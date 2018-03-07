@@ -1,0 +1,126 @@
+{
+	"version": "2.0.0",
+	"options": {
+		"cwd": "${workspaceRoot}"
+	},
+	"tasks": [
+		{
+			"label": "developer pip install",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"windows" : {
+				"command": "pip",
+				"args": ["install", "-e", "${workspaceRoot}", "--upgrade"]
+			},
+			"linux" : {
+				"command": "pip3",
+				"args": ["install", "-e", "${workspaceRoot}", "--upgrade"]
+			}
+		},
+		{
+			"label": "Run file tests",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"windows": {
+				"command": "python"
+			},
+			"linux": {
+				"command": "python3"
+			},
+			"args": ["${file}", "-v"]
+		},
+		{
+			"label": "Run all tests",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"windows": {
+				"command": "python",
+				"args": [
+					"-m",
+					"unittest",
+					"discover",
+					"-s",
+					"${workspaceRoot}\\tests",
+					"-v",
+					"-p",
+					"*_test.py"]
+			},
+			"linux": {
+				"command": "python3",
+				"args": [
+					"-m",
+					"unittest",
+					"discover",
+					"-s",
+					"${workspaceRoot}//tests", "-v",
+					"-p",
+					"*_test.py"]
+			}
+		},
+		{
+			"label": "Run package linting",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"windows": {
+				"command": "pylint",
+				"args": ["${workspaceRoot}\\pyviews"]
+			},
+			"linux": {
+				"command": "pylint3",
+				"args": ["${workspaceRoot}//pyviews"]
+			}
+		},
+		{
+			"label": "prepare wheel",
+			"command": "python",
+			"args": [
+				"packaging.py",
+				"bdist_wheel"
+			]
+		},
+		{
+			"label": "upload wheel",
+			"command": "twine",
+			"windows": {
+				"args": [
+					"upload",
+					"dist\\*"
+				]
+			},
+			"linux": {
+				"args": [
+					"upload",
+					"dist/*"
+				]
+			}
+		},
+		{
+			"label": "upload test wheel",
+			"command": "twine",
+			"windows": {
+				"args": [
+					"upload",
+					"--repository-url",
+					"https://test.pypi.org/legacy/",
+					"dist\\*"
+				]
+			},
+			"linux": {
+				"args": [
+					"upload",
+					"--repository-url",
+					"https://test.pypi.org/legacy/",
+					"dist/*"
+				]
+			}
+		}
+	]
+}

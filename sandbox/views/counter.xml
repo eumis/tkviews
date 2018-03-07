@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<w:Container xmlns="tkinter"
+             xmlns:w="tkviews"
+             xmlns:import="pyviews.rendering.modifiers.import_global"
+             xmlns:bind="tkviews.modifiers.bind"
+             xmlns:global='pyviews.rendering.modifiers.set_global'
+
+             import:Counter="sandbox.counter.Counter"
+             import:Grid='tkviews.geometry.GridGeometry'
+             import:Pack='tkviews.geometry.PackGeometry'
+             import:to_int='pyviews.rendering.converters.to_int'
+             import:int_var='variables.IntVar'
+
+             global:vm="{Counter()}">
+
+    <w:View name='styles'/>
+
+    <Frame geometry='{Pack(fill="x")}'>
+        <Button geometry='{Pack(side="left")}'
+                style='button'
+                bind:Button-1="once:{lambda e: vm.up_count()}">
+            + 1
+        </Button>
+
+        <Entry geometry='{Pack(side="left")}'
+               text='{int_var:{vm.count}}'>
+        </Entry>
+
+        <Label geometry='{Pack(side="left")}'
+               style='back'
+               bind:Button-1="once:{lambda e: print(e)}">
+            {vm.count}
+        </Label>
+    </Frame>
+
+    <Frame geometry='{Pack(anchor="nw", side="left")}'>
+        <w:Row index='{0}' weight='{1}' />
+        <w:Column index='{0}' weight='{1}' />
+        <Frame geometry='{Grid(row=0, column=0)}'
+               background='white'>
+            <w:For items='{vm.range}'>
+                <Label geometry='{Grid(row=index, column=index)}'
+                       style='{"yellowbg" if index % 2 == 0 else "redbg"}'>
+                    {str(item+1) + ' ' + str(index)}
+                </Label>
+            </w:For>
+        </Frame>
+    </Frame>
+</w:Container>

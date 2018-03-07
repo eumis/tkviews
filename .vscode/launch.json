@@ -1,0 +1,44 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "windows": {
+                "program": "${workspaceRoot}\\sandbox\\run.py",
+                "cwd": "${workspaceRoot}\\sandbox"
+            },
+            "linux": {
+                "program": "${workspaceRoot}//sandbox//run.py",
+                "cwd": "${workspaceRoot}//sandbox",
+                "pythonPath": "${config:python.pythonPath}"
+            },
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ]
+        },
+        {
+            "name": "Debug python test",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "program": "${file}",
+            "cwd": "${workspaceRoot}",
+            "args": [
+                "-v"
+            ],
+            "debugOptions": [
+                "WaitOnAbnormalExit",
+                "WaitOnNormalExit",
+                "RedirectOutput"
+            ],
+            "linux": {
+                "pythonPath": "${config:python.pythonPath}"
+            }
+        }
+    ]
+}

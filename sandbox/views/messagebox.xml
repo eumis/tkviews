@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<w:Container xmlns='tkinter'
+        xmlns:w="tkviews"
+        xmlns:import='pyviews.rendering.modifiers.import_global'
+        xmlns:bind='tkviews.modifiers.bind'
+
+        import:Pack='tkviews.geometry.PackGeometry'
+        import:show_message='commands.show_message'>
+    <Button geometry='{Pack(fill="x")}'
+            text='show message'
+            bind:Button-1="once:{lambda e:show_message('message title', 'hohohoho')}">
+    </Button>
+</w:Container>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<w:Root xmlns='tkinter'
+        xmlns:w="tkviews"
+        xmlns:import='pyviews.rendering.modifiers.import_global'
+        xmlns:global='pyviews.rendering.modifiers.set_global'
+        xmlns:bind='tkviews.modifiers.bind'
+
+        import:AppViewModel='view_model.AppViewModel'
+        import:Grid='tkviews.geometry.GridGeometry'
+        import:Pack='tkviews.geometry.PackGeometry'
+        import:show_message='commands.show_message'
+        import:show_view='sandbox.commands.show_view'
+
+        background="white"
+        global:vm='{AppViewModel("")}'>
+        <Frame geometry='{Pack(fill="x")}'>
+                <Button geometry='{Grid(row=0, column=0, sticky="e")}'
+                        bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}">
+                        Message box
+                </Button>
+
+                <Button geometry='{Grid(row=0, column=1, sticky="e")}'
+                        bind:Button-1="once:{lambda e: show_view(vm, 'counter')}">
+                        Counter
+                </Button>
+
+                <Button geometry='{Grid(row=0, column=2, sticky="e")}'
+                        bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}">
+                        Scroll
+                </Button>
+        </Frame>
+        <w:View name='{vm.view}' />
+</w:Root>

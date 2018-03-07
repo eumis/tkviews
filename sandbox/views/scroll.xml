@@ -7,7 +7,7 @@
           xmlns:global='pyviews.rendering.modifiers.set_global'
 
           import:Pack='tkviews.geometry.PackGeometry'
-          import:ScrollVm="sandbox.scroll.ScrollVm"
+          import:ScrollVm="scroll.ScrollVm"
 
           geometry='{Pack(fill="both", expand=True)}'
           global:vm='{ScrollVm()}'>

@@ -5,7 +5,7 @@
              xmlns:bind="tkviews.modifiers.bind"
              xmlns:global='pyviews.rendering.modifiers.set_global'
 
-             import:Counter="sandbox.counter.Counter"
+             import:Counter="counter.Counter"
              import:Grid='tkviews.geometry.GridGeometry'
              import:Pack='tkviews.geometry.PackGeometry'
              import:to_int='pyviews.rendering.converters.to_int'

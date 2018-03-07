@@ -9,7 +9,7 @@
         import:Grid='tkviews.geometry.GridGeometry'
         import:Pack='tkviews.geometry.PackGeometry'
         import:show_message='commands.show_message'
-        import:show_view='sandbox.commands.show_view'
+        import:show_view='commands.show_view'
 
         background="white"
         global:vm='{AppViewModel("")}'>

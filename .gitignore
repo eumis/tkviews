@@ -1,7 +1,7 @@
 *.pyc
 dist/
 build/
-pyviews.egg-info/
+tkviews.egg-info/
 *.swp
 *.py~
 *.un~

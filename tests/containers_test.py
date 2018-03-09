@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
-from tests.utility import case
+from pyviews.testing import case
 from pyviews.core import ioc
 from pyviews.core.xml import XmlNode
 from tkviews.containers import Container, View, For, If

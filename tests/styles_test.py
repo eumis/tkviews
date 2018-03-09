@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import call, Mock
-from tests.utility import case
+from pyviews.testing import case
 from tests.mock import some_modifier
 from pyviews.core.ioc import Scope, scope, register_single
 from pyviews.core.xml import XmlAttr, XmlNode

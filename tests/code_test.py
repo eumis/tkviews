@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import Mock
-from tests.utility import case
+from pyviews.testing import case
 from pyviews.core.observable import InheritedDict
 from pyviews.core.compilation import CompilationError
 from tkviews.code import Code

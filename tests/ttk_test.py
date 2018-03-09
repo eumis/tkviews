@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import call, Mock
-from tests.utility import case
+from pyviews.testing import case
 from tkviews import ttk
 
 class StyleTest(TestCase):

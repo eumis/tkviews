@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
-from tests.utility import case
+from pyviews.testing import case
 from tkviews.canvas import CanvasNode
 
 class CanvasItem(CanvasNode):

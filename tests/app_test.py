@@ -1,6 +1,6 @@
 from os.path import abspath
 from unittest import TestCase, main
-from tests.utility import case
+from pyviews.testing import case
 from pyviews.core import ioc
 from tkviews.rendering import convert_to_node
 from tkviews.modifiers import set_attr

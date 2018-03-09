@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
-from tests.utility import case
+from pyviews.testing import case
 from tkviews.geometry import GridGeometry, PackGeometry, PlaceGeometry
 from tkviews.geometry import Row, Column
 

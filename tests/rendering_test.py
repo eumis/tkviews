@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import patch, Mock
-from tests.utility import case
+from pyviews.testing import case
 from tkviews import rendering
 
 class ParsingTests(TestCase):

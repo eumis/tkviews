@@ -3,28 +3,29 @@
 from tkinter import Entry, StringVar
 from tkinter.ttk import Widget as TtkWidget
 from pyviews.core.xml import XmlAttr
-from pyviews.core.node import NodeArgs
+from pyviews.core.node import RenderArgs
 from pyviews.core.compilation import Expression
 from pyviews.core.binding import InstanceTarget, get_expression_target
 from pyviews.core.binding import ExpressionBinding, TwoWaysBinding
-from pyviews.rendering.core import apply_attribute, parse_expression
+from pyviews.rendering.core import apply_attribute, parse_expression, render_step
 from pyviews.rendering.binding import BindingArgs
 from tkviews.binding import VariableBinding
 from tkviews.widgets import WidgetNode
 from tkviews.ttk import TtkWidgetNode
 
-def convert_to_node(inst, args: NodeArgs):
+def convert_to_node(inst, args: RenderArgs):
     '''Wraps instance with WidgetNode'''
     args = (inst, args['xml_node'], args['parent_context'])
     if isinstance(inst, TtkWidget):
         return TtkWidgetNode(*args)
     return WidgetNode(*args)
 
-def apply_text(node: WidgetNode):
+@render_step('xml_node')
+def apply_text(node: WidgetNode, xml_node=None):
     '''Applies xml node content to WidgetNode'''
-    if not node.xml_node.text:
+    if not xml_node.text:
         return
-    text_attr = XmlAttr('text', node.xml_node.text)
+    text_attr = XmlAttr('text', xml_node.text)
     apply_attribute(node, text_attr)
 
 def is_entry_twoways(args: BindingArgs):

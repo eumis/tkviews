@@ -8,7 +8,7 @@ from pyviews.core.xml import XmlNode
 from pyviews.core.observable import InheritedDict
 from pyviews.core.node import Node
 from pyviews.rendering.views import get_view_root
-from tkviews.widgets import WidgetArgs
+from tkviews.widgets import TkRenderArgs
 
 class Container(Node):
     '''Used to combine some xml elements'''
@@ -20,8 +20,8 @@ class Container(Node):
         '''Sets passed attribute'''
         setattr(self, key, value)
 
-    def get_node_args(self, xml_node):
-        return WidgetArgs(xml_node, self, self.master)
+    def get_render_args(self, xml_node):
+        return TkRenderArgs(xml_node, self, self.master)
 
 class View(Container):
     '''Loads xml from anothre file'''
@@ -49,7 +49,7 @@ class View(Container):
         self.destroy_children()
         try:
             root_xml = get_view_root(self.name)
-            self._child_nodes = [render(root_xml, self.get_node_args(root_xml))]
+            self._child_nodes = [render(root_xml, self.get_render_args(root_xml))]
         except FileNotFoundError:
             self._child_nodes = []
 
@@ -106,7 +106,7 @@ class For(Container):
         nodes = self.xml_node.children
         for index, item in items:
             for xml_node in nodes:
-                args = self.get_node_args(xml_node, index, item)
+                args = self.get_render_args(xml_node, index, item)
                 self._child_nodes.append(render(xml_node, args))
 
     def render_children(self):
@@ -115,8 +115,8 @@ class For(Container):
         self.destroy_children()
         self._render_children([(i, item) for i, item in enumerate(self._items)])
 
-    def get_node_args(self, xml_node: XmlNode, index=None, item=None):
-        args = super().get_node_args(xml_node)
+    def get_render_args(self, xml_node: XmlNode, index=None, item=None):
+        args = super().get_render_args(xml_node)
         context = args['parent_context'].copy()
         item_globals = InheritedDict(context['globals'])
         item_globals['index'] = index

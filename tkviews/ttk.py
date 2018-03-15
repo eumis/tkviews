@@ -2,6 +2,7 @@
 
 from tkinter.ttk import Style as TtkStyle
 from pyviews.core.node import Node
+from pyviews.rendering.core import render_step
 from tkviews.widgets import WidgetNode
 
 class TtkWidgetNode(WidgetNode):
@@ -42,8 +43,8 @@ class Style(Node):
             raise KeyError("style doesn't have name")
         ttk_style.configure(self.full_name, **self.values)
 
-    def get_node_args(self, xml_node):
-        args = super().get_node_args(xml_node)
+    def get_render_args(self, xml_node):
+        args = super().get_render_args(xml_node)
         args['parent_name'] = self.full_name
         return args
 
@@ -52,6 +53,7 @@ def theme_use(node, key, value):
     ttk_style = TtkStyle()
     ttk_style.theme_use(key)
 
+@render_step
 def apply_ttk_style(node: Style):
     '''Parsing step for Style node. Applies passed Style node.'''
     node.apply()

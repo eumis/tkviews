@@ -20,13 +20,13 @@ class StyleTest(TestCase):
     @case('name', None)
     @case('name', '')
     @case('name', ' ')
-    def test_get_node_args_adds_fullname(self, name, parent_name):
+    def test_get_render_args_adds_fullname(self, name, parent_name):
         style = ttk.Style(None, parent_name=parent_name)
         style.name = name
 
-        args = style.get_node_args(None)
+        args = style.get_render_args(None)
 
-        msg = 'get_node_args should return args with parent_name key'
+        msg = 'get_render_args should return args with parent_name key'
         self.assertEqual(style.full_name, args['parent_name'], msg=msg)
 
 class ApplyTest(TestCase):

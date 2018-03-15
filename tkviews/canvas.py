@@ -4,6 +4,7 @@ from tkinter import Canvas, TclError
 from pyviews.core import get_not_implemented_message
 from pyviews.core.ioc import inject
 from pyviews.core.node import Node
+from pyviews.rendering.core import render_step
 
 class CanvasNode(Node):
     '''Base class for wrappers'''
@@ -120,6 +121,7 @@ class Window(CanvasNode):
     def _create(self):
         return self._canvas.create_window(*self._place, **self._options)
 
+@render_step
 def render(node: CanvasNode):
     '''Calls node's render'''
     node.render()

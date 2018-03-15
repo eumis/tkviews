@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 from unittest.mock import call, Mock
-from pyviews.testing import case
 from tests.mock import some_modifier
+from pyviews.testing import case
 from pyviews.core.ioc import Scope, scope, register_single
 from pyviews.core.xml import XmlAttr, XmlNode
 from pyviews.core.observable import InheritedDict
@@ -125,7 +125,7 @@ class ParsingTest(TestCase):
         context = {'globals': parent_globals}
         style = Style(xml_node, context)
 
-        apply_attributes(style)
+        apply_attributes(style, {'xml_node': style.xml_node})
 
         msg = 'actual style_items are not equal to expected'
         self.assertTrue(_style_items_equal(style_items, self.styles[style.name]), msg)
@@ -138,7 +138,7 @@ class ParsingTest(TestCase):
         xml_node.attrs = [XmlAttr('name', name)]
         style = Style(xml_node)
 
-        apply_attributes(style)
+        apply_attributes(style, {'xml_node': style.xml_node})
 
         msg = '"name" attribute value should be used as style name'
         self.assertEqual(name, style.name, msg)

@@ -3,7 +3,7 @@
 from pyviews.core import get_not_implemented_message
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node
-from pyviews.rendering.core import apply_attributes
+from pyviews.rendering.core import render_step
 
 class Geometry:
     '''Base for wrapper'''
@@ -75,7 +75,7 @@ class Column(LayoutSetup):
     def apply(self):
         self._master.grid_columnconfigure(self._index, **self._args)
 
+@render_step
 def apply_layout(layout: LayoutSetup):
-    '''Parsing step for LayoutSetup. Parses attributes and calls apply'''
-    apply_attributes(layout)
+    '''Calls layout apply'''
     layout.apply()

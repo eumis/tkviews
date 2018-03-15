@@ -1,7 +1,7 @@
 from tkinter import Frame, Canvas, Scrollbar
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node
-from tkviews.widgets import WidgetArgs
+from tkviews.widgets import TkRenderArgs
 
 class Scroll(Node):
     def __init__(self, master, xml_node: XmlNode, parent_context=None):
@@ -91,8 +91,8 @@ class Scroll(Node):
         if 'Button-' in event:
             self._canvas.bind('<'+event+'>', handler)
 
-    def get_node_args(self, xml_node):
-        return WidgetArgs(xml_node, self, self._container)
+    def get_render_args(self, xml_node):
+        return TkRenderArgs(xml_node, self, self._container)
 
     def destroy(self):
         super().destroy()

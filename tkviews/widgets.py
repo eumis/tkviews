@@ -3,17 +3,17 @@
 from tkinter import Tk, Widget
 from pyviews.core.ioc import inject
 from pyviews.core.xml import XmlNode
-from pyviews.core.node import Node, NodeArgs
+from pyviews.core.node import Node, RenderArgs
 
-class WidgetArgs(NodeArgs):
-    '''NodeArgs for WidgetNode'''
+class TkRenderArgs(RenderArgs):
+    '''RenderArgs for WidgetNode'''
     def __init__(self, xml_node, parent_node=None, widget_master=None):
         super().__init__(xml_node, parent_node)
         self['master'] = widget_master
 
     def get_args(self, inst_type=None):
         if issubclass(inst_type, Widget):
-            return NodeArgs.Result([self['master']], {})
+            return RenderArgs.Result([self['master']], {})
         return super().get_args(inst_type)
 
 class WidgetNode(Node):
@@ -47,8 +47,8 @@ class WidgetNode(Node):
         self._style = value
         apply_styles(self, value)
 
-    def get_node_args(self, xml_node: XmlNode):
-        return WidgetArgs(xml_node, self, self.widget)
+    def get_render_args(self, xml_node: XmlNode):
+        return TkRenderArgs(xml_node, self, self.widget)
 
     def destroy(self):
         super().destroy()

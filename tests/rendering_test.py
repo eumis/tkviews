@@ -12,7 +12,7 @@ class ParsingTests(TestCase):
         node.xml_node = Mock()
         node.xml_node.text = text
 
-        rendering.apply_text(node)
+        rendering.apply_text(node, {'xml_node': node.xml_node})
 
         msg = "apply_attribute shouldn't be called if text is None"
         self.assertFalse(apply_attribute.called, msg)
@@ -25,7 +25,7 @@ class ParsingTests(TestCase):
         node.xml_node = Mock()
         node.xml_node.text = text
 
-        rendering.apply_text(node)
+        rendering.apply_text(node, {'xml_node': node.xml_node})
 
         msg = 'apply_attirbute should be called with XmlAttr "text"'
         self.assertEqual(apply_attribute.call_args[0][0], node, msg)

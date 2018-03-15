@@ -5,7 +5,7 @@ from pyviews.core.ioc import inject
 from pyviews.core.compilation import Expression
 from pyviews.core.node import Node
 from pyviews.rendering.expression import is_code_expression, parse_expression
-from pyviews.rendering.core import get_modifier
+from pyviews.rendering.core import get_modifier, render_step
 
 class StyleItem:
     '''Wrapper under option'''
@@ -40,8 +40,8 @@ class Style(Node):
         return all(i._name != item._name or i._modifier != item._modifier \
                    for i in items)
 
-    def get_node_args(self, xml_node):
-        args = super().get_node_args(xml_node)
+    def get_render_args(self, xml_node):
+        args = super().get_render_args(xml_node)
         args['parent_style'] = self.name
         return args
 
@@ -51,9 +51,10 @@ class Style(Node):
         del styles[self.name]
         self._destroy_bindings()
 
-def apply_attributes(node: Style):
+@render_step('xml_node')
+def apply_attributes(node: Style, xml_node=None):
     '''Parsing step. Parses attributes to style items and sets them to style'''
-    attrs = node.xml_node.attrs
+    attrs = xml_node.attrs
     try:
         node.name = next(attr.value for attr in attrs if attr.name == 'name')
     except StopIteration:

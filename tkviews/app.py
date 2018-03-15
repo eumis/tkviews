@@ -33,8 +33,8 @@ def _register_rendering_steps():
     ioc.register_single('rendering_steps',
                         [apply_attributes, apply_ttk_style, render_children],
                         TtkStyle)
-    ioc.register_single('rendering_steps', [apply_layout], Row)
-    ioc.register_single('rendering_steps', [apply_layout], Column)
+    ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Row)
+    ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Column)
     _register_canvas_rendering_steps()
 
 def _register_canvas_rendering_steps():

@@ -47,11 +47,9 @@ class View(Container):
     def render_children(self, render=None):
         self._rendered = True
         self.destroy_children()
-        try:
+        if self.name is not None:
             root_xml = get_view_root(self.name)
             self._child_nodes = [render(root_xml, self.get_render_args(root_xml))]
-        except FileNotFoundError:
-            self._child_nodes = []
 
 class For(Container):
     '''Renders children for every item in items collection'''

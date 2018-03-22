@@ -8,7 +8,6 @@
              import:Counter="counter.Counter"
              import:Grid='tkviews.geometry.GridGeometry'
              import:Pack='tkviews.geometry.PackGeometry'
-             import:to_int='pyviews.rendering.converters.to_int'
              import:int_var='variables.IntVar'
 
              global:vm="{Counter()}">

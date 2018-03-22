@@ -5,7 +5,7 @@ from pyviews.testing import case
 from pyviews.core.ioc import Scope, scope, register_single
 from pyviews.core.xml import XmlAttr, XmlNode
 from pyviews.core.observable import InheritedDict
-from tkviews.styles import StyleItem, Style, apply_attributes, apply_styles
+from tkviews.styles import StyleItem, Style, apply_attributes, apply_styles, StyleError
 from tkviews.modifiers import set_attr
 
 class StyleItemTest(TestCase):
@@ -153,8 +153,8 @@ class ParsingTest(TestCase):
         style = Style(xml_node)
 
         msg = '"name" attribute value should be used as style name'
-        with self.assertRaises(KeyError, msg=msg):
-            apply_attributes(style)
+        with self.assertRaises(StyleError, msg=msg):
+            apply_attributes(style, {'xml_node': xml_node})
 
 class ApplyTest(TestCase):
     @case('one,two', ['one', 'two'], ['one', 'two', 'three'])
@@ -181,6 +181,21 @@ class ApplyTest(TestCase):
                     return False
 
         return True
+
+    @case('two', ['one', 'three'])
+    @case('one, two', ['one', 'three'])
+    @case('one, two', ['three'])
+    @case('two, three', ['one', 'three'])
+    def test_apply_styles_raises(self, styles_to_apply, all_styles):
+        styles = {}
+        register_single('styles', styles)
+        for key in all_styles:
+            styles[key] = [Mock() for i in range(0, 5)]
+        node = Mock()
+
+        msg = 'apply_styles should raise StyleError if style is not found'
+        with self.assertRaises(StyleError, msg=msg):
+            apply_styles(node, styles_to_apply)
 
     def tearDown(self):
         register_single('styles', {})

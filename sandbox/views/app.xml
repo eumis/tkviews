@@ -12,7 +12,7 @@
         import:show_view='commands.show_view'
 
         background="white"
-        global:vm='{AppViewModel("")}'>
+        global:vm='{AppViewModel()}'>
         <Frame geometry='{Pack(fill="x")}'>
                 <Button geometry='{Grid(row=0, column=0, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}">

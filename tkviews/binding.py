@@ -1,7 +1,9 @@
 '''Bindings specific for tkinter'''
 
+from sys import exc_info
 from tkinter import Variable
-from pyviews.core.binding import Binding, BindingTarget
+from pyviews.core import CoreError
+from pyviews.core.binding import Binding, BindingTarget, BindingError
 
 class VariableTarget(BindingTarget):
     '''Target is tkinter Var'''
@@ -23,8 +25,17 @@ class VariableBinding(Binding):
         self._trace_id = self._var.trace_add('write', self._callback)
 
     def _callback(self, *args):
-        value = self._var.get()
-        self._target.on_change(value)
+        try:
+            value = self._var.get()
+            self._target.on_change(value)
+        except CoreError as error:
+            self.add_error_info(error)
+            raise
+        except:
+            info = exc_info()
+            error = BindingError(BindingError.TargetUpdateError)
+            self.add_error_info(error)
+            raise error from info[1]
 
     def destroy(self):
         if self._trace_id:

@@ -71,11 +71,11 @@
 			},
 			"windows": {
 				"command": "pylint",
-				"args": ["${workspaceRoot}\\pyviews"]
+				"args": ["${workspaceRoot}\\tkviews"]
 			},
 			"linux": {
 				"command": "pylint3",
-				"args": ["${workspaceRoot}//pyviews"]
+				"args": ["${workspaceRoot}//tkviews"]
 			}
 		},
 		{

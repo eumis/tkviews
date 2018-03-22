@@ -3,7 +3,7 @@
 from tkinter.ttk import Style as TtkStyle
 from pyviews.core.node import Node
 from pyviews.rendering.core import render_step
-from tkviews.widgets import WidgetNode
+from tkviews.node import WidgetNode
 
 class TtkWidgetNode(WidgetNode):
     '''Base wrapper for ttk widget'''

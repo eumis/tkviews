@@ -1,7 +1,7 @@
 '''Package adapts pyviews for using with tkinter'''
 
 from pyviews.rendering.node import Code
-from .widgets import Root
+from .node import Root
 from .containers import Container, For, View, If
 from .styles import Style
 from .geometry import Row, Column

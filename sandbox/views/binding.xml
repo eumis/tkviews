@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<w:Container xmlns="tkinter"
+             xmlns:w="tkviews"
+             xmlns:import="pyviews.rendering.modifiers.import_global"
+             xmlns:bind="tkviews.modifiers.bind"
+             xmlns:global='pyviews.rendering.modifiers.set_global'
+
+             import:BindingViewModel="view_model.BindingViewModel"
+             import:Grid='tkviews.geometry.GridGeometry'
+             import:Pack='tkviews.geometry.PackGeometry'
+             import:int_var='tkinter.IntVar'
+             import:str_var='tkinter.StringVar'
+
+             global:vm="{BindingViewModel()}">
+    <LabelFrame geometry='{Pack(fill="x")}'
+                text='Entry string binding'>
+        <Entry geometry='{Pack(side="left")}'
+               text='{{vm.entry}}'>
+        </Entry>
+
+        <Label geometry='{Pack(side="left")}'>
+            {vm.entry}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame geometry='{Pack(fill="x", pady=10)}'
+                text='Checkbutton bool binding'>
+        <Checkbutton geometry='{Pack(side="left")}'
+                     value='{{vm.check_b}}'>
+            {'checked' if vm.check_b else 'unchecked'}
+        </Checkbutton>
+
+        <Label geometry='{Pack(side="left")}'>
+            {str(vm.check_b)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame geometry='{Pack(fill="x", pady=10)}'
+                text='Checkbutton int binding'>
+        <Checkbutton geometry='{Pack(side="left")}'
+                     value='{int_var:{vm.check_int}}'>
+            {'checked' if vm.check_int == 1 else 'unchecked'}
+        </Checkbutton>
+
+        <Label geometry='{Pack(side="left")}'>
+            {str(vm.check_int)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame geometry='{Pack(fill="x", pady=10)}'
+                text='Checkbutton str binding with onvalue and offvalue'>
+        <Checkbutton geometry='{Pack(side="left")}'
+                     value='{str_var:{vm.check_str}}'
+                     onvalue='on'
+                     offvalue='off'>
+            {'checked' if vm.check_str == 'on' else 'unchecked'}
+        </Checkbutton>
+
+        <Label geometry='{Pack(side="left")}'>
+            {str(vm.check_str)}
+        </Label>
+    </LabelFrame>
+</w:Container>

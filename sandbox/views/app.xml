@@ -28,6 +28,11 @@
                         bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}">
                         Scroll
                 </Button>
+
+                <Button geometry='{Grid(row=0, column=3, sticky="e")}'
+                        bind:Button-1="once:{lambda e: show_view(vm, 'binding')}">
+                        Binding
+                </Button>
         </Frame>
         <w:View name='{vm.view}' />
 </w:Root>

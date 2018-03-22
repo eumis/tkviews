@@ -1,7 +1,7 @@
 from tkinter import Frame, Canvas, Scrollbar
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node
-from tkviews.widgets import TkRenderArgs
+from tkviews.node import TkRenderArgs
 
 class Scroll(Node):
     def __init__(self, master, xml_node: XmlNode, parent_context=None):

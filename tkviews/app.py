@@ -6,11 +6,12 @@ from pyviews.rendering.dependencies import register_defaults
 from pyviews.rendering.core import apply_attributes, render_children
 from pyviews.rendering.binding import BindingFactory, add_default_rules
 from pyviews.rendering.views import render_view
-from tkviews.rendering import convert_to_node, apply_text, is_entry_twoways, apply_entry_twoways
+from tkviews.rendering import convert_to_node, apply_text
+from tkviews.binding import add_rules as add_tkviews_binding_rules
 from tkviews.modifiers import set_attr
 from tkviews.styles import Style, apply_attributes as apply_style_attrs, apply_styles
 from tkviews.geometry import Row, Column, apply_layout
-from tkviews.widgets import Root
+from tkviews.node import Root
 from tkviews.ttk import Style as TtkStyle, apply_ttk_style
 from tkviews import canvas
 
@@ -49,9 +50,10 @@ def _register_canvas_rendering_steps():
     ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Window)
 
 def register_binding_factory(factory=None):
+    '''Adds all needed rules to binding factory and registers dependency'''
     factory = factory if factory else BindingFactory()
     add_default_rules(factory)
-    factory.add_rule('twoways', BindingFactory.Rule(is_entry_twoways, apply_entry_twoways))
+    add_tkviews_binding_rules(factory)
     ioc.register_single('binding_factory', factory)
 
 def launch(root_view=None):

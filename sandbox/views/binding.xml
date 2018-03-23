@@ -60,4 +60,19 @@
             {str(vm.check_str)}
         </Label>
     </LabelFrame>
+
+    <LabelFrame geometry='{Pack(fill="x", pady=10)}'
+                global:var='{int_var()}'
+                text='Radiobuttons binding'>
+        <w:For items='{list(range(3))}'>
+            <Radiobutton geometry='{Pack(side="left")}'
+                        value='{item}'
+                        selected_value='{var:{vm.radio}}'>
+                {'{0} {1}'.format(item, 'checked' if vm.radio == item else 'unchecked')}
+            </Radiobutton>
+        </w:For>
+        <Label geometry='{Pack(side="left")}'>
+            {str(vm.radio)}
+        </Label>
+    </LabelFrame>
 </w:Container>

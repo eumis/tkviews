@@ -12,3 +12,4 @@ class BindingViewModel(ObservableEntity):
         self.check_b = False
         self.check_int = 10
         self.check_str = 'some value'
+        self.radio = -1

@@ -46,7 +46,7 @@ def _register_canvas_rendering_steps():
     ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Oval)
     ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Polygon)
     ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Rectangle)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Text)
+    ioc.register_single('rendering_steps', [apply_attributes, apply_text, canvas.render], canvas.Text)
     ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Window)
 
 def register_binding_factory(factory=None):

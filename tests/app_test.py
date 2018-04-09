@@ -18,7 +18,7 @@ class TestIocDependencies(TestCase):
     @case('view_ext', '.xml')
     def test_dependency(self, key, expected):
         app.register_dependencies()
-        actual = ioc.Scope.Current.container.get(key)
+        actual = ioc.get_current_scope().container.get(key)
         msg = 'app module should register default for {0}'.format(key)
         self.assertEqual(actual, expected, msg=msg)
 

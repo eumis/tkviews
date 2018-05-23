@@ -46,3 +46,7 @@ def visible(node: WidgetNode, key, value):
         node.geometry.apply(node.widget)
     else:
         node.geometry.forget(node.widget)
+
+def call(node: WidgetNode, key, args):
+    '''Calls node's call'''
+    node.call(key, args)

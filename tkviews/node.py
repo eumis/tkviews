@@ -77,6 +77,13 @@ class WidgetNode(Node):
         else:
             self.widget.configure(**{key:value})
 
+    def call(self, key, args):
+        '''Calls method by key'''
+        if hasattr(self, key):
+            getattr(self, key)(*args)
+        elif hasattr(self.widget, key):
+            getattr(self.widget, key)(*args)
+
 class Root(WidgetNode):
     '''Wrapper under tkinter Root'''
     def __init__(self, xml_node: XmlNode):

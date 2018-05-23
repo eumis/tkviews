@@ -72,8 +72,11 @@ def apply_entry_twoways(args: BindingArgs):
     Wrapped instance is changed on property change
     '''
     (var_key, expr_body) = parse_expression(args.expr_body)
-    var = args.node.globals[var_key]() \
-                if args.node.globals.has_key(var_key) else StringVar()
+    if args.node.globals.has_key(var_key):
+        val = args.node.globals[var_key]
+        var = val() if callable(val) else val
+    else:
+        var = StringVar()
     args.node.widget.config(textvariable=var)
     args.node.define_setter('text', lambda node, value: var.set(value))
 

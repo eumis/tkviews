@@ -1,7 +1,7 @@
 '''Bindings specific for tkinter'''
 
 from sys import exc_info
-from tkinter import Variable, StringVar, Entry, Checkbutton, Radiobutton
+from tkinter import Variable, Entry, Checkbutton, Radiobutton
 from pyviews.core import CoreError
 from pyviews.core.compilation import Expression
 from pyviews.core.binding import Binding, BindingTarget, BindingError
@@ -49,47 +49,35 @@ class VariableBinding(Binding):
 
 def add_rules(factory: BindingFactory):
     '''Adds tkviews binding rules to passed factory'''
-    factory.add_rule('twoways', _get_rule(Entry, apply_entry_twoways))
-    factory.add_rule('twoways', _get_rule(Checkbutton, apply_default_twoways))
-    factory.add_rule('twoways', _get_rule(Radiobutton, apply_default_twoways))
+    factory.add_rule('twoways', _get_rule(Entry, 'text', apply_entry_twoways))
+    factory.add_rule('twoways', _get_rule(Checkbutton, 'value', apply_var_two_ways))
+    factory.add_rule('twoways', _get_rule(Radiobutton, 'selected_value', apply_var_two_ways))
 
-def _get_rule(target_type, apply):
+def _get_rule(target_type, attr, apply):
     return BindingFactory.Rule(
-        lambda args: _is_suitable(args, target_type),
+        lambda args: _is_suitable(args, target_type, attr),
         apply)
 
-def _is_suitable(args, target_type):
+def _is_suitable(args: BindingArgs, target_type, attr):
     try:
-        return isinstance(args.node.widget, target_type)
+        return isinstance(args.node.widget, target_type) and args.attr.name == attr
     except AttributeError:
         return False
 
 def apply_entry_twoways(args: BindingArgs):
-    '''
-    Applies "twoways" binding.
-    Expression result is assigned to property.
-    Property is set on expression change.
-    Wrapped instance is changed on property change
-    '''
+    '''Applies twoways binding for entry text'''
+    apply_var_two_ways(args, 'textvariable')
+
+def apply_var_two_ways(args: BindingArgs, var_property=None):
+    '''Applies twoways binding using tkinter variable.'''
+    var_property = var_property if var_property else 'variable'
     (var_key, expr_body) = parse_expression(args.expr_body)
     if args.node.globals.has_key(var_key):
         val = args.node.globals[var_key]
         var = val() if callable(val) else val
-    else:
-        var = StringVar()
-    args.node.widget.config(textvariable=var)
-    args.node.define_setter('text', lambda node, value: var.set(value))
+        args.node.set_attr(var_property, var)
 
-    _apply_two_ways(args, expr_body, var)
-
-def apply_default_twoways(args: BindingArgs):
-    '''Applies default twoways binding.'''
-    (var_key, expr_body) = parse_expression(args.expr_body)
-    if args.node.globals.has_key(var_key):
-        val = args.node.globals[var_key]
-        args.node.variable = val() if callable(val) else val
-
-    _apply_two_ways(args, expr_body, args.node.variable)
+    _apply_two_ways(args, expr_body, getattr(args.node, var_property))
 
 def _apply_two_ways(args: BindingArgs, expr_body: str, var: Variable):
     '''Applies two ways binding between tkinter Variable and expression'''

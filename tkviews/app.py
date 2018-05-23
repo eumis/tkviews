@@ -39,15 +39,17 @@ def _register_rendering_steps():
     _register_canvas_rendering_steps()
 
 def _register_canvas_rendering_steps():
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Arc)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Bitmap)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Image)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Line)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Oval)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Polygon)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Rectangle)
-    ioc.register_single('rendering_steps', [apply_attributes, apply_text, canvas.render], canvas.Text)
-    ioc.register_single('rendering_steps', [apply_attributes, canvas.render], canvas.Window)
+    canvas_node_types = [
+        canvas.Arc, canvas.Bitmap, canvas.Image,
+        canvas.Line, canvas.Oval, canvas.Polygon,
+        canvas.Rectangle, canvas.Window
+    ]
+    for node_type in canvas_node_types:
+        ioc.register_single('rendering_steps', [apply_attributes, canvas.render], node_type)
+    ioc.register_single(
+        'rendering_steps',
+        [apply_attributes, apply_text, canvas.render],
+        canvas.Text)
 
 def register_binding_factory(factory=None):
     '''Adds all needed rules to binding factory and registers dependency'''

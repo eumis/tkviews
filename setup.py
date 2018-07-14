@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 def setup_package():
     setup(
         name='tkviews',
-        version='0.9.8',
+        version='1.0.0',
         description='Package for creating tkinter applications in declarative way.',
         url='https://github.com/eumis/tkviews',
         author='eumis(Eugen Misievich)',

@@ -4,6 +4,7 @@ from tkinter import Tk, Widget
 from pyviews.core.ioc import inject
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node, RenderArgs
+from tkviews.geometry import Geometry
 
 class TkRenderArgs(RenderArgs):
     '''RenderArgs for WidgetNode'''
@@ -26,12 +27,14 @@ class WidgetNode(Node):
         self._setters = {}
 
     @property
-    def geometry(self):
+    def geometry(self: Geometry):
         '''Geometry'''
         return self._geometry
 
     @geometry.setter
-    def geometry(self, value):
+    def geometry(self, value: Geometry):
+        if self._geometry:
+            self._geometry.forget()
         self._geometry = value
         if value is not None:
             value.apply(self.widget)

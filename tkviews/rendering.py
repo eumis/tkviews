@@ -26,7 +26,7 @@ def convert_to_node(inst, args: RenderArgs):
 @render_step('xml_node')
 def apply_text(node: WidgetNode, xml_node=None):
     '''Applies xml node content to WidgetNode'''
-    if not xml_node.text:
+    if xml_node.text is None or not xml_node.text.strip():
         return
     text_attr = XmlAttr('text', xml_node.text)
     apply_attribute(node, text_attr)

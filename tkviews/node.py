@@ -24,10 +24,9 @@ class WidgetNode(Node):
         self.widget = widget
         self._geometry = None
         self._style = ''
-        self._setters = {}
 
     @property
-    def geometry(self: Geometry):
+    def geometry(self) -> Geometry:
         '''Geometry'''
         return self._geometry
 
@@ -65,15 +64,9 @@ class WidgetNode(Node):
         '''Calls widget's bind_all'''
         self.widget.bind_all('<'+event+'>', command, '+')
 
-    def define_setter(self, key, setter):
-        '''Defines setter for passed key'''
-        self._setters[key] = setter
-
     def set_attr(self, key, value):
         '''Applies passed attribute'''
-        if key in self._setters:
-            self._setters[key](self, value)
-        elif hasattr(self, key):
+        if hasattr(self, key):
             setattr(self, key, value)
         elif hasattr(self.widget, key):
             setattr(self.widget, key, value)

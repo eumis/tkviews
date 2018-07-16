@@ -15,23 +15,23 @@
         global:vm='{AppViewModel()}'>
         <Frame geometry='{Pack(fill="x")}'>
                 <Button geometry='{Grid(row=0, column=0, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}">
-                        Message box
+                        bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
+                        text='Message box'>
                 </Button>
 
                 <Button geometry='{Grid(row=0, column=1, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'counter')}">
-                        Counter
+                        bind:Button-1="once:{lambda e: show_view(vm, 'counter')}"
+                        text='Counter'>
                 </Button>
 
                 <Button geometry='{Grid(row=0, column=2, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}">
-                        Scroll
+                        bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}"
+                        text='Scroll'>
                 </Button>
 
                 <Button geometry='{Grid(row=0, column=3, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'binding')}">
-                        Binding
+                        bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
+                        text='Binding'>
                 </Button>
         </Frame>
         <w:View name='{vm.view}' />

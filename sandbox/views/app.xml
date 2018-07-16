@@ -16,23 +16,19 @@
         <Frame geometry='{Pack(fill="x")}'>
                 <Button geometry='{Grid(row=0, column=0, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
-                        text='Message box'>
-                </Button>
+                        text='Message box' />
 
                 <Button geometry='{Grid(row=0, column=1, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'counter')}"
-                        text='Counter'>
-                </Button>
+                        text='Counter' />
 
                 <Button geometry='{Grid(row=0, column=2, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}"
-                        text='Scroll'>
-                </Button>
+                        text='Scroll' />
 
                 <Button geometry='{Grid(row=0, column=3, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
-                        text='Binding'>
-                </Button>
+                        text='Binding' />
         </Frame>
         <w:View name='{vm.view}' />
 </w:Root>

@@ -17,9 +17,8 @@
     <Frame geometry='{Pack(fill="x")}'>
         <Button geometry='{Pack(side="left")}'
                 style='button'
-                bind:Button-1="once:{lambda e: vm.up_count()}">
-            + 1
-        </Button>
+                bind:Button-1="once:{lambda e: vm.up_count()}"
+                text='+1' />
 
         <Entry geometry='{Pack(side="left")}'
                text='{int_var:{vm.count}}'>

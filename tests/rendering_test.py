@@ -7,6 +7,7 @@ class ParsingTests(TestCase):
     @patch('tkviews.rendering.apply_attribute')
     @case(None)
     @case('')
+    @case('      ')
     def test_apply_text_none(self, apply_attribute, text):
         node = Mock()
         node.xml_node = Mock()
@@ -18,7 +19,7 @@ class ParsingTests(TestCase):
         self.assertFalse(apply_attribute.called, msg)
 
     @patch('tkviews.rendering.apply_attribute')
-    @case('  ')
+    @case('  asdf   ')
     @case('asdfasdf')
     def test_apply_text(self, apply_attribute, text):
         node = Mock()

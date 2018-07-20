@@ -19,7 +19,7 @@ def register_dependencies():
     '''Registers all dependencies needed for application'''
     register_defaults()
     ioc.register_single('views_folder', abspath('views'))
-    ioc.register_single('view_ext', '.xml')
+    ioc.register_single('view_ext', 'xml')
     ioc.register_single('styles', {})
     ioc.register_func('convert_to_node', convert_to_node)
     ioc.register_func('set_attr', set_attr)

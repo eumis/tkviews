@@ -15,7 +15,7 @@ class TestIocDependencies(TestCase):
     @case('convert_to_node', convert_to_node)
     @case('set_attr', set_attr)
     @case('views_folder', abspath('views'))
-    @case('view_ext', '.xml')
+    @case('view_ext', 'xml')
     def test_dependency(self, key, expected):
         app.register_dependencies()
         actual = ioc.get_current_scope().container.get(key)

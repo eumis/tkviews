@@ -1,86 +1,20 @@
 '''Tkinter widgets nodes'''
 
-from tkinter import Tk, Widget
+from tkinter import Tk
+from pyviews import NodeSetup
+from pyviews.core.xml import XmlAttr
 from pyviews.core.ioc import inject
 from pyviews.core.xml import XmlNode
-from pyviews.core.node import Node, RenderArgs
+from pyviews.core.node import InstanceNode, Property
+from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
 from tkviews.geometry import Geometry
 
-class TkRenderArgs(RenderArgs):
-    '''RenderArgs for WidgetNode'''
-    def __init__(self, xml_node, parent_node=None, widget_master=None):
-        super().__init__(xml_node, parent_node)
-        self['master'] = widget_master
+# def get_args(self, inst_type=None):
+#     if issubclass(inst_type, Widget):
+#         return RenderArgs.Result([self['master']], {})
+#     return super().get_args(inst_type)
 
-    def get_args(self, inst_type=None):
-        if issubclass(inst_type, Widget):
-            return RenderArgs.Result([self['master']], {})
-        return super().get_args(inst_type)
-
-class WidgetNode(Node):
-    '''Wrapper under tkinter widget'''
-    def __init__(self, widget, xml_node: XmlNode, parent_context=None):
-        super().__init__(xml_node, parent_context)
-        self.widget = widget
-        self._geometry = None
-        self._style = ''
-
-    @property
-    def geometry(self) -> Geometry:
-        '''Geometry'''
-        return self._geometry
-
-    @geometry.setter
-    def geometry(self, value: Geometry):
-        if self._geometry:
-            self._geometry.forget()
-        self._geometry = value
-        if value is not None:
-            value.apply(self.widget)
-
-    @property
-    def style(self):
-        '''Widget style'''
-        return self._style
-
-    @style.setter
-    @inject('apply_styles')
-    def style(self, value, apply_styles=None):
-        self._style = value
-        apply_styles(self, value)
-
-    def get_render_args(self, xml_node: XmlNode):
-        return TkRenderArgs(xml_node, self, self.widget)
-
-    def destroy(self):
-        super().destroy()
-        self.widget.destroy()
-
-    def bind(self, event, command):
-        '''Calls widget's bind'''
-        self.widget.bind('<'+event+'>', command)
-
-    def bind_all(self, event, command):
-        '''Calls widget's bind_all'''
-        self.widget.bind_all('<'+event+'>', command, '+')
-
-    def set_attr(self, key, value):
-        '''Applies passed attribute'''
-        if hasattr(self, key):
-            setattr(self, key, value)
-        elif hasattr(self.widget, key):
-            setattr(self.widget, key, value)
-        else:
-            self.widget.configure(**{key:value})
-
-    def call(self, key, args):
-        '''Calls method by key'''
-        if hasattr(self, key):
-            getattr(self, key)(*args)
-        elif hasattr(self.widget, key):
-            getattr(self.widget, key)(*args)
-
-class Root(WidgetNode):
+class Root(InstanceNode):
     '''Wrapper under tkinter Root'''
     def __init__(self, xml_node: XmlNode):
         super().__init__(Tk(), xml_node)
@@ -104,3 +38,62 @@ class Root(WidgetNode):
     def icon(self, value):
         self._icon = value
         self.widget.iconbitmap(default=value)
+
+def get_root_setup():
+    '''Returns setup for root'''
+    node_setup = NodeSetup(setter=_widget_node_setter, on_destroy=_on_widget_destroy)
+    node_setup.render_steps = [
+        apply_attributes,
+        render_children
+    ]
+    node_setup.get_child_args = _get_child_args
+    return node_setup
+
+def get_widget_setup():
+    '''Returns setup for widget'''
+    node_setup = NodeSetup()
+    node_setup.render_steps = [
+        apply_attributes,
+        render_children
+    ]
+    node_setup.setter = _widget_node_setter
+    node_setup.properties = {
+        'geometry': Property('geometry', _geometry_setter),
+        'style': Property('style', _style_setter)
+    }
+    node_setup.get_child_args = _get_child_args
+    node_setup.on_destroy = _on_widget_destroy
+
+def apply_text(node: InstanceNode):
+    '''Applies xml node content to WidgetNode'''
+    if node.xml_node.text is None or not node.xml_node.text.strip():
+        return
+    text_attr = XmlAttr('text', node.xml_node.text)
+    apply_attribute(node, text_attr)
+
+def _widget_node_setter(node: InstanceNode, key: str, value):
+    '''Applies passed attribute'''
+    if hasattr(node, key):
+        setattr(node, key, value)
+    elif hasattr(node.widget, key):
+        setattr(node.widget, key, value)
+    else:
+        node.instance.configure(**{key:value})
+
+def _geometry_setter(node: InstanceNode, geometry: Geometry, previous: Geometry):
+    if previous:
+        previous.forget()
+    if geometry is not None:
+        geometry.apply(node.instance)
+    return geometry
+
+@inject('apply_styles')
+def _style_setter(node: InstanceNode, styles: str, apply_styles=None):
+    apply_styles(node, styles)
+    return styles
+
+def _get_child_args(node: InstanceNode):
+    return {'parent_node': node, 'master': node.instance}
+
+def _on_widget_destroy(node: InstanceNode):
+    node.instance.destroy()

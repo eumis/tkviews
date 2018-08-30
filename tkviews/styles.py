@@ -76,7 +76,7 @@ def _get_item(node: Style, attr: XmlAttr):
     return StyleItem(modifier, attr.name, value)
 
 @inject('styles')
-def apply_styles(node: Node, style_keys, styles: dict = None):
+def apply_styles(node: Node, style_keys: str, styles: dict = None):
     '''Applies passed styles to node'''
     keys = [key.strip() for key in style_keys.split(',')] \
             if isinstance(style_keys, str) else style_keys

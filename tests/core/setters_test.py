@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
-from tkviews.modifiers import bind, bind_all, set_attr, config, visible
+from tkviews.core.setters import bind, bind_all, set_attr, config, visible
 
 class TkModifiersTests(TestCase):
     def setUp(self):

@@ -56,7 +56,6 @@ class CheckbuttonNode(WidgetNode):
     def value(self, checked):
         self.variable.set(checked)
 
-
 class RadiobuttonNode(WidgetNode):
     '''Wrapper under Checkbutton'''
     def __init__(self, widget, xml_node: XmlNode, parent_context=None):

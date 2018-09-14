@@ -1,6 +1,5 @@
 '''Package adapts pyviews for using with tkinter'''
 
-from pyviews.rendering.node import Code
 from pyviews.rendering.modifiers import set_global, import_global, inject_global
 from .node import Root
 from .containers import Container, For, View, If

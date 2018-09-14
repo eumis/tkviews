@@ -47,6 +47,7 @@ class VariableBinding(Binding):
             self._var.trace_remove('write', self._trace_id)
         self._trace_id = None
 
+# TODO updates binding rules and write tests
 def add_rules(factory: BindingFactory):
     '''Adds tkviews binding rules to passed factory'''
     factory.add_rule('twoways', _get_rule(Entry, 'text', apply_entry_twoways))
@@ -60,7 +61,7 @@ def _get_rule(target_type, attr, apply):
 
 def _is_suitable(args: BindingArgs, target_type, attr):
     try:
-        return isinstance(args.node.widget, target_type) and args.attr.name == attr
+        return isinstance(args.node.instance, target_type) and args.attr.name == attr
     except AttributeError:
         return False
 

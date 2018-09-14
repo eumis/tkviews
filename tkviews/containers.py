@@ -8,7 +8,6 @@ from pyviews.core.xml import XmlNode
 from pyviews.core.observable import InheritedDict
 from pyviews.core.node import Node
 from pyviews.rendering.views import get_view_root
-from tkviews.node import TkRenderArgs
 
 class Container(Node):
     '''Used to combine some xml elements'''

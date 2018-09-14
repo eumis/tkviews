@@ -36,24 +36,20 @@ class Style(Node):
         else:
             self.values[key] = value
 
-    def apply(self):
-        '''Sets style to widget'''
-        ttk_style = TtkStyle()
-        if not self.name:
-            raise KeyError("style doesn't have name")
-        ttk_style.configure(self.full_name, **self.values)
-
     def get_render_args(self, xml_node):
         args = super().get_render_args(xml_node)
         args['parent_name'] = self.full_name
         return args
 
 def theme_use(node, key, value):
-    '''Modifier to set ttk style theme'''
+    '''Sets ttk style theme'''
     ttk_style = TtkStyle()
     ttk_style.theme_use(key)
 
 @render_step
 def apply_ttk_style(node: Style):
-    '''Parsing step for Style node. Applies passed Style node.'''
-    node.apply()
+    '''Sets style to widget'''
+    ttk_style = TtkStyle()
+    if not node.name:
+        raise KeyError("style doesn't have name")
+    ttk_style.configure(node.full_name, **node.values)

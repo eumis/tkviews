@@ -8,7 +8,7 @@ from pyviews.core.xml import XmlNode
 from pyviews.core.node import InstanceNode, Property
 from pyviews.core.observable import InheritedDict
 from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
-from tkviews.geometry import Geometry
+from tkviews.core.geometry import Geometry
 
 class Root(InstanceNode):
     '''Wrapper under tkinter Root'''

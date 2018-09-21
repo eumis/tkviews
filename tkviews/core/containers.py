@@ -3,52 +3,33 @@ Nodes used as abstract containers, that used to incapsulate some logic.
 Containers don't represent any widget.
 '''
 
+from tkinter import Widget
 from pyviews.core.ioc import inject
 from pyviews.core.xml import XmlNode
-from pyviews.core.observable import InheritedDict
+from pyviews.core.observable import InheritedDict, observable_property
 from pyviews.core.node import Node
-from pyviews.rendering.views import get_view_root
 
 class Container(Node):
     '''Used to combine some xml elements'''
-    def __init__(self, master, xml_node: XmlNode, parent_context=None):
-        super().__init__(xml_node, parent_context)
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(xml_node, node_globals=node_globals)
         self.master = master
+        self.styles = node_styles
 
-    def set_attr(self, key, value):
-        '''Sets passed attribute'''
-        setattr(self, key, value)
-
-    def get_render_args(self, xml_node):
-        return TkRenderArgs(xml_node, self, self.master)
-
-class View(Container):
+class View(Node):
     '''Loads xml from anothre file'''
-    def __init__(self, master, xml_node: XmlNode, parent_context=None):
-        super().__init__(master, xml_node, parent_context)
-        self._name = None
-        self._rendered = False
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(xml_node, node_globals=node_globals)
+        self.master = master
+        self.node_styles = node_styles
 
-    @property
-    def name(self):
-        '''Relative view path'''
-        return self._name
+    (name, name_observable) = observable_property('_name')
 
-    @name.setter
-    def name(self, value):
-        if self._name == value:
-            return
-        self._name = value
-        if self._rendered:
-            self.render_children()
-
-    @inject('render')
-    def render_children(self, render=None):
-        self._rendered = True
-        self.destroy_children()
-        if self.name is not None:
-            root_xml = get_view_root(self.name)
-            self._child_nodes = [render(root_xml, self.get_render_args(root_xml))]
+    def set_content(self, content: Node):
+        '''Destroys current '''
+        self._children = [content]
 
 class For(Container):
     '''Renders children for every item in items collection'''
@@ -75,10 +56,10 @@ class For(Container):
         try:
             items_count = len(self._items)
             children_count = self._child_count * items_count
-            overflow = self._child_nodes[children_count:]
+            overflow = self._children[children_count:]
             for child in overflow:
                 child.destroy()
-            self._child_nodes = self._child_nodes[:children_count]
+            self._children = self._children[:children_count]
         except IndexError:
             pass
 
@@ -88,13 +69,13 @@ class For(Container):
                 start = index * self._child_count
                 end = (index + 1) * self._child_count
                 for child_index in range(start, end):
-                    globs = self._child_nodes[child_index].globals
+                    globs = self._children[child_index].globals
                     globs['item'] = item
         except IndexError:
             pass
 
     def _create_not_existing(self):
-        start = int(len(self._child_nodes) / self._child_count)
+        start = int(len(self._children) / self._child_count)
         end = len(self._items)
         self._render_children([(i, self._items[i]) for i in range(start, end)])
 
@@ -104,7 +85,7 @@ class For(Container):
         for index, item in items:
             for xml_node in nodes:
                 args = self.get_render_args(xml_node, index, item)
-                self._child_nodes.append(render(xml_node, args))
+                self._children.append(render(xml_node, args))
 
     def render_children(self):
         self._rendered = True

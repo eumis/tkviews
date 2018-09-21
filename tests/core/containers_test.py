@@ -3,7 +3,7 @@ from unittest.mock import Mock, call
 from pyviews.testing import case
 from pyviews.core import ioc
 from pyviews.core.xml import XmlNode
-from tkviews.containers import Container, View, For, If
+from tkviews.core.containers import Container, View, For, If
 
 class ContainerTest(TestCase):
     def setUp(self):

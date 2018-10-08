@@ -2,10 +2,8 @@
 Contains methods for node setups creation
 '''
 
-from pyviews import Node, NodeSetup, get_view_root
-from pyviews.core.ioc import SERVICES as deps
-from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import apply_attributes, render_children
+from pyviews import NodeSetup
+from pyviews.rendering.flow import apply_attributes
 from tkviews.core.canvas import CanvasNode
 
 def get_canvas_setup() -> NodeSetup:

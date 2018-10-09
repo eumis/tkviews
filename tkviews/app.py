@@ -2,56 +2,47 @@
 
 from os.path import abspath
 from pyviews.core import ioc
-from pyviews.rendering.dependencies import register_defaults
-from pyviews.rendering.core import apply_attributes, render_children
+from pyviews.dependencies import register_defaults
 from pyviews.rendering.binding import BindingFactory, add_default_rules
 from pyviews.rendering.views import render_view
-from tkviews.rendering import convert_to_node, apply_text
-from tkviews.binding import add_rules as add_tkviews_binding_rules
-from tkviews.modifiers import set_attr
-from tkviews.styles import Style, apply_attributes as apply_style_attrs, apply_styles
-from tkviews.geometry import Row, Column, apply_layout
-from tkviews.node import Root, get_root_setup, get_widget_setup
-from tkviews.ttk import Style as TtkStyle, apply_ttk_style
-from tkviews import canvas
+from tkviews.rendering import convert_to_node
+from tkviews.core.binding import add_rules as add_tkviews_binding_rules
+from tkviews.core.widgets import Root, WidgetNode
+from tkviews.setup.widgets import get_root_setup, get_widget_setup
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
     register_defaults()
     ioc.register_single('views_folder', abspath('views'))
     ioc.register_single('view_ext', 'xml')
-    ioc.register_single('styles', {})
     ioc.register_func('convert_to_node', convert_to_node)
-    ioc.register_func('set_attr', set_attr)
-    ioc.register_func('apply_styles', apply_styles)
 
-    ioc.register_single('setup', get_widget_setup())
     ioc.register_single('setup', get_root_setup(), Root)
+    ioc.register_single('setup', get_widget_setup(), WidgetNode)
 
     register_binding_factory()
-    _register_rendering_steps()
 
-def _register_rendering_steps():
-    ioc.register_single('rendering_steps', [apply_style_attrs, render_children], Style)
-    ioc.register_single('rendering_steps',
-                        [apply_attributes, apply_ttk_style, render_children],
-                        TtkStyle)
-    ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Row)
-    ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Column)
-    _register_canvas_rendering_steps()
+# def _register_rendering_steps():
+#     ioc.register_single('rendering_steps', [apply_style_attrs, render_children], Style)
+#     ioc.register_single('rendering_steps',
+#                         [apply_attributes, apply_ttk_style, render_children],
+#                         TtkStyle)
+#     ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Row)
+#     ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Column)
+#     _register_canvas_rendering_steps()
 
-def _register_canvas_rendering_steps():
-    canvas_node_types = [
-        canvas.Arc, canvas.Bitmap, canvas.Image,
-        canvas.Line, canvas.Oval, canvas.Polygon,
-        canvas.Rectangle, canvas.Window
-    ]
-    for node_type in canvas_node_types:
-        ioc.register_single('rendering_steps', [apply_attributes, canvas.render], node_type)
-    ioc.register_single(
-        'rendering_steps',
-        [apply_attributes, apply_text, canvas.render],
-        canvas.Text)
+# def _register_canvas_rendering_steps():
+#     canvas_node_types = [
+#         canvas.Arc, canvas.Bitmap, canvas.Image,
+#         canvas.Line, canvas.Oval, canvas.Polygon,
+#         canvas.Rectangle, canvas.Window
+#     ]
+#     for node_type in canvas_node_types:
+#         ioc.register_single('rendering_steps', [apply_attributes, canvas.render], node_type)
+#     ioc.register_single(
+#         'rendering_steps',
+#         [apply_attributes, apply_text, canvas.render],
+#         canvas.Text)
 
 def register_binding_factory(factory=None):
     '''Adds all needed rules to binding factory and registers dependency'''

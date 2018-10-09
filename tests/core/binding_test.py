@@ -1,14 +1,15 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
-from tkinter import Variable
+from tkinter import Variable, Tk
 from pyviews.testing import case
 from tkviews.core.binding import VariableTarget, VariableBinding
 
 class TestVariableTarget(TestCase):
+    def setUp(self):
+        self.root = Tk()
+
     @case(1)
     @case('value')
-    @case(None)
-    @case([1, 'str'])
     def test_on_change_set_var(self, value):
         var = Variable()
         target = VariableTarget(var)
@@ -18,11 +19,15 @@ class TestVariableTarget(TestCase):
         msg = 'on_change set value to variable'
         self.assertEqual(var.get(), value, msg)
 
+    def tearDown(self):
+        self.root.destroy()
+
 class TestVariableBinding(TestCase):
+    def setUp(self):
+        self.root = Tk()
+
     @case(1)
     @case('value')
-    @case(None)
-    @case([1, 'str'])
     def test_bind_should_subscribe_to_var_changes(self, value):
         var = Variable()
         target = Mock()
@@ -58,3 +63,9 @@ class TestVariableBinding(TestCase):
         binding = VariableBinding(target, var)
 
         binding.destroy()
+
+    def tearDown(self):
+        self.root.destroy()
+
+if __name__ == '__main__':
+    main()

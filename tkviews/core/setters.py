@@ -2,7 +2,7 @@
 
 from sys import exc_info
 from pyviews.core import CoreError
-from tkviews.node import InstanceNode
+from pyviews.core.node import InstanceNode
 
 class CallbackError(CoreError):
     '''Error from callback'''

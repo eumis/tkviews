@@ -19,7 +19,7 @@ class StyleItem:
     def __hash__(self):
         return hash((self._name, self._setter))
 
-    def __eq__(self, other: StyleItem):
+    def __eq__(self, other):
         return hash(self) == hash(other)
 
 class Style(Node):

@@ -4,8 +4,6 @@ from tkinter import Tk, Widget
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import InstanceNode
 from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
-from tkviews.core.geometry import Geometry
 
 class Root(InstanceNode):
     '''Wrapper under tkinter Root'''

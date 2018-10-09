@@ -6,7 +6,7 @@ from pyviews.core.compilation import Expression
 from pyviews.core.observable import InheritedDict
 from pyviews.rendering.flow import get_setter
 from pyviews.rendering.expression import is_code_expression, parse_expression
-from tkviews.core.node import WidgetNode
+from tkviews.core.widgets import WidgetNode
 from tkviews.core.styles import Style, StyleItem
 
 class StyleError(CoreError):

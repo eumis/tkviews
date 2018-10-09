@@ -1,10 +1,12 @@
+'''Contains rendering setup for widget nodes'''
+
 from pyviews import Node, NodeSetup
 from pyviews.core.xml import XmlAttr
 from pyviews.core.ioc import inject
 from pyviews.core.node import Property
 from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
-from tkviews.core.node import WidgetNode
+from tkviews.core.widgets import WidgetNode
 
 def get_root_setup():
     '''Returns setup for root'''

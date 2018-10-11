@@ -4,8 +4,9 @@ from tkinter import Tk, Widget
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import InstanceNode
 from pyviews.core.observable import InheritedDict
+from tkviews.core import TkNode
 
-class Root(InstanceNode):
+class Root(InstanceNode, TkNode):
     '''Wrapper under tkinter Root'''
     def __init__(self, xml_node: XmlNode):
         super().__init__(Tk(), xml_node)
@@ -36,7 +37,7 @@ class Root(InstanceNode):
         self._icon = value
         self.widget.iconbitmap(default=value)
 
-class WidgetNode(InstanceNode):
+class WidgetNode(InstanceNode, TkNode):
     '''Wrapper under tkinter widget'''
     def __init__(self, widget: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):

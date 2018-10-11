@@ -5,27 +5,30 @@ from pyviews.core.xml import XmlNode
 from pyviews.core.observable import InheritedDict
 from pyviews.core import get_not_implemented_message
 from pyviews.core.node import Node
+from tkviews.core import TkNode
 
-class CanvasNode(Node):
+class CanvasNode(Node, TkNode):
     '''Base class for wrappers'''
     def __init__(self, master: Canvas, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
         self._canvas = master
-        self._events = {}
         self._item_id = None
-
-        self.place = None
-        self.node_styles = node_styles
+        self._node_styles = node_styles
 
     @property
     def item_id(self):
         '''id returned from create method of canvas'''
         return self._item_id
 
+    @property
+    def node_styles(self):
+        '''Returns node_styles'''
+        return self._node_styles
+
     def create(self, **options):
         '''Creates canvas element'''
-        self.item_id = self._create(**options)
+        self._item_id = self._create(**options)
 
     def _create(self, **options):
         raise NotImplementedError(get_not_implemented_message(self, '_create'))

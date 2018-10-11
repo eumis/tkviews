@@ -4,8 +4,9 @@ from tkinter.ttk import Style, Widget
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node, InstanceNode
 from pyviews.core.observable import InheritedDict
+from tkviews.core import TkNode
 
-class TtkWidgetNode(InstanceNode):
+class TtkWidgetNode(InstanceNode, TkNode):
     '''Wrapper under ttk widget'''
     def __init__(self, widget: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):

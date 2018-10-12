@@ -7,14 +7,24 @@ from tkinter import Widget
 from pyviews.core.xml import XmlNode
 from pyviews.core.observable import InheritedDict, observable_property
 from pyviews.core.node import Node
+from tkviews.core import TkNode
 
-class Container(Node):
+class Container(Node, TkNode):
     '''Used to combine some xml elements'''
     def __init__(self, master: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
-        self.master = master
-        self.node_styles = node_styles
+        self._master = master
+        self._node_styles = node_styles
+
+    @property
+    def master(self):
+        '''Master widget'''
+        return self._master
+
+    @property
+    def node_styles(self):
+        return self._node_styles
 
 class View(Container):
     '''Loads xml from anothre file'''

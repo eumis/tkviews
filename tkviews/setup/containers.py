@@ -87,7 +87,7 @@ def _destroy_overflow(node: For):
     try:
         items_count = len(node.items)
         children_count = len(node.xml_node.children) * items_count
-        overflow = node._children[children_count:]
+        overflow = node.children[children_count:]
         for child in overflow:
             child.destroy()
         node.children = node.children[:children_count]
@@ -101,14 +101,14 @@ def _update_existing(node: For):
             start = index * item_children_count
             end = (index + 1) * item_children_count
             for child_index in range(start, end):
-                globs = node._children[child_index].globals
+                globs = node.children[child_index].globals
                 globs['item'] = item
     except IndexError:
         pass
 
 def _create_not_existing(node: For, node_setup: NodeSetup):
     item_children_count = len(node.xml_node.children)
-    start = int(len(node._children) / item_children_count)
+    start = int(len(node.children) / item_children_count)
     end = len(node.items)
     items = [node.items[i] for i in range(start, end)]
     _render_for_children(node, node_setup, items)

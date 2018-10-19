@@ -5,19 +5,21 @@ from pyviews.core import ioc
 from pyviews.dependencies import register_defaults
 from pyviews.rendering.binding import BindingFactory, add_default_rules
 from pyviews.rendering.views import render_view
-from tkviews.rendering import convert_to_node
+from tkviews.rendering import create_node
 from tkviews.core.binding import add_rules as add_tkviews_binding_rules
 from tkviews.core.widgets import Root, WidgetNode
 from tkviews.setup.widgets import get_root_setup, get_widget_setup
+from tkviews.setup.containers import get_container_setup, get_for_setup, get_if_setup
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
     register_defaults()
     ioc.register_single('views_folder', abspath('views'))
     ioc.register_single('view_ext', 'xml')
-    ioc.register_func('convert_to_node', convert_to_node)
+    ioc.register_func('create_node', create_node)
 
     ioc.register_single('setup', get_root_setup(), Root)
+    ioc.register_single('setup', get_widget_setup(), WidgetNode)
     ioc.register_single('setup', get_widget_setup(), WidgetNode)
 
     register_binding_factory()

@@ -68,10 +68,17 @@ def _render_for_children(node: For, node_setup: NodeSetup, items: list):
     item_xml_nodes = node.xml_node.children
     for index, item in enumerate(items):
         for xml_node in item_xml_nodes:
-            child_args = _get_for_child_args(node_setup, node, index, item)
+            child_args = _get_for_child_args(node, node_setup, index, item)
             child = deps.render(xml_node, **child_args)
             node.add_child(child)
-    _render_for_children(node, node_setup, node.items)
+
+def _get_for_child_args(node: For, node_setup: NodeSetup, index, item):
+    child_args = node_setup.get_child_args(node)
+    child_globals = InheritedDict(child_args['node_globals'])
+    child_globals['index'] = index
+    child_globals['item'] = item
+    child_args['node_globals'] = child_globals
+    return child_args
 
 def rerender_on_items_change(node: For, **args):
     '''Subscribes to items change and updates children'''
@@ -113,14 +120,6 @@ def _create_not_existing(node: For, node_setup: NodeSetup):
     items = [node.items[i] for i in range(start, end)]
     _render_for_children(node, node_setup, items)
 
-def _get_for_child_args(node: For, node_setup: NodeSetup, index, item):
-    child_args = node_setup.get_render_args(node)
-    child_globals = InheritedDict(child_args['node_globals'])
-    child_globals['index'] = index
-    child_globals['item'] = item
-    child_args['node_globals'] = child_globals
-    return child_args
-
 
 
 
@@ -153,5 +152,5 @@ def _get_child_args(node: Container):
         'parent_node': node,
         'master': node.master,
         'node_globals': node.globals,
-        'node_styles': node.styles
+        'node_styles': node.node_styles
     }

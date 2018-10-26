@@ -6,6 +6,7 @@ from pyviews.core import ioc
 from pyviews.core.xml import XmlNode
 from tkviews.core.containers import Container, View, For, If
 from tkviews.setup.containers import render_view_children, rerender_on_view_change
+from tkviews.setup.containers import get_for_setup, render_for_items, rerender_on_items_change
 
 class ViewTest(TestCase):
     def setUp(self):
@@ -62,6 +63,45 @@ class ViewTest(TestCase):
 
         msg = 'render_view_children should be called on view change'
         self.assertFalse(render_view_children.called, msg)
+
+class ForTest(TestCase):
+    @patch('tkviews.setup.containers.deps')
+    @case([], [], [])
+    @case(['item1'], ['node1'], ['node1'])
+    @case(['item1'], ['node1', 'node2'], ['node1', 'node2'])
+    @case(['item1', 'item2'], ['node1'], ['node1', 'node1'])
+    @case(['item1', 'item2'], ['node1', 'node2'], ['node1', 'node2', 'node1', 'node2'])
+    def test_render_for_items_should_render_xml_nodes(self, deps, items, nodes, expected_children):
+        xml_node = Mock()
+        xml_node.children = nodes
+        node = For(Mock(), xml_node)
+        node.items = items
+        deps.render = lambda xml_node, **args: xml_node
+
+        render_for_items(node, get_for_setup())
+
+        msg = 'render_for_items should render all xml children for every item'
+        self.assertEqual(node.children, expected_children, msg)
+
+    @patch('tkviews.setup.containers.deps')
+    @case([], [], [])
+    @case(['item1'], ['node1'], [(0, 'item1')])
+    @case(['item1'], ['node1', 'node2'], [(0, 'item1'), (0, 'item1')])
+    @case(['item1', 'item2'], ['node1'], [(0, 'item1'), (1, 'item2')])
+    @case(['item1', 'item2'], ['node1', 'node2'],
+          [(0, 'item1'), (0, 'item1'), (1, 'item2'), (1, 'item2')])
+    def test_render_for_items_should_add_item_and_index_to_globals(self, deps, items, nodes, expected_children):
+        xml_node = Mock()
+        xml_node.children = nodes
+        node = For(Mock(), xml_node)
+        node.items = items
+        deps.render = lambda xml_node, **args: (args['node_globals']['index'], args['node_globals']['item'])
+
+        render_for_items(node, get_for_setup())
+
+        msg = 'render_for_items should add item and index to child globals'
+        self.assertEqual(node.children, expected_children, msg)
+
 
 # class ForTest(TestCase):
 #     def setUp(self):

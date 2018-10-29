@@ -1,3 +1,4 @@
+from math import floor
 from unittest import TestCase, main
 from unittest.mock import Mock, call, patch
 from pyviews import NodeSetup
@@ -72,8 +73,7 @@ class ForTest(TestCase):
     @case(['item1', 'item2'], ['node1'], ['node1', 'node1'])
     @case(['item1', 'item2'], ['node1', 'node2'], ['node1', 'node2', 'node1', 'node2'])
     def test_render_for_items_should_render_xml_nodes(self, deps, items, nodes, expected_children):
-        xml_node = Mock()
-        xml_node.children = nodes
+        xml_node = Mock(children=nodes)
         node = For(Mock(), xml_node)
         node.items = items
         deps.render = lambda xml_node, **args: xml_node
@@ -91,8 +91,7 @@ class ForTest(TestCase):
     @case(['item1', 'item2'], ['node1', 'node2'],
           [(0, 'item1'), (0, 'item1'), (1, 'item2'), (1, 'item2')])
     def test_render_for_items_should_add_item_and_index_to_globals(self, deps, items, nodes, expected_children):
-        xml_node = Mock()
-        xml_node.children = nodes
+        xml_node = Mock(children=nodes)
         node = For(Mock(), xml_node)
         node.items = items
         deps.render = lambda xml_node, **args: (args['node_globals']['index'], args['node_globals']['item'])
@@ -102,128 +101,74 @@ class ForTest(TestCase):
         msg = 'render_for_items should add item and index to child globals'
         self.assertEqual(node.children, expected_children, msg)
 
+    @patch('tkviews.setup.containers.deps')
+    @case(2, 4, 4)
+    @case(2, 4, 2)
+    @case(1, 4, 2)
+    @case(4, 3, 0)
+    @case(1, 3, 0)
+    @case(3, 10, 1)
+    def test_rerender_on_items_change_destroys(self, deps, xml_child_count, items_count, new_items_count):
+        xml_node = Mock(children=[Mock() for i in range(xml_child_count)])
+        node = For(Mock(), xml_node)
+        node.items = [Mock() for i in range(items_count)]
+        node.add_children([Mock(destroy=Mock(),globals={}) for i in range(xml_child_count * items_count)])
+        deps.render = lambda xml_node, **args: Mock()
 
-# class ForTest(TestCase):
-#     def setUp(self):
-#         self._child = Mock()
-#         self._child.destroy = Mock()
-#         self._child.globals = Mock()
-#         self._child.globals.__setitem__ = Mock(side_effect=lambda *args: None)
-#         self._render = Mock(return_value=self._child)
-#         with ioc.Scope('ForTest'):
-#             ioc.register_single('render', self._render)
+        to_destroy = node.children[xml_child_count * new_items_count:]
+        to_left = node.children[:xml_child_count * new_items_count]
 
-#     def _init_test(self, child_count=3):
-#         self._reset_mocks()
-#         return self._create_node(child_count)
+        rerender_on_items_change(node, node_setup=get_for_setup())
+        node.items = [Mock() for i in range(new_items_count)]
 
-#     def _reset_mocks(self):
-#         self._render.reset_mock()
-#         self._child.reset_mock()
+        msg = 'rerender_on_items_change should destroy overflow nodes'
+        for child in to_destroy:
+            self.assertTrue(child.destroy.called, msg)
 
-#     def _create_node(self, child_count):
-#         xml_node = XmlNode('tkviews', 'For')
-#         for i in range(child_count):
-#             xml_node.children.append(XmlNode('tkviews', 'child'))
-#         node = For(None, xml_node)
-#         return (xml_node, node)
+        msg = 'rerender_on_items_change should removed destroyed from children'
+        self.assertEqual(node.children, to_left, msg)
 
-#     @case([])
-#     @case(['asdf', 'qwer'])
-#     def test_items_shouldnt_trigger_render(self, items):
-#         node = self._init_test()[1]
-#         node.items = items
+    @patch('tkviews.setup.containers.deps')
+    @case(2, 4, 4)
+    @case(2, 0, 4)
+    @case(2, 4, 2)
+    @case(2, 4, 6)
+    @case(1, 4, 2)
+    @case(4, 3, 0)
+    @case(1, 3, 0)
+    @case(3, 10, 11)
+    def test_rerender_on_items_change_updates_item(self, deps, xml_child_count, items_count, new_items_count):
+        xml_node = Mock(children=[Mock() for i in range(xml_child_count)])
+        node = For(Mock(), xml_node)
+        node.items = [Mock() for i in range(items_count)]
+        node.add_children([Mock(destroy=Mock(), globals={}) for i in range(xml_child_count * items_count)])
+        deps.render = lambda xml_node, **args: Mock()
+        children_to_update = node.children[:xml_child_count * new_items_count]
 
-#         msg = "initial items set shouldn't call render_children"
-#         self.assertFalse(self._render.called, msg)
+        rerender_on_items_change(node, node_setup=get_for_setup())
+        node.items = [Mock() for i in range(new_items_count)]
 
-#     @ioc.scope('ForTest')
-#     @case([], 1)
-#     @case([1], 0)
-#     @case([1], 1)
-#     @case([1], 2)
-#     @case([1, 2], 0)
-#     @case([1, 2], 1)
-#     @case([1, 2], 4)
-#     def test_all_children_should_be_created(self, items, child_count):
-#         node = self._init_test(child_count)[1]
-#         node.items = items
-#         node.render_children()
+        msg = 'rerender_on_items_change should update item in globals for children'
+        for i, child in enumerate(children_to_update):
+            item = node.items[floor(i / xml_child_count)]
+            self.assertEqual(child.globals['item'], item, msg)
 
-#         msg = 'all children should be created for every item'
-#         self.assertEqual(self._render.call_count, len(items) * child_count, msg)
+    @patch('tkviews.setup.containers.deps')
+    @case(2, 4, 6)
+    @case(2, 4, 10)
+    @case(1, 4, 4)
+    def test_rerender_on_items_change_creates_new(self, deps, xml_child_count, items_count, new_items_count):
+        xml_node = Mock(children=[Mock() for i in range(xml_child_count)])
+        node = For(Mock(), xml_node)
+        node.items = [Mock() for i in range(items_count)]
+        node.add_children([Mock(destroy=Mock(), globals={}) for i in range(xml_child_count * items_count)])
+        deps.render = lambda xml_node, **args: Mock()
 
-#     @ioc.scope('ForTest')
-#     @case([1], [2], 2)
-#     @case([1], [2], 1)
-#     @case([1, 2], [2], 1)
-#     @case([1, 2], [2], 2)
-#     @case([1, 2], [2, 3, 4], 5)
-#     @case([1, 2], [2, 3, 4], 1)
-#     def test_children_should_be_updated(self, items, new_items, child_count):
-#         node = self._init_test(child_count)[1]
-#         node.items = items
-#         node.render_children()
-#         self._child.reset_mock()
+        rerender_on_items_change(node, node_setup=get_for_setup())
+        node.items = [Mock() for i in range(new_items_count)]
 
-#         node.items = new_items
-
-#         count = min(len(items), len(new_items)) * child_count
-#         calls = [call('item', new_items[int(i / child_count)]) for i in range(0, count)]
-#         set_item_mock = self._child.globals.__setitem__
-
-#         msg = 'children should be updated when items are updated'
-#         self.assertEqual(set_item_mock.call_args_list, calls, msg)
-
-#     @ioc.scope('ForTest')
-#     @case([1], [2], 2)
-#     @case([1], [2], 1)
-#     @case([1, 2], [2], 1)
-#     @case([1, 2], [2], 2)
-#     @case([1, 2], [2, 3, 4], 5)
-#     @case([1, 2], [2, 3, 4], 1)
-#     @case([1, 2, 3, 4, 5, 6], [2, 3], 1)
-#     @case([1, 2, 3, 4, 5, 6], [2, 3], 3)
-#     def test_overflow_children_should_be_removed(self, items, new_items, child_count):
-#         node = self._init_test(child_count)[1]
-#         node.items = items
-#         node.render_children()
-#         self._child.reset_mock()
-
-#         node.items = new_items
-
-#         items_count = len(items)
-#         new_count = len(new_items)
-#         count = (items_count - new_count) * child_count \
-#                 if items_count > new_count else 0
-
-#         msg = 'overflow children should be removed when items are updated'
-#         self.assertEqual(self._child.destroy.call_count, count, msg)
-
-#     @ioc.scope('ForTest')
-#     @case([1], [2], 2)
-#     @case([1], [2], 1)
-#     @case([1, 2], [2], 1)
-#     @case([1, 2], [2], 2)
-#     @case([1, 2], [2, 3, 4], 5)
-#     @case([1, 2], [2, 3, 4], 1)
-#     @case([2, 3], [1, 2, 3, 4, 5, 6], 1)
-#     @case([2, 3], [1, 2, 3, 4, 5, 6], 3)
-#     def test_new_children_should_be_created(self, items, new_items, child_count):
-#         node = self._init_test(child_count)[1]
-#         node.items = items
-#         node.render_children()
-#         self._render.reset_mock()
-
-#         node.items = new_items
-
-#         items_count = len(items)
-#         new_count = len(new_items)
-#         count = (new_count - items_count) * child_count \
-#                 if new_count > items_count else 0
-
-#         msg = 'new children should be created new items'
-#         self.assertEqual(self._render.call_count, count, msg)
+        msg = 'rerender_on_items_change should create new children'
+        self.assertEqual(len(node.children), xml_child_count * new_items_count, msg)
 
 # class IfTest(TestCase):
 #     def setUp(self):

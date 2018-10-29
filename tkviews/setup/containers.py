@@ -97,7 +97,7 @@ def _destroy_overflow(node: For):
         overflow = node.children[children_count:]
         for child in overflow:
             child.destroy()
-        node.children = node.children[:children_count]
+        node._children = node.children[:children_count]
     except IndexError:
         pass
 

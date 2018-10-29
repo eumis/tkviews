@@ -128,24 +128,26 @@ def get_if_setup() -> NodeSetup:
     node_setup = NodeSetup()
     node_setup.render_steps = [
         apply_attributes,
-        _subscribe_to_condition_change,
-        _render_if
+        render_if,
+        subscribe_to_condition_change
     ]
     node_setup.get_child_args = _get_child_args
     return node_setup
 
-def _subscribe_to_condition_change(node: If, node_setup: NodeSetup = None, **args):
+def render_if(node: If, node_setup: NodeSetup = None, **args):
+    # renders children nodes if condition is true
+    if node.condition:
+        render_children(node, node_setup=node_setup, **args)
+
+def subscribe_to_condition_change(node: If, node_setup: NodeSetup = None, **args):
+    '''Rerenders if on condition change'''
     node.condition_observable.callback = lambda n, v, o, ns=node_setup: _on_condition_change(n, ns, v, o, **args)
 
 def _on_condition_change(node: If, node_setup: NodeSetup, val: bool, old: bool, **args):
     if val == old:
         return
     node.destroy_children()
-    _render_if(node, node_setup, **args)
-
-def _render_if(node: If, node_setup: NodeSetup = None, **args):
-    if node.condition:
-        render_children(node, node_setup=node_setup, **args)
+    render_if(node, node_setup, **args)
 
 def _get_child_args(node: Container):
     return {

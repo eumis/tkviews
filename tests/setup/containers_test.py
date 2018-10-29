@@ -8,6 +8,7 @@ from pyviews.core.xml import XmlNode
 from tkviews.core.containers import Container, View, For, If
 from tkviews.setup.containers import render_view_children, rerender_on_view_change
 from tkviews.setup.containers import get_for_setup, render_for_items, rerender_on_items_change
+from tkviews.setup.containers import get_if_setup, render_if, subscribe_to_condition_change
 
 class ViewTest(TestCase):
     def setUp(self):
@@ -170,75 +171,41 @@ class ForTest(TestCase):
         msg = 'rerender_on_items_change should create new children'
         self.assertEqual(len(node.children), xml_child_count * new_items_count, msg)
 
-# class IfTest(TestCase):
-#     def setUp(self):
-#         self._setup_ioc()
-#         self._setup_node()
+class IfTest(TestCase):
+    @patch('tkviews.setup.containers.render_children')
+    @case(True)
+    @case(False)
+    def test_render_if_renders(self, render_children, condition):
+        render_children.reset_mock()
+        node = If(Mock(), Mock())
+        node.condition = condition
 
-#     def _setup_ioc(self):
-#         self._child = Mock()
-#         self._child.destroy = Mock()
-#         self._child.globals = Mock()
-#         self._child.globals.__setitem__ = Mock(side_effect=lambda *args: None)
-#         self._parse = Mock(return_value=self._child)
-#         with ioc.Scope('IfTest'):
-#             ioc.register_single('render', self._parse)
+        render_if(node, get_if_setup())
 
-#     def _setup_node(self):
-#         xml_node = XmlNode('tkviews', 'If')
-#         xml_node.children.append(XmlNode('tkviews', 'child'))
-#         self.node = If(None, xml_node)
+        msg = 'render_if should render children if condition is True'
+        self.assertEqual(render_children.called, condition, msg)
 
-#     def test_default_condition_false(self):
-#         msg = 'default "condition" value should be False'
-#         self.assertFalse(self.node.condition, msg)
+    @patch('tkviews.setup.containers.render_children')
+    def test_subscribe_to_condition_change_should_render_children(self, render_children):
+        node = If(Mock(), Mock())
+        node.condition = False
 
-#     @ioc.scope('IfTest')
-#     def test_init_setup_shouldnt_trigger_render(self):
-#         self.node.condition = True
-#         self.node.condition = False
+        subscribe_to_condition_change(node, get_if_setup())
+        node.condition = True
 
-#         msg = "initial items set shouldn't call render_children"
-#         self.assertFalse(self._parse.called, msg)
-#         self.assertFalse(self._child.destroy.called, msg)
+        msg = 'subscribe_to_condition_change should render children if condition is changed to True'
+        self.assertTrue(render_children.called, msg)
 
-#     @ioc.scope('IfTest')
-#     @case(True)
-#     @case(False)
-#     def test_same_condition_shouldnt_trigger_render(self, value):
-#         self.node.condition = value
-#         self.node.render_children()
-#         self._parse.reset_mock()
-#         self._child.reset_mock()
+    @patch('tkviews.setup.containers.render_children')
+    def test_subscribe_to_condition_change_should_destroy_children(self, render_children):
+        node = Mock(destroy_children=Mock())
+        node.condition = True
 
-#         self.node.condition = value
+        subscribe_to_condition_change(node, get_if_setup())
+        node.condition = False
 
-#         msg = "same condition value shouldn't trigger parsing"
-#         self.assertFalse(self._parse.called, msg)
-#         self.assertFalse(self._child.destroy.called, msg)
-
-#     @ioc.scope('IfTest')
-#     def test_true_should_trigger_render(self):
-#         self.node.render_children()
-#         self._parse.reset_mock()
-#         self._child.reset_mock()
-
-#         self.node.condition = True
-
-#         msg = "True value shouldn't trigger parsing"
-#         self.assertTrue(self._parse.called, msg)
-
-#     @ioc.scope('IfTest')
-#     def test_false_should_trigger_destroy(self):
-#         self.node.condition = True
-#         self.node.render_children()
-#         self._parse.reset_mock()
-#         self._child.reset_mock()
-
-#         self.node.condition = False
-
-#         msg = "False value should destroy children"
-#         self.assertTrue(self._child.destroy.called, msg)
+        msg = 'subscribe_to_condition_change should destroy children if condition is changed to False'
+        self.assertTrue(node.destroy_children, msg)
 
 if __name__ == '__main__':
     main()

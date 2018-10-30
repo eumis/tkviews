@@ -1,3 +1,4 @@
+'''Contains rendering steps for style nodes'''
 
 from pyviews import NodeSetup
 from pyviews.core import CoreError
@@ -21,6 +22,7 @@ def get_style_setup() -> NodeSetup:
         apply_parent_items,
         store_to_node_styles
     ]
+    node_setup.get_child_args = _get_style_args
     return node_setup
 
 def apply_style_items(node: Style, **args):
@@ -34,7 +36,7 @@ def apply_style_items(node: Style, **args):
 
 def _get_style_item(node: Style, attr: XmlAttr):
     setter = get_setter(attr)
-    value = attr.value.strip() if attr.value else ''
+    value = attr.value if attr.value else ''
     if is_code_expression(value):
         expression = Expression(parse_expression(value)[1])
         value = expression.execute(node.globals.to_dictionary())
@@ -62,3 +64,9 @@ def apply_styles(node: WidgetNode, style_keys: str):
         error = StyleError('Style is not found')
         error.add_info('Style name', key_error.args[0])
         raise error from key_error
+
+def _get_style_args(node: Style):
+    return {
+        'parent_node': node,
+        'parent_name': node.name
+    }

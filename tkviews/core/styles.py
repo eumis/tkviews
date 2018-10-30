@@ -12,6 +12,21 @@ class StyleItem:
         self._name = name
         self._value = value
 
+    @property
+    def setter(self):
+        '''Returns setter'''
+        return self._setter
+
+    @property
+    def name(self):
+        '''Returns name'''
+        return self._name
+
+    @property
+    def value(self):
+        '''Returns value'''
+        return self._value
+
     def apply(self, node: Node):
         '''Applies option to passed node'''
         self._setter(node, self._name, self._value)

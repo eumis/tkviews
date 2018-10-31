@@ -1,58 +1,60 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
+from pyviews.testing import case
 from tkviews.core.setters import bind, bind_all, set_attr, config, visible
 
 class TkModifiersTests(TestCase):
-    def setUp(self):
-        self.node = Mock()
-
     def test_bind(self):
-        event = 'event'
-        command = lambda: None
+        node = Mock(instance=Mock())
 
-        bind(self.node, event, command)
+        bind(node, 'event', lambda: None)
 
-        msg = "bind should call bind of WidgetNode"
-        self.assertTrue(self.node.bind.called, msg)
+        msg = "bind should call bind of instance"
+        self.assertTrue(node.instance.bind.called, msg)
 
     def test_bind_all(self):
-        event = 'event'
-        command = lambda: None
+        node = Mock(instance=Mock())
 
-        bind_all(self.node, event, command)
+        bind_all(node, 'event', lambda: None)
 
-        msg = "bind_all should call bind_all of WidgetNode with passed parameters"
-        self.assertTrue(self.node.bind_all.called, msg)
+        msg = "bind_all should call bind_all of instance"
+        self.assertTrue(node.instance.bind_all.called, msg)
 
-    def test_set_attr(self):
-        key = 'key'
-        value = 2
+    @case('key', 1)
+    @case('other_key', 'value')
+    def test_set_attr(self, key, value):
+        node = Mock(setter=Mock())
 
-        set_attr(self.node, key, value)
+        set_attr(node, key, value)
 
-        msg = "set_attr should call set_attr of WidgetNode with passed parameters"
-        self.assertEqual(self.node.set_attr.call_args, call(key, value), msg)
+        msg = "set_attr should call setter with passed parameters"
+        self.assertEqual(node.setter.call_args, call(node, key, value), msg)
 
-    def test_config(self):
-        key = 'key'
-        value = 2
+    @case('key', 1)
+    @case('other_key', 'value')
+    def test_config(self, key, value):
+        node = Mock(instance=Mock())
 
-        config(self.node, key, value)
+        config(node, key, value)
 
         msg = "config should call config of widget from WidgetNode with passed parameters"
-        self.assertEqual(self.node.widget.config.call_args, call(**{key: value}), msg)
+        self.assertEqual(node.instance.config.call_args, call(**{key: value}), msg)
 
     def test_visible_true(self):
-        visible(self.node, None, True)
+        node = Mock(geometry=Mock(), instance=Mock())
+
+        visible(node, None, True)
 
         msg = "visible should call geometry apply if true"
-        self.assertEqual(self.node.geometry.apply.call_args, call(self.node.widget), msg)
+        self.assertEqual(node.geometry.apply.call_args, call(node.instance), msg)
 
     def test_visible_false(self):
-        visible(self.node, None, False)
+        node = Mock(geometry=Mock(), instance=Mock())
+
+        visible(node, None, False)
 
         msg = "visible should call geometry forget if false"
-        self.assertEqual(self.node.geometry.forget.call_args, call(self.node.widget), msg)
+        self.assertEqual(node.geometry.forget.call_args, call(node.instance), msg)
 
 if __name__ == '__main__':
     main()

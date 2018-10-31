@@ -8,8 +8,13 @@ from pyviews.rendering.views import render_view
 from tkviews.rendering import create_node
 from tkviews.core.binding import add_rules as add_tkviews_binding_rules
 from tkviews.core.widgets import Root, WidgetNode
+from tkviews.core.containers import Container, View, For, If
+from tkviews.core.styles import Style
+from tkviews.core.ttk import TtkWidgetNode, TtkStyle
 from tkviews.setup.widgets import get_root_setup, get_widget_setup
-from tkviews.setup.containers import get_container_setup, get_for_setup, get_if_setup
+from tkviews.setup.containers import get_container_setup, get_for_setup, get_if_setup, get_view_setup
+from tkviews.setup.styles import get_style_setup
+from tkviews.setup.ttk import get_ttk_style_setup
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
@@ -20,7 +25,15 @@ def register_dependencies():
 
     ioc.register_single('setup', get_root_setup(), Root)
     ioc.register_single('setup', get_widget_setup(), WidgetNode)
-    ioc.register_single('setup', get_widget_setup(), WidgetNode)
+    ioc.register_single('setup', get_widget_setup(), TtkWidgetNode)
+
+    ioc.register_single('setup', get_container_setup(), Container)
+    ioc.register_single('setup', get_view_setup(), View)
+    ioc.register_single('setup', get_for_setup(), For)
+    ioc.register_single('setup', get_if_setup(), If)
+
+    ioc.register_single('setup', get_style_setup(), Style)
+    ioc.register_single('setup', get_ttk_style_setup(), TtkStyle)
 
     register_binding_factory()
 

@@ -1,8 +1,8 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from tkviews.geometry import GridGeometry, PackGeometry, PlaceGeometry
-from tkviews.geometry import Row, Column
+from tkviews.core.geometry import GridGeometry, PackGeometry, PlaceGeometry
+from tkviews.core.geometry import Row, Column
 
 class TestGridGeometry(TestCase):
     def setUp(self):

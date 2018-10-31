@@ -1,11 +1,11 @@
 from unittest import TestCase, main
-from unittest.mock import call, Mock
+from unittest.mock import Mock
 from pyviews.testing import case
-from pyviews.core.xml import XmlAttr, XmlNode
+from pyviews.core.xml import XmlAttr
 from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import get_setter, default_setter
-from tkviews.core.styles import Style, StyleItem
-from tkviews.setup.styles import apply_style_items, StyleError
+from pyviews.rendering.flow import default_setter
+from tkviews.core.styles import Style, StyleError
+from tkviews.setup.styles import apply_style_items
 from tkviews.setup.styles import apply_parent_items, store_to_node_styles
 
 def some_setter():

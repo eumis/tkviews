@@ -29,7 +29,7 @@ class ViewTest(TestCase):
         node.set_content = Mock()
         node.name = view_name
 
-        render_view_children(node, node_setup=NodeSetup(get_child_args=Mock(return_value={})))
+        render_view_children(node)
 
         msg = 'render_view_children should render view by node name and set result as view child'
         self.assertEqual(node.set_content.call_args, call(child), msg)
@@ -79,7 +79,7 @@ class ForTest(TestCase):
         node.items = items
         deps.render = lambda xml_node, **args: xml_node
 
-        render_for_items(node, get_for_setup())
+        render_for_items(node)
 
         msg = 'render_for_items should render all xml children for every item'
         self.assertEqual(node.children, expected_children, msg)
@@ -97,7 +97,7 @@ class ForTest(TestCase):
         node.items = items
         deps.render = lambda xml_node, **args: (args['node_globals']['index'], args['node_globals']['item'])
 
-        render_for_items(node, get_for_setup())
+        render_for_items(node)
 
         msg = 'render_for_items should add item and index to child globals'
         self.assertEqual(node.children, expected_children, msg)
@@ -119,7 +119,7 @@ class ForTest(TestCase):
         to_destroy = node.children[xml_child_count * new_items_count:]
         to_left = node.children[:xml_child_count * new_items_count]
 
-        rerender_on_items_change(node, node_setup=get_for_setup())
+        rerender_on_items_change(node)
         node.items = [Mock() for i in range(new_items_count)]
 
         msg = 'rerender_on_items_change should destroy overflow nodes'
@@ -146,7 +146,7 @@ class ForTest(TestCase):
         deps.render = lambda xml_node, **args: Mock()
         children_to_update = node.children[:xml_child_count * new_items_count]
 
-        rerender_on_items_change(node, node_setup=get_for_setup())
+        rerender_on_items_change(node)
         node.items = [Mock() for i in range(new_items_count)]
 
         msg = 'rerender_on_items_change should update item in globals for children'
@@ -165,7 +165,7 @@ class ForTest(TestCase):
         node.add_children([Mock(destroy=Mock(), globals={}) for i in range(xml_child_count * items_count)])
         deps.render = lambda xml_node, **args: Mock()
 
-        rerender_on_items_change(node, node_setup=get_for_setup())
+        rerender_on_items_change(node)
         node.items = [Mock() for i in range(new_items_count)]
 
         msg = 'rerender_on_items_change should create new children'

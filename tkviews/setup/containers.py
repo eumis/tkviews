@@ -15,7 +15,6 @@ def get_container_setup() -> NodeSetup:
         apply_attributes,
         render_children
     ]
-    node_setup.get_child_args = _get_child_args
     return node_setup
 
 def get_view_setup() -> NodeSetup:
@@ -26,15 +25,14 @@ def get_view_setup() -> NodeSetup:
         render_view_children,
         rerender_on_view_change
     ]
-    node_setup.get_child_args = _get_child_args
     return node_setup
 
 # pylint: disable=W0613
 
-def render_view_children(node: View, node_setup: NodeSetup = None, **args):
+def render_view_children(node: View, **args):
     '''Finds view by name attribute and renders it as view node child'''
-    child_args = node_setup.get_child_init_args(node, **args)
     view_root = get_view_root(node.name)
+    child_args = _get_child_args(node)
     node.set_content(deps.render(view_root, **child_args))
 
 def rerender_on_view_change(node: View, **args):
@@ -57,23 +55,22 @@ def get_for_setup() -> NodeSetup:
         render_for_items,
         rerender_on_items_change
     ]
-    node_setup.get_child_args = _get_child_args
     return node_setup
 
-def render_for_items(node: For, node_setup: NodeSetup = None, **args):
+def render_for_items(node: For, **args):
     '''Renders For children'''
-    _render_for_children(node, node_setup, node.items)
+    _render_for_children(node, node.items)
 
-def _render_for_children(node: For, node_setup: NodeSetup, items: list):
+def _render_for_children(node: For, items: list):
     item_xml_nodes = node.xml_node.children
     for index, item in enumerate(items):
         for xml_node in item_xml_nodes:
-            child_args = _get_for_child_args(node, node_setup, index, item)
+            child_args = _get_for_child_args(node, index, item)
             child = deps.render(xml_node, **child_args)
             node.add_child(child)
 
-def _get_for_child_args(node: For, node_setup: NodeSetup, index, item):
-    child_args = node_setup.get_child_args(node)
+def _get_for_child_args(node: For, index, item):
+    child_args = _get_child_args(node)
     child_globals = InheritedDict(child_args['node_globals'])
     child_globals['index'] = index
     child_globals['item'] = item
@@ -85,10 +82,10 @@ def rerender_on_items_change(node: For, **args):
     node.items_observable.callback = lambda n, v, o, a=args: _on_items_changed(n, **a) \
                                      if v != o else None
 
-def _on_items_changed(node: For, node_setup: NodeSetup = None, **args):
+def _on_items_changed(node: For, **args):
     _destroy_overflow(node)
     _update_existing(node)
-    _create_not_existing(node, node_setup)
+    _create_not_existing(node)
 
 def _destroy_overflow(node: For):
     try:
@@ -113,12 +110,12 @@ def _update_existing(node: For):
     except IndexError:
         pass
 
-def _create_not_existing(node: For, node_setup: NodeSetup):
+def _create_not_existing(node: For):
     item_children_count = len(node.xml_node.children)
     start = int(len(node.children) / item_children_count)
     end = len(node.items)
     items = [node.items[i] for i in range(start, end)]
-    _render_for_children(node, node_setup, items)
+    _render_for_children(node, items)
 
 
 

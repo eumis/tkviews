@@ -2,10 +2,10 @@
 
 from pyviews import Node, NodeSetup
 from pyviews.core.xml import XmlAttr
-from pyviews.core.ioc import inject
 from pyviews.core.node import Property
 from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
+from tkviews.core.styles import StyleError
 from tkviews.core.widgets import WidgetNode
 
 def get_root_setup():
@@ -15,9 +15,8 @@ def get_root_setup():
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
-        render_children
+        render_widget_children
     ]
-    node_setup.get_child_args = _get_child_args
     return node_setup
 
 def setup_widget_setter(node: Node, **args):
@@ -40,6 +39,14 @@ def setup_widget_destroy(node: WidgetNode, **args):
 def _on_widget_destroy(node: WidgetNode):
     node.instance.destroy()
 
+def render_widget_children(node: Node, **args):
+    '''Renders child widgets'''
+    render_children(node,
+                    parent_node=node,
+                    master=node.instance,
+                    node_globals=node.globals,
+                    node_styles=node.node_styles)
+
 def get_widget_setup():
     '''Returns setup for widget'''
     node_setup = NodeSetup()
@@ -48,14 +55,8 @@ def get_widget_setup():
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
-        render_children
+        render_widget_children
     ]
-    node_setup.properties = {
-        'geometry': Property('geometry', _geometry_setter),
-        'style': Property('style', _style_setter)
-    }
-    node_setup.get_child_args = _get_child_args
-    node_setup.on_destroy = _on_widget_destroy
 
 def setup_properties(node: WidgetNode, **args):
     '''Sets up widget node properties'''
@@ -69,10 +70,22 @@ def _geometry_setter(node: WidgetNode, geometry: Geometry, previous: Geometry):
         geometry.apply(node.instance)
     return geometry
 
-@inject('apply_styles')
-def _style_setter(node: WidgetNode, styles: str, apply_styles=None):
+def _style_setter(node: WidgetNode, styles: str):
     apply_styles(node, styles)
     return styles
+
+def apply_styles(node: WidgetNode, style_keys: str):
+    '''Applies styles to node'''
+    keys = [key.strip() for key in style_keys.split(',')] \
+            if isinstance(style_keys, str) else style_keys
+    try:
+        for key in [key for key in keys if key]:
+            for item in node.node_styles[key]:
+                item.apply(node)
+    except KeyError as key_error:
+        error = StyleError('Style is not found')
+        error.add_info('Style name', key_error.args[0])
+        raise error from key_error
 
 def apply_text(node: WidgetNode):
     '''Applies xml node content to WidgetNode'''
@@ -80,11 +93,3 @@ def apply_text(node: WidgetNode):
         return
     text_attr = XmlAttr('text', node.xml_node.text)
     apply_attribute(node, text_attr)
-
-def _get_child_args(node: WidgetNode):
-    return {
-        'parent_node': node,
-        'master': node.instance,
-        'node_globals': node.globals,
-        'node_styles': node.node_styles
-    }

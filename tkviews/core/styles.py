@@ -2,6 +2,7 @@
 
 from typing import Any, Callable
 from pyviews.core.xml import XmlNode
+from pyviews.core import CoreError
 from pyviews.core.node import Node
 from pyviews.core.observable import InheritedDict
 
@@ -47,3 +48,7 @@ class Style(Node):
     def destroy(self):
         '''Removes self from styles'''
         self._destroy_bindings()
+
+class StyleError(CoreError):
+    '''Error for style'''
+    pass

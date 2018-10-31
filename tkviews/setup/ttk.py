@@ -13,6 +13,7 @@ def get_ttk_style_setup() -> NodeSetup:
         apply_style_attributes,
         configure
     ]
+    return setup
 
 def setup_value_setter(node: TtkStyle, **args):
     '''Sets TtkStyle attribute setter'''

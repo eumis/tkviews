@@ -25,7 +25,9 @@ def setup_widget_setter(node: Node, **args):
 
 def _widget_node_setter(node: WidgetNode, key: str, value):
     '''Applies passed attribute'''
-    if hasattr(node, key):
+    if key in node.properties:
+        node.properties[key].set(value)
+    elif hasattr(node, key):
         setattr(node, key, value)
     elif hasattr(node.instance, key):
         setattr(node.instance, key, value)
@@ -57,11 +59,12 @@ def get_widget_setup():
         apply_attributes,
         render_widget_children
     ]
+    return node_setup
 
 def setup_properties(node: WidgetNode, **args):
     '''Sets up widget node properties'''
-    node.properties['geometry']: Property('geometry', _geometry_setter)
-    node.properties['style']: Property('style', _style_setter)
+    node.properties['geometry'] = Property('geometry', _geometry_setter, node=node)
+    node.properties['style'] = Property('style', _style_setter, node=node)
 
 def _geometry_setter(node: WidgetNode, geometry: Geometry, previous: Geometry):
     if previous:

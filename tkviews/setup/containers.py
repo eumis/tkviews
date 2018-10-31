@@ -31,9 +31,10 @@ def get_view_setup() -> NodeSetup:
 
 def render_view_children(node: View, **args):
     '''Finds view by name attribute and renders it as view node child'''
-    view_root = get_view_root(node.name)
-    child_args = _get_child_args(node)
-    node.set_content(deps.render(view_root, **child_args))
+    if node.name:
+        view_root = get_view_root(node.name)
+        child_args = _get_child_args(node)
+        node.set_content(deps.render(view_root, **child_args))
 
 def rerender_on_view_change(node: View, **args):
     '''Subscribes to name change and renders new view'''

@@ -70,4 +70,4 @@ def launch(root_view=None):
     '''Runs application. Widgets are created from passed xml_files'''
     root_view = 'root' if root_view is None else root_view
     root = render_view(root_view)
-    root.widget.mainloop()
+    root.instance.mainloop()

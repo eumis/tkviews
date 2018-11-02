@@ -5,7 +5,7 @@ Containers don't represent any widget.
 
 from tkinter import Widget
 from pyviews.core.xml import XmlNode
-from pyviews.core.observable import InheritedDict, observable_property
+from pyviews.core.observable import InheritedDict
 from pyviews.core.node import Node
 from tkviews.core import TkNode
 
@@ -31,8 +31,19 @@ class View(Container):
     def __init__(self, master: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+        self._name = None
+        self.name_changed = lambda view, name, previous_name: None
 
-    (name, name_observable) = observable_property('_name')
+    @property
+    def name(self):
+        '''Returns view name'''
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        old_name = self._name
+        self._name = value
+        self.name_changed(self, value, old_name)
 
     def set_content(self, content: Node):
         '''Destroys current '''
@@ -43,15 +54,35 @@ class For(Container):
     def __init__(self, master: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
-        self.items = []
+        self._items = []
+        self.items_changed = lambda node, items, old_items: None
 
-    (items, items_observable) = observable_property('_items')
+    @property
+    def items(self):
+        '''Returns items'''
+        return self._items
+
+    @items.setter
+    def items(self, value):
+        old_items = self._items
+        self._items = value
+        self.items_changed(self, value, old_items)
 
 class If(Container):
     '''Renders children if condition is True'''
     def __init__(self, master: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
-        self.condition = False
+        self._condition = False
+        self.condition_changed = lambda node, cond, old_cond: None
 
-    (condition, condition_observable) = observable_property('_condition')
+    @property
+    def condition(self):
+        '''Returns condition'''
+        return self._condition
+
+    @condition.setter
+    def condition(self, value):
+        old_condition = self._condition
+        self._condition = value
+        self.condition_changed(self, value, old_condition)

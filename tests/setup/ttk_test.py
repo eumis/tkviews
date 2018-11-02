@@ -2,13 +2,13 @@ from unittest import TestCase, main
 from unittest.mock import Mock, patch, call
 from pyviews.testing import case
 from pyviews.core.xml import XmlAttr
-from pyviews.rendering.flow import default_setter
+from pyviews.rendering.pipeline import call_set_attr
 from tkviews.core.ttk import TtkStyle
 from tkviews.setup.ttk import setup_value_setter, apply_style_attributes, configure
 
 def increment(node, key, value):
     '''Increments value'''
-    default_setter(node, key, value + 1)
+    call_set_attr(node, key, value + 1)
 
 from tests.setup.ttk_test import increment
 
@@ -18,7 +18,7 @@ class SetupTests(TestCase):
         name = 'some_name'
 
         setup_value_setter(node)
-        node.setter(node, 'name', name)
+        node.set_attr('name', name)
 
         msg = 'setup_value_setter should set setter that sets node properties'
         self.assertEqual(node.name, name, msg)
@@ -30,7 +30,7 @@ class SetupTests(TestCase):
 
         setup_value_setter(node)
         for key, value in values.items():
-            node.setter(node, key, value)
+            node.set_attr(key, value)
 
         msg = 'setup_value_setter should set setter that sets to "values" property'
         self.assertDictEqual(node.values, values, msg)

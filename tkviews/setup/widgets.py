@@ -1,16 +1,16 @@
 '''Contains rendering setup for widget nodes'''
 
-from pyviews import Node, NodeSetup
+from pyviews import Node, RenderingPipeline
 from pyviews.core.xml import XmlAttr
 from pyviews.core.node import Property
-from pyviews.rendering.flow import apply_attributes, render_children, apply_attribute
+from pyviews.rendering.pipeline import apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
 from tkviews.core.styles import StyleError
 from tkviews.core.widgets import WidgetNode
 
 def get_root_setup():
     '''Returns setup for root'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         setup_widget_setter,
         setup_widget_destroy,
@@ -46,12 +46,12 @@ def render_widget_children(node: Node, **args):
     render_children(node,
                     parent_node=node,
                     master=node.instance,
-                    node_globals=node.globals,
+                    node_globals=node.node_globals,
                     node_styles=node.node_styles)
 
 def get_widget_setup():
     '''Returns setup for widget'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         setup_properties,
         setup_widget_setter,

@@ -2,24 +2,28 @@
 Contains methods for node setups creation
 '''
 
-from pyviews import NodeSetup, get_view_root
+from pyviews import RenderingPipeline, get_view_root
 from pyviews.core.ioc import SERVICES as deps
 from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import apply_attributes, render_children
+from pyviews.rendering.pipeline import apply_attributes, render_children
 from tkviews.core.containers import Container, View, For, If
 
-def get_container_setup() -> NodeSetup:
+def get_container_setup() -> RenderingPipeline:
     '''Returns setup for container'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         apply_attributes,
-        render_children
+        render_container_children
     ]
     return node_setup
 
-def get_view_setup() -> NodeSetup:
+def render_container_children(node, **args):
+    '''Renders container children'''
+    render_children(node, **_get_child_args(node))
+
+def get_view_setup() -> RenderingPipeline:
     '''Returns setup for container'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         apply_attributes,
         render_view_children,
@@ -38,7 +42,7 @@ def render_view_children(node: View, **args):
 
 def rerender_on_view_change(node: View, **args):
     '''Subscribes to name change and renders new view'''
-    node.name_observable.callback = lambda n, val, old, a=args: _rerender_view(n, a) \
+    node.name_changed = lambda n, val, old, a=args: _rerender_view(n, a) \
                                     if val != old else None
 
 def _rerender_view(node: View, args: dict):
@@ -48,9 +52,9 @@ def _rerender_view(node: View, args: dict):
 
 
 
-def get_for_setup() -> NodeSetup:
+def get_for_setup() -> RenderingPipeline:
     '''Returns setup for For node'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         apply_attributes,
         render_for_items,
@@ -80,7 +84,7 @@ def _get_for_child_args(node: For, index, item):
 
 def rerender_on_items_change(node: For, **args):
     '''Subscribes to items change and updates children'''
-    node.items_observable.callback = lambda n, v, o, a=args: _on_items_changed(n, **a) \
+    node.items_changed = lambda n, v, o, a=args: _on_items_changed(n, **a) \
                                      if v != o else None
 
 def _on_items_changed(node: For, **args):
@@ -106,7 +110,7 @@ def _update_existing(node: For):
             start = index * item_children_count
             end = (index + 1) * item_children_count
             for child_index in range(start, end):
-                globs = node.children[child_index].globals
+                globs = node.children[child_index].node_globals
                 globs['item'] = item
     except IndexError:
         pass
@@ -121,36 +125,35 @@ def _create_not_existing(node: For):
 
 
 
-def get_if_setup() -> NodeSetup:
+def get_if_setup() -> RenderingPipeline:
     '''Returns setup for For node'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         apply_attributes,
         render_if,
         subscribe_to_condition_change
     ]
-    node_setup.get_child_args = _get_child_args
     return node_setup
 
-def render_if(node: If, node_setup: NodeSetup = None, **args):
-    # renders children nodes if condition is true
+def render_if(node: If, **args):
+    '''Renders children nodes if condition is true'''
     if node.condition:
-        render_children(node, node_setup=node_setup, **args)
+        render_children(node, **_get_child_args(node))
 
-def subscribe_to_condition_change(node: If, node_setup: NodeSetup = None, **args):
+def subscribe_to_condition_change(node: If, node_setup: RenderingPipeline = None, **args):
     '''Rerenders if on condition change'''
-    node.condition_observable.callback = lambda n, v, o, ns=node_setup: _on_condition_change(n, ns, v, o, **args)
+    node.condition_changed = lambda n, v, o: _on_condition_change(n, v, o, **args)
 
-def _on_condition_change(node: If, node_setup: NodeSetup, val: bool, old: bool, **args):
+def _on_condition_change(node: If, val: bool, old: bool, **args):
     if val == old:
         return
     node.destroy_children()
-    render_if(node, node_setup, **args)
+    render_if(node, **args)
 
 def _get_child_args(node: Container):
     return {
         'parent_node': node,
         'master': node.master,
-        'node_globals': node.globals,
+        'node_globals': node.node_globals,
         'node_styles': node.node_styles
     }

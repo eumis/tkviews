@@ -15,7 +15,7 @@ class RenderStepsTest(TestCase):
 
         setup_temp_setter(canvas)
         for key, value in attrs.items():
-            canvas.setter(canvas, key, value)
+            canvas.set_attr(key, value)
 
         msg = 'setup_temp_setter should set setter that stores attrs it attr_values property'
         self.assertDictEqual(canvas.attr_values, attrs, msg)
@@ -44,11 +44,11 @@ class RenderStepsTest(TestCase):
     @case('key', 1)
     @case('other_key', 'value')
     def test_setup_config_setter_calls_config(self, key, value):
-        canvas = Mock()
+        canvas = CanvasNode(Mock(), Mock())
         canvas.config = Mock()
 
         setup_config_setter(canvas)
-        canvas.setter(canvas, key, value)
+        canvas.set_attr(key, value)
 
         msg = 'setup_config_setter should set setter that calls config method'
         self.assertEqual(canvas.config.call_args, call(**{key:value}), msg)

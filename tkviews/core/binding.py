@@ -73,8 +73,8 @@ def apply_var_two_ways(args: BindingArgs, var_property=None):
     '''Applies twoways binding using tkinter variable.'''
     var_property = var_property if var_property else 'variable'
     (var_key, expr_body) = parse_expression(args.expr_body)
-    if args.node.globals.has_key(var_key):
-        val = args.node.globals[var_key]
+    if args.node.node_globals.has_key(var_key):
+        val = args.node.node_globals[var_key]
         var = val() if callable(val) else val
         args.node.set_attr(var_property, var)
 
@@ -84,9 +84,9 @@ def _apply_two_ways(args: BindingArgs, expr_body: str, var: Variable):
     '''Applies two ways binding between tkinter Variable and expression'''
     expression = Expression(expr_body)
     target = InstanceTarget(args.node, args.attr.name, args.modifier)
-    expr_binding = ExpressionBinding(target, expression, args.node.globals)
+    expr_binding = ExpressionBinding(target, expression, args.node.node_globals)
 
-    target = get_expression_target(expression, args.node.globals)
+    target = get_expression_target(expression, args.node.node_globals)
     obs_binding = VariableBinding(target, var)
 
     two_ways_binding = TwoWaysBinding(expr_binding, obs_binding)

@@ -23,12 +23,12 @@ class TkModifiersTests(TestCase):
     @case('key', 1)
     @case('other_key', 'value')
     def test_set_attr(self, key, value):
-        node = Mock(setter=Mock())
+        node = Mock(set_attr=Mock())
 
         set_attr(node, key, value)
 
-        msg = "set_attr should call setter with passed parameters"
-        self.assertEqual(node.setter.call_args, call(node, key, value), msg)
+        msg = "set_attr should call set_attr with passed parameters"
+        self.assertEqual(node.set_attr.call_args, call(key, value), msg)
 
     @case('key', 1)
     @case('other_key', 'value')

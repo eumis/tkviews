@@ -36,7 +36,7 @@ def bind_all(node: InstanceNode, event_name, command):
 
 def set_attr(node: InstanceNode, key, value):
     '''Calls nodes's set_attr method'''
-    node.setter(node, key, value)
+    node.set_attr(key, value)
 
 def config(node: InstanceNode, key, value):
     '''Calls widget's config method'''

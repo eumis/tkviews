@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from pyviews.testing import case
 from pyviews.core.xml import XmlAttr
 from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import default_setter
+from pyviews.rendering.pipeline import call_set_attr
 from tkviews.core.styles import Style, StyleError
 from tkviews.setup.styles import apply_style_items
 from tkviews.setup.styles import apply_parent_items, store_to_node_styles
@@ -19,9 +19,9 @@ def another_setter():
 from tests.setup.styles_test import some_setter, another_setter
 
 class ApplyStyleItemsTests(TestCase):
-    @case([('one', '1', None)], [('one', '1', default_setter)])
-    @case([('one', '{1}', None)], [('one', 1, default_setter)])
-    @case([('one', ' value ', None)], [('one', ' value ', default_setter)])
+    @case([('one', '1', None)], [('one', '1', call_set_attr)])
+    @case([('one', '{1}', None)], [('one', 1, call_set_attr)])
+    @case([('one', ' value ', None)], [('one', ' value ', call_set_attr)])
     @case([('one', 'value', 'tests.setup.styles_test.some_setter')], [('one', 'value', some_setter)])
     @case(
         [
@@ -31,7 +31,7 @@ class ApplyStyleItemsTests(TestCase):
         ],
         [
             ('one', 'value', some_setter),
-            ('two', 2, default_setter),
+            ('two', 2, call_set_attr),
             ('key', '', another_setter)
         ]
     )
@@ -104,7 +104,7 @@ class StoreToNodeStylesTests(TestCase):
         store_to_node_styles(node, node_styles=node_styles)
 
         msg = 'store_to_node_styles should store style items to node_styles'
-        self.assertEqual(node_styles[node.name], node.items, msg)
+        self.assertEqual(node_styles[node.name], node.items.values(), msg)
 
 if __name__ == '__main__':
     main()

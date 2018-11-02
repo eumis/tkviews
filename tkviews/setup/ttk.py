@@ -1,13 +1,13 @@
 from tkinter.ttk import Style
-from pyviews import NodeSetup
+from pyviews import RenderingPipeline
 from pyviews.core.compilation import Expression
 from pyviews.rendering.expression import is_code_expression, parse_expression
-from pyviews.rendering.flow import get_setter
+from pyviews.rendering.pipeline import get_setter
 from tkviews.core.ttk import TtkStyle
 
-def get_ttk_style_setup() -> NodeSetup:
-    '''Returns NodeSetup for TtkStyle'''
-    setup = NodeSetup()
+def get_ttk_style_setup() -> RenderingPipeline:
+    '''Returns RenderingPipeline for TtkStyle'''
+    setup = RenderingPipeline()
     setup.render_steps = [
         setup_value_setter,
         apply_style_attributes,
@@ -17,7 +17,7 @@ def get_ttk_style_setup() -> NodeSetup:
 
 def setup_value_setter(node: TtkStyle, **args):
     '''Sets TtkStyle attribute setter'''
-    node.setter = _value_setter
+    node.attr_setter = _value_setter
 
 def _value_setter(node: TtkStyle, key: str, value):
     if hasattr(node, key):
@@ -32,7 +32,7 @@ def apply_style_attributes(node: TtkStyle, **args):
         value = attr.value if attr.value else ''
         if is_code_expression(value):
             expression = Expression(parse_expression(value)[1])
-            value = expression.execute(node.globals.to_dictionary())
+            value = expression.execute(node.node_globals.to_dictionary())
         setter(node, attr.name, value)
 
 def configure(node: TtkStyle, **args):

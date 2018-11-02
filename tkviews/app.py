@@ -7,7 +7,7 @@ from pyviews.rendering.binding import BindingFactory, add_default_rules
 from pyviews.rendering.views import render_view
 from tkviews.rendering import create_node
 from tkviews.core.binding import add_rules as add_tkviews_binding_rules
-from tkviews.core.widgets import Root, WidgetNode
+from tkviews.core.widgets import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 from tkviews.core.containers import Container, View, For, If
 from tkviews.core.styles import Style
 from tkviews.core.ttk import TtkWidgetNode, TtkStyle
@@ -25,6 +25,9 @@ def register_dependencies():
 
     ioc.register_single('setup', get_root_setup(), Root)
     ioc.register_single('setup', get_widget_setup(), WidgetNode)
+    ioc.register_single('setup', get_widget_setup(), EntryNode)
+    ioc.register_single('setup', get_widget_setup(), CheckbuttonNode)
+    ioc.register_single('setup', get_widget_setup(), RadiobuttonNode)
     ioc.register_single('setup', get_widget_setup(), TtkWidgetNode)
 
     ioc.register_single('setup', get_container_setup(), Container)

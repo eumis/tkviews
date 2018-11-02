@@ -1,16 +1,16 @@
 '''Contains rendering steps for style nodes'''
 
-from pyviews import NodeSetup
+from pyviews import RenderingPipeline
 from pyviews.core.xml import XmlAttr
 from pyviews.core.compilation import Expression
 from pyviews.core.observable import InheritedDict
-from pyviews.rendering.flow import get_setter, render_children
+from pyviews.rendering.pipeline import get_setter, render_children
 from pyviews.rendering.expression import is_code_expression, parse_expression
 from tkviews.core.styles import Style, StyleItem, StyleError
 
-def get_style_setup() -> NodeSetup:
+def get_style_setup() -> RenderingPipeline:
     '''Returns setup for style node'''
-    node_setup = NodeSetup()
+    node_setup = RenderingPipeline()
     node_setup.render_steps = [
         apply_style_items,
         apply_parent_items,
@@ -33,7 +33,7 @@ def _get_style_item(node: Style, attr: XmlAttr):
     value = attr.value if attr.value else ''
     if is_code_expression(value):
         expression = Expression(parse_expression(value)[1])
-        value = expression.execute(node.globals.to_dictionary())
+        value = expression.execute(node.node_globals.to_dictionary())
     return StyleItem(setter, attr.name, value)
 
 def apply_parent_items(node: Style, parent_name: str = None, node_styles: InheritedDict = None, **args):
@@ -44,11 +44,12 @@ def apply_parent_items(node: Style, parent_name: str = None, node_styles: Inheri
 
 def store_to_node_styles(node: Style, node_styles: InheritedDict = None, **args):
     '''Store styles to node styles'''
-    node_styles[node.name] = node.items
+    node_styles[node.name] = node.items.values()
 
-def render_child_styles(node: Style, **args):
+def render_child_styles(node: Style, node_styles: InheritedDict = None, **args):
     '''Renders child styles'''
     render_children(node,
                     parent_node=node,
                     parent_name=node.name,
-                    node_globals=node.globals)
+                    node_globals=node.node_globals,
+                    node_styles=node_styles)

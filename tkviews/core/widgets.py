@@ -22,11 +22,11 @@ class Root(InstanceNode, TkNode):
     @property
     def state(self):
         '''Widget state'''
-        return self.widget.state()
+        return self.instance.state()
 
     @state.setter
     def state(self, state):
-        self.widget.state(state)
+        self.instance.state(state)
 
     @property
     def icon(self):
@@ -36,7 +36,7 @@ class Root(InstanceNode, TkNode):
     @icon.setter
     def icon(self, value):
         self._icon = value
-        self.widget.iconbitmap(default=value)
+        self.instance.iconbitmap(default=value)
 
 class WidgetNode(InstanceNode, TkNode):
     '''Wrapper under tkinter widget'''
@@ -66,7 +66,7 @@ class EntryNode(WidgetNode):
     @textvariable.setter
     def textvariable(self, var):
         self._textvariable = var
-        self.widget.config(textvariable=var)
+        self.instance.config(textvariable=var)
 
     @property
     def text(self):
@@ -93,7 +93,7 @@ class CheckbuttonNode(WidgetNode):
     @variable.setter
     def variable(self, var):
         self._variable = var
-        self.widget.config(variable=var)
+        self.instance.config(variable=var)
 
     @property
     def value(self):
@@ -120,7 +120,7 @@ class RadiobuttonNode(WidgetNode):
     @variable.setter
     def variable(self, var):
         self._variable = var
-        self.widget.config(variable=var)
+        self.instance.config(variable=var)
 
     @property
     def selected_value(self):

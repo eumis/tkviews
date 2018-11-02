@@ -2,14 +2,12 @@
 Contains methods for node setups creation
 '''
 
-from pyviews import NodeSetup
-from pyviews.rendering.flow import apply_attributes
+from pyviews.rendering.pipeline import RenderingPipeline, apply_attributes
 from tkviews.core.canvas import CanvasNode
 
-def get_canvas_setup() -> NodeSetup:
+def get_canvas_setup() -> RenderingPipeline:
     '''Returns setup for canvas'''
-    node_setup = NodeSetup()
-    node_setup.render_steps = [
+    return RenderingPipeline(steps=[
         setup_temp_setter,
         setup_temp_binding,
         apply_attributes,
@@ -18,18 +16,19 @@ def get_canvas_setup() -> NodeSetup:
         setup_event_binding,
         apply_temp_events,
         clear_temp
-    ]
-    return node_setup
+    ])
 
 # pylint: disable=W0613
 
 def setup_temp_setter(node: CanvasNode, **args):
     '''Stores attributes values to temp dictionary'''
     node.attr_values = {}
-    node.setter = _set_option_value
+    node.attr_setter = _set_option_value
 
 def _set_option_value(node: CanvasNode, key, value):
-    if hasattr(node, key):
+    if key in node.properties:
+        node.properties[key].set_value(value)
+    elif hasattr(node, key):
         setattr(node, key, value)
     else:
         node.attr_values[key] = value
@@ -49,10 +48,15 @@ def create_item(node: CanvasNode, **args):
 
 def setup_config_setter(node: CanvasNode, **args):
     '''Attribute values are passed to itemconfigure method'''
-    node.setter = _set_config_value
+    node.attr_setter = _set_config_value
 
 def _set_config_value(node: CanvasNode, key, value):
-    node.config(**{key: value})
+    if key in node.properties:
+        node.properties[key].set_value(value)
+    elif hasattr(node, key):
+        setattr(node, key, value)
+    else:
+        node.config(**{key: value})
 
 def setup_event_binding(node: CanvasNode, **args):
     '''Binds created item to callbacks from temp dictionary'''

@@ -57,6 +57,7 @@ def get_widget_setup():
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
+        apply_text,
         render_widget_children
     ]
     return node_setup
@@ -90,7 +91,7 @@ def apply_styles(node: WidgetNode, style_keys: str):
         error.add_info('Style name', key_error.args[0])
         raise error from key_error
 
-def apply_text(node: WidgetNode):
+def apply_text(node: WidgetNode, **args):
     '''Applies xml node content to WidgetNode'''
     if node.xml_node.text is None or not node.xml_node.text.strip():
         return

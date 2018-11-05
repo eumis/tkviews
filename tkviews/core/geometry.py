@@ -50,15 +50,8 @@ class LayoutSetup(Node):
     def __init__(self, master, xml_node: XmlNode, parent_context=None):
         super().__init__(xml_node, parent_context)
         self._master = master
-        self._args = {}
-        self._index = None
-
-    def set_attr(self, key, value):
-        '''Sets config parameter'''
-        if key == 'index':
-            self._index = value
-        else:
-            self._args[key] = value
+        self.args = {}
+        self.index = None
 
     def apply(self):
         '''Calls config with passed parameters'''
@@ -67,13 +60,9 @@ class LayoutSetup(Node):
 class Row(LayoutSetup):
     '''Wrapper under grid_rowconfigure method'''
     def apply(self):
-        self._master.grid_rowconfigure(self._index, **self._args)
+        self._master.grid_rowconfigure(self.index, **self.args)
 
 class Column(LayoutSetup):
     '''Wrapper under grid_columnconfigure method'''
     def apply(self):
-        self._master.grid_columnconfigure(self._index, **self._args)
-
-def apply_layout(layout: LayoutSetup):
-    '''Calls layout apply'''
-    layout.apply()
+        self._master.grid_columnconfigure(self.index, **self.args)

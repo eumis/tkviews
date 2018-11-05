@@ -66,11 +66,11 @@ def render_for_items(node: For, **args):
     '''Renders For children'''
     _render_for_children(node, node.items)
 
-def _render_for_children(node: For, items: list):
+def _render_for_children(node: For, items: list, index_shift=0):
     item_xml_nodes = node.xml_node.children
     for index, item in enumerate(items):
         for xml_node in item_xml_nodes:
-            child_args = _get_for_child_args(node, index, item)
+            child_args = _get_for_child_args(node, index + index_shift, item)
             child = deps.render(xml_node, **child_args)
             node.add_child(child)
 
@@ -112,6 +112,7 @@ def _update_existing(node: For):
             for child_index in range(start, end):
                 globs = node.children[child_index].node_globals
                 globs['item'] = item
+                globs['index'] = index
     except IndexError:
         pass
 
@@ -120,7 +121,7 @@ def _create_not_existing(node: For):
     start = int(len(node.children) / item_children_count)
     end = len(node.items)
     items = [node.items[i] for i in range(start, end)]
-    _render_for_children(node, items)
+    _render_for_children(node, items, start)
 
 
 

@@ -11,10 +11,13 @@ from tkviews.core.widgets import Root, WidgetNode, EntryNode, CheckbuttonNode, R
 from tkviews.core.containers import Container, View, For, If
 from tkviews.core.styles import Style
 from tkviews.core.ttk import TtkWidgetNode, TtkStyle
+from tkviews.core.geometry import Row, Column
 from tkviews.setup.widgets import get_root_setup, get_widget_setup
-from tkviews.setup.containers import get_container_setup, get_for_setup, get_if_setup, get_view_setup
+from tkviews.setup.containers import get_container_setup, get_view_setup
+from tkviews.setup.containers import get_for_setup, get_if_setup
 from tkviews.setup.styles import get_style_setup
 from tkviews.setup.ttk import get_ttk_style_setup
+from tkviews.setup.geometry import get_layout_setup
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
@@ -37,6 +40,9 @@ def register_dependencies():
 
     ioc.register_single('pipeline', get_style_setup(), Style)
     ioc.register_single('pipeline', get_ttk_style_setup(), TtkStyle)
+
+    ioc.register_single('pipeline', get_layout_setup(), Row)
+    ioc.register_single('pipeline', get_layout_setup(), Column)
 
     register_binding_factory()
 

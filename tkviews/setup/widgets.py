@@ -11,7 +11,7 @@ from tkviews.core.widgets import WidgetNode
 def get_root_setup():
     '''Returns setup for root'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
@@ -21,7 +21,7 @@ def get_root_setup():
 
 def setup_widget_setter(node: Node, **args):
     '''Sets up setter'''
-    node.setter = _widget_node_setter
+    node.attr_setter = _widget_node_setter
 
 def _widget_node_setter(node: WidgetNode, key: str, value):
     '''Applies passed attribute'''
@@ -52,7 +52,7 @@ def render_widget_children(node: Node, **args):
 def get_widget_setup():
     '''Returns setup for widget'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         setup_properties,
         setup_widget_setter,
         setup_widget_destroy,

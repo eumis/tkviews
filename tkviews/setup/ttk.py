@@ -8,7 +8,7 @@ from tkviews.core.ttk import TtkStyle
 def get_ttk_style_setup() -> RenderingPipeline:
     '''Returns RenderingPipeline for TtkStyle'''
     setup = RenderingPipeline()
-    setup.render_steps = [
+    setup.steps = [
         setup_value_setter,
         apply_style_attributes,
         configure

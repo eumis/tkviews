@@ -11,7 +11,7 @@ from tkviews.core.styles import Style, StyleItem, StyleError
 def get_style_setup() -> RenderingPipeline:
     '''Returns setup for style node'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,

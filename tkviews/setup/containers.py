@@ -11,7 +11,7 @@ from tkviews.core.containers import Container, View, For, If
 def get_container_setup() -> RenderingPipeline:
     '''Returns setup for container'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         apply_attributes,
         render_container_children
     ]
@@ -24,7 +24,7 @@ def render_container_children(node, **args):
 def get_view_setup() -> RenderingPipeline:
     '''Returns setup for container'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         apply_attributes,
         render_view_children,
         rerender_on_view_change
@@ -55,7 +55,7 @@ def _rerender_view(node: View, args: dict):
 def get_for_setup() -> RenderingPipeline:
     '''Returns setup for For node'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         apply_attributes,
         render_for_items,
         rerender_on_items_change
@@ -128,7 +128,7 @@ def _create_not_existing(node: For):
 def get_if_setup() -> RenderingPipeline:
     '''Returns setup for For node'''
     node_setup = RenderingPipeline()
-    node_setup.render_steps = [
+    node_setup.steps = [
         apply_attributes,
         render_if,
         subscribe_to_condition_change

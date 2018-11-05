@@ -23,20 +23,20 @@ def register_dependencies():
     ioc.register_single('view_ext', 'xml')
     ioc.register_func('create_node', create_node)
 
-    ioc.register_single('setup', get_root_setup(), Root)
-    ioc.register_single('setup', get_widget_setup(), WidgetNode)
-    ioc.register_single('setup', get_widget_setup(), EntryNode)
-    ioc.register_single('setup', get_widget_setup(), CheckbuttonNode)
-    ioc.register_single('setup', get_widget_setup(), RadiobuttonNode)
-    ioc.register_single('setup', get_widget_setup(), TtkWidgetNode)
+    ioc.register_single('pipeline', get_root_setup(), Root)
+    ioc.register_single('pipeline', get_widget_setup(), WidgetNode)
+    ioc.register_single('pipeline', get_widget_setup(), EntryNode)
+    ioc.register_single('pipeline', get_widget_setup(), CheckbuttonNode)
+    ioc.register_single('pipeline', get_widget_setup(), RadiobuttonNode)
+    ioc.register_single('pipeline', get_widget_setup(), TtkWidgetNode)
 
-    ioc.register_single('setup', get_container_setup(), Container)
-    ioc.register_single('setup', get_view_setup(), View)
-    ioc.register_single('setup', get_for_setup(), For)
-    ioc.register_single('setup', get_if_setup(), If)
+    ioc.register_single('pipeline', get_container_setup(), Container)
+    ioc.register_single('pipeline', get_view_setup(), View)
+    ioc.register_single('pipeline', get_for_setup(), For)
+    ioc.register_single('pipeline', get_if_setup(), If)
 
-    ioc.register_single('setup', get_style_setup(), Style)
-    ioc.register_single('setup', get_ttk_style_setup(), TtkStyle)
+    ioc.register_single('pipeline', get_style_setup(), Style)
+    ioc.register_single('pipeline', get_ttk_style_setup(), TtkStyle)
 
     register_binding_factory()
 

@@ -15,7 +15,8 @@ def get_style_setup() -> RenderingPipeline:
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        render_child_styles
+        render_child_styles,
+        # remove_style_on_destroy
     ]
     return node_setup
 
@@ -53,3 +54,7 @@ def render_child_styles(node: Style, node_styles: InheritedDict = None, **args):
                     parent_name=node.name,
                     node_globals=node.node_globals,
                     node_styles=node_styles)
+
+def remove_style_on_destroy(node: Style, node_styles: InheritedDict = None, **args):
+    '''Removes style from styles on destroying'''
+    node_styles.remove_key(node.name)

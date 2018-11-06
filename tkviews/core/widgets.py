@@ -38,6 +38,14 @@ class Root(InstanceNode, TkNode):
         self._icon = value
         self.instance.iconbitmap(default=value)
 
+    def bind(self, event, command):
+        '''Calls widget bind'''
+        self.instance.bind(event, command)
+
+    def bind_all(self, event, command):
+        '''Calls widget bind'''
+        self.instance.bind_all(event, command)
+
 class WidgetNode(InstanceNode, TkNode):
     '''Wrapper under tkinter widget'''
     def __init__(self, widget: Widget, xml_node: XmlNode,
@@ -49,6 +57,14 @@ class WidgetNode(InstanceNode, TkNode):
     def node_styles(self) -> InheritedDict:
         '''Returns node styles set'''
         return self._node_styles
+
+    def bind(self, event, command):
+        '''Calls widget bind'''
+        self.instance.bind(event, command)
+
+    def bind_all(self, event, command):
+        '''Calls widget bind'''
+        self.instance.bind_all(event, command)
 
 class EntryNode(WidgetNode):
     '''Wrapper under Entry'''

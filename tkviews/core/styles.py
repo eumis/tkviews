@@ -45,10 +45,6 @@ class Style(Node):
         self.name = None
         self.items = {}
 
-    def destroy(self):
-        '''Removes self from styles'''
-        self._destroy_bindings()
-
 class StyleError(CoreError):
     '''Error for style'''
     pass

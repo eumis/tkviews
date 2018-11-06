@@ -5,20 +5,20 @@ from tkviews.core.setters import bind, bind_all, set_attr, config, visible
 
 class TkModifiersTests(TestCase):
     def test_bind(self):
-        node = Mock(instance=Mock())
+        node = Mock()
 
         bind(node, 'event', lambda: None)
 
         msg = "bind should call bind of instance"
-        self.assertTrue(node.instance.bind.called, msg)
+        self.assertTrue(node.bind.called, msg)
 
     def test_bind_all(self):
-        node = Mock(instance=Mock())
+        node = Mock()
 
         bind_all(node, 'event', lambda: None)
 
         msg = "bind_all should call bind_all of instance"
-        self.assertTrue(node.instance.bind_all.called, msg)
+        self.assertTrue(node.bind_all.called, msg)
 
     @case('key', 1)
     @case('other_key', 'value')

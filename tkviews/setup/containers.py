@@ -2,6 +2,8 @@
 Contains methods for node setups creation
 '''
 
+# pylint: disable=W0613
+
 from pyviews import RenderingPipeline, get_view_root
 from pyviews.core.ioc import SERVICES as deps
 from pyviews.core.observable import InheritedDict
@@ -21,6 +23,9 @@ def render_container_children(node, **args):
     '''Renders container children'''
     render_children(node, **_get_child_args(node))
 
+
+
+
 def get_view_setup() -> RenderingPipeline:
     '''Returns setup for container'''
     node_setup = RenderingPipeline()
@@ -30,8 +35,6 @@ def get_view_setup() -> RenderingPipeline:
         rerender_on_view_change
     ]
     return node_setup
-
-# pylint: disable=W0613
 
 def render_view_children(node: View, **args):
     '''Finds view by name attribute and renders it as view node child'''

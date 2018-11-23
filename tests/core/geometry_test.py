@@ -131,41 +131,5 @@ class TestPlaceGeometry(TestCase):
         msg = 'pack should be called with arguments passed to geometry'
         self.assertEqual(self._widget.place.call_args, call(**args), msg)
 
-class TestRow(TestCase):
-    def setUp(self):
-        self._widget = Mock()
-        self._widget.grid_rowconfigure = Mock()
-
-    @case(0, {'minsize': 10})
-    @case(2, {'weight': 5, 'minsize': 10})
-    def test_apply(self, index, args):
-        row = Row(self._widget, None)
-
-        row.set_attr('index', index)
-        for key, value in args.items():
-            row.set_attr(key, value)
-        row.apply()
-
-        msg = 'Row.apply should be called with arguments set with set_attr'
-        self.assertEqual(self._widget.grid_rowconfigure.call_args, call(index, **args), msg)
-
-class TestColumn(TestCase):
-    def setUp(self):
-        self._widget = Mock()
-        self._widget.grid_columnconfigure = Mock()
-
-    @case(0, {'minsize': 10})
-    @case(2, {'weight': 5, 'minsize': 10})
-    def test_apply(self, index, args):
-        column = Column(self._widget, None)
-
-        column.set_attr('index', index)
-        for key, value in args.items():
-            column.set_attr(key, value)
-        column.apply()
-
-        msg = 'Column.apply should be called with arguments set with set_attr'
-        self.assertEqual(self._widget.grid_columnconfigure.call_args, call(index, **args), msg)
-
 if __name__ == '__main__':
     main()

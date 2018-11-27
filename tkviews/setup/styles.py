@@ -1,5 +1,7 @@
 '''Contains rendering steps for style nodes'''
 
+# pylint: disable=W0613
+
 from pyviews import RenderingPipeline
 from pyviews.core.xml import XmlAttr
 from pyviews.core.compilation import Expression
@@ -52,7 +54,7 @@ def render_child_styles(node: Style, node_styles: InheritedDict = None, **args):
     render_children(node,
                     parent_node=node,
                     parent_name=node.name,
-                    node_globals=node.node_globals,
+                    node_globals=InheritedDict(node.node_globals),
                     node_styles=node_styles)
 
 def remove_style_on_destroy(node: Style, node_styles: InheritedDict = None, **args):

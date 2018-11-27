@@ -79,7 +79,7 @@ def _render_for_children(node: For, items: list, index_shift=0):
 
 def _get_for_child_args(node: For, index, item):
     child_args = _get_child_args(node)
-    child_globals = InheritedDict(child_args['node_globals'])
+    child_globals = child_args['node_globals']
     child_globals['index'] = index
     child_globals['item'] = item
     child_args['node_globals'] = child_globals
@@ -158,6 +158,6 @@ def _get_child_args(node: Container):
     return {
         'parent_node': node,
         'master': node.master,
-        'node_globals': node.node_globals,
+        'node_globals': InheritedDict(node.node_globals),
         'node_styles': node.node_styles
     }

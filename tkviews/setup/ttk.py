@@ -1,3 +1,7 @@
+'''Ttk nodes rendering pipeline'''
+
+# pylint: disable=W0613
+
 from tkinter.ttk import Style
 from pyviews import RenderingPipeline
 from pyviews.core.compilation import Expression

@@ -1,8 +1,11 @@
 '''Contains rendering setup for widget nodes'''
 
+# pylint: disable=W0613
+
 from pyviews import Node, RenderingPipeline
 from pyviews.core.xml import XmlAttr
 from pyviews.core.node import Property
+from pyviews.core.observable import InheritedDict
 from pyviews.rendering.pipeline import apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
 from tkviews.core.styles import StyleError
@@ -46,7 +49,7 @@ def render_widget_children(node: Node, **args):
     render_children(node,
                     parent_node=node,
                     master=node.instance,
-                    node_globals=node.node_globals,
+                    node_globals=InheritedDict(node.node_globals),
                     node_styles=node.node_styles)
 
 def get_widget_setup():

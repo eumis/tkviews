@@ -14,16 +14,19 @@ from tkviews.setup.containers import get_if_setup, render_if, subscribe_to_condi
 
 class render_container_children_tests(TestCase):
     @patch('tkviews.setup.containers.render_children')
+    @patch('tkviews.setup.containers.InheritedDict')
     @case([])
     @case(['item1'])
     @case(['item1', 'item2'])
-    def test_renders_child(self, render_children: Mock, nodes):
+    def test_renders_child(self, inherited_dict: Mock, render_children: Mock, nodes):
         xml_node = Mock(children=nodes)
+        child_globals = Mock()
+        inherited_dict.side_effect = lambda parent: child_globals
         node = Container(Mock(), xml_node)
         child_args = {
             'parent_node': node,
             'master': node.master,
-            'node_globals': node.node_globals,
+            'node_globals': inherited_dict(node.node_globals),
             'node_styles': node.node_styles
         }
 
@@ -43,7 +46,7 @@ class render_view_children_tests(TestCase):
         child = Mock()
         deps.render = Mock(side_effect=lambda r, **args: child if r == view_root else None)
 
-        node = Mock()
+        node = Mock(node_globals=None)
         node.set_content = Mock()
         node.name = view_name
 

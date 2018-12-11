@@ -36,15 +36,11 @@ class render_container_children_tests(TestCase):
         self.assertEqual(render_children.call_args, call(node, **child_args), msg)
 
 class render_view_children_tests(TestCase):
-    @patch('tkviews.setup.containers.get_view_root')
-    @patch('tkviews.setup.containers.deps')
-    def test_renders_child(self, deps: Mock, get_view_root: Mock):
+    @patch('tkviews.setup.containers.render_view')
+    def test_renders_view(self, render_view: Mock):
         view_name = 'name'
-        view_root = Mock()
-        get_view_root.side_effect = lambda name: view_root if name == view_name else None
-
         child = Mock()
-        deps.render = Mock(side_effect=lambda r, **args: child if r == view_root else None)
+        render_view.side_effect = lambda name, **args: child if name == view_name else None
 
         node = Mock(node_globals=None)
         node.set_content = Mock()
@@ -55,13 +51,35 @@ class render_view_children_tests(TestCase):
         msg = 'should render view by node name and set result as view child'
         self.assertEqual(node.set_content.call_args, call(child), msg)
 
-    @patch('tkviews.setup.containers.get_view_root')
-    @patch('tkviews.setup.containers.deps')
+    @patch('tkviews.setup.containers.render_view')
+    @patch('tkviews.setup.containers.InheritedDict')
+    def test_renders_view_with_args(self, inherit_dict:Mock, render_view: Mock):
+        view_name = 'name'
+        inherit_dict.side_effect = lambda source: source
+        render_view.side_effect = lambda name, **args: args
+
+        node = Mock()
+        node.node_globals = Mock()
+        node.node_styles = Mock()
+        node.set_content = Mock()
+        node.master = Mock()
+        node.name = view_name
+        args = {
+            'parent_node': node,
+            'master': node.master,
+            'node_globals': inherit_dict(node.node_globals),
+            'node_styles': node.node_styles
+        }
+
+        render_view_children(node)
+
+        msg = 'should render view by node name and set result as view child'
+        self.assertEqual(node.set_content.call_args, call(args), msg)
+
+    @patch('tkviews.setup.containers.render_view')
     @case('')
     @case(None)
-    def test_not_render_empty_view_name(self, deps: Mock, get_view_root: Mock, view_name):
-        deps.render = Mock()
-
+    def test_not_render_empty_view_name(self, render_view: Mock, view_name):
         node = Mock()
         node.set_content = Mock()
         node.name = view_name
@@ -69,7 +87,7 @@ class render_view_children_tests(TestCase):
         render_view_children(node)
 
         msg = 'should not render view if name is empty or None'
-        self.assertFalse(node.set_content.called or deps.render.called, msg)
+        self.assertFalse(node.set_content.called or render_view.called, msg)
 
 class rerender_on_view_change_tests(TestCase):
     @patch('tkviews.setup.containers.render_view_children')

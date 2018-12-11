@@ -9,6 +9,7 @@ from pyviews.core.ioc import SERVICES as deps
 from pyviews.core.observable import InheritedDict
 from pyviews.rendering.pipeline import apply_attributes, render_children
 from tkviews.core.containers import Container, View, For, If
+from pyviews.rendering.views import render_view
 
 def get_container_setup() -> RenderingPipeline:
     '''Returns setup for container'''
@@ -39,9 +40,9 @@ def get_view_setup() -> RenderingPipeline:
 def render_view_children(node: View, **args):
     '''Finds view by name attribute and renders it as view node child'''
     if node.name:
-        view_root = get_view_root(node.name)
         child_args = _get_child_args(node)
-        node.set_content(deps.render(view_root, **child_args))
+        content = render_view(node.name, **child_args)
+        node.set_content(content)
 
 def rerender_on_view_change(node: View, **args):
     '''Subscribes to name change and renders new view'''

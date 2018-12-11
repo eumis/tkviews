@@ -4,12 +4,12 @@ Contains methods for node setups creation
 
 # pylint: disable=W0613
 
-from pyviews import RenderingPipeline, get_view_root
+from pyviews import RenderingPipeline
 from pyviews.core.ioc import SERVICES as deps
 from pyviews.core.observable import InheritedDict
 from pyviews.rendering.pipeline import apply_attributes, render_children
-from tkviews.core.containers import Container, View, For, If
 from pyviews.rendering.views import render_view
+from tkviews.core.containers import Container, View, For, If
 
 def get_container_setup() -> RenderingPipeline:
     '''Returns setup for container'''

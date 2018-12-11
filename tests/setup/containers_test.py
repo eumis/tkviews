@@ -106,12 +106,10 @@ class rerender_on_view_change_tests(TestCase):
         msg = 'render_view_children should be called on view change'
         self.assertEqual(render_view_children.call_args, call(node, **args), msg)
 
-    @patch('tkviews.setup.containers.get_view_root')
-    @patch('tkviews.setup.containers.deps')
+    @patch('tkviews.setup.containers.render_view')
     @case('')
     @case(None)
-    def test_not_render_empty_name(self, deps: Mock, get_view_root: Mock, view_name):
-        deps.render = Mock()
+    def test_not_render_empty_name(self, render_view: Mock, view_name):
         node = View(Mock(), Mock())
         node.set_content = Mock()
         node.destroy_children = Mock()
@@ -121,7 +119,7 @@ class rerender_on_view_change_tests(TestCase):
         node.name = view_name
 
         msg = 'should not render in case name is not set or empty'
-        self.assertFalse(deps.render.called or node.set_content.called, msg)
+        self.assertFalse(render_view.called or node.set_content.called, msg)
 
     @patch('tkviews.setup.containers.render_view_children')
     def test_not_rerender_same_view(self, render_view_children: Mock):

@@ -1,14 +1,18 @@
 '''Bindings specific for tkinter'''
 
 from sys import exc_info
+from typing import Type
 from tkinter import Variable, Entry, Checkbutton, Radiobutton
+from pyviews import Modifier, Node
 from pyviews.core import CoreError
 from pyviews.core.compilation import Expression
+from pyviews.core.xml import XmlAttr
 from pyviews.core.binding import Binding, BindingTarget, BindingError
-from pyviews.core.binding import InstanceTarget, get_expression_target
+from pyviews.core.binding import PropertyTarget, get_expression_target
 from pyviews.core.binding import ExpressionBinding, TwoWaysBinding
-from pyviews.rendering.binding import BindingFactory, BindingArgs
+from pyviews.rendering.binding import Binder, BindingRule
 from pyviews.rendering.expression import parse_expression
+from tkviews.core.widgets import WidgetNode
 
 class VariableTarget(BindingTarget):
     '''Target is tkinter Var'''
@@ -47,48 +51,59 @@ class VariableBinding(Binding):
             self._var.trace_remove('write', self._trace_id)
         self._trace_id = None
 
-# TODO updates binding rules and write tests
-def add_rules(factory: BindingFactory):
+class VariableTwowaysRule(BindingRule):
+    '''Rule for two ways binding between property and expression using variable'''
+    def __init__(self, widget_type: Type, node_property: str, variable_property: str):
+        self._widget_type = widget_type
+        self._node_property = node_property
+        self._variable_property = variable_property
+
+    def suitable(self,
+                 node: Node = None,
+                 attr: XmlAttr = None,
+                 **args) -> bool:
+        try:
+            return isinstance(node.instance, self._widget_type) and attr.name == self._node_property
+        except AttributeError:
+            return False
+
+    def apply(self,
+              node: WidgetNode = None,
+              expr_body: str = None,
+              modifier: Modifier = None,
+              attr: XmlAttr = None,
+              **args):
+        (variable_type_key, expr_body) = parse_expression(expr_body)
+
+        if node.node_globals.has_key(variable_type_key):
+            self._set_variable(node, variable_type_key)
+        variable = getattr(node, self._variable_property)
+
+        expression = Expression(expr_body)
+        expr_binding = self._create_expression_binding(node, expression, attr, modifier)
+        var_binding = self._create_variable_binding(node, expression, variable)
+
+        two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
+        two_ways_binding.bind()
+        node.add_binding(two_ways_binding)
+
+    def _set_variable(self, node: Node, variable_type_key: str):
+        variable_type = node.node_globals[variable_type_key]
+        variable = variable_type() if callable(variable_type) else variable_type
+        node.set_attr(self._variable_property, variable)
+
+    def _create_expression_binding(self,
+                                   node: Node, expr: Expression, attr: XmlAttr, modifier: Modifier):
+        target = PropertyTarget(node, attr.name, modifier)
+        return ExpressionBinding(target, expr, node.node_globals)
+
+    def _create_variable_binding(self,
+                                 node: Node, expr: Expression, variable: Variable):
+        target = get_expression_target(expr, node.node_globals)
+        return VariableBinding(target, variable)
+
+def add_rules(binder: Binder):
     '''Adds tkviews binding rules to passed factory'''
-    factory.add_rule('twoways', _get_rule(Entry, 'text', apply_entry_twoways))
-    factory.add_rule('twoways', _get_rule(Checkbutton, 'value', apply_var_two_ways))
-    factory.add_rule('twoways', _get_rule(Radiobutton, 'selected_value', apply_var_two_ways))
-
-def _get_rule(target_type, attr, apply):
-    return BindingFactory.Rule(
-        lambda args: _is_suitable(args, target_type, attr),
-        apply)
-
-def _is_suitable(args: BindingArgs, target_type, attr):
-    try:
-        return isinstance(args.node.instance, target_type) and args.attr.name == attr
-    except AttributeError:
-        return False
-
-def apply_entry_twoways(args: BindingArgs):
-    '''Applies twoways binding for entry text'''
-    apply_var_two_ways(args, 'textvariable')
-
-def apply_var_two_ways(args: BindingArgs, var_property=None):
-    '''Applies twoways binding using tkinter variable.'''
-    var_property = var_property if var_property else 'variable'
-    (var_key, expr_body) = parse_expression(args.expr_body)
-    if args.node.node_globals.has_key(var_key):
-        val = args.node.node_globals[var_key]
-        var = val() if callable(val) else val
-        args.node.set_attr(var_property, var)
-
-    _apply_two_ways(args, expr_body, getattr(args.node, var_property))
-
-def _apply_two_ways(args: BindingArgs, expr_body: str, var: Variable):
-    '''Applies two ways binding between tkinter Variable and expression'''
-    expression = Expression(expr_body)
-    target = InstanceTarget(args.node, args.attr.name, args.modifier)
-    expr_binding = ExpressionBinding(target, expression, args.node.node_globals)
-
-    target = get_expression_target(expression, args.node.node_globals)
-    obs_binding = VariableBinding(target, var)
-
-    two_ways_binding = TwoWaysBinding(expr_binding, obs_binding)
-    two_ways_binding.bind()
-    args.node.add_binding(two_ways_binding)
+    binder.add_rule('twoways', VariableTwowaysRule(Entry, 'text', 'textvariable'))
+    binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'value', 'variable'))
+    binder.add_rule('twoways', VariableTwowaysRule(Radiobutton, 'selected_value', 'variable'))

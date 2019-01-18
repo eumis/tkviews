@@ -2,7 +2,11 @@ from unittest import TestCase, main
 from unittest.mock import Mock, call
 from tkinter import Variable, Tk
 from pyviews.testing import case
+from pyviews import Node
+from pyviews.core.xml import XmlAttr
+from tkviews.core.widgets import WidgetNode
 from tkviews.core.binding import VariableTarget, VariableBinding
+from tkviews.core.binding import VariableTwowaysRule
 
 class TestVariableTarget(TestCase):
     def setUp(self):
@@ -66,6 +70,53 @@ class TestVariableBinding(TestCase):
 
     def tearDown(self):
         self.root.destroy()
+
+class Entry:
+    pass
+
+class Radiobutton:
+    pass
+
+class Checkbutton:
+    pass
+
+class VariableTwowaysRule_suitable_tests(TestCase):
+    @case(VariableTwowaysRule(Entry, 'text', 'textvariable'),
+          {'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('text')},
+          True)
+    @case(VariableTwowaysRule(Entry, 'text', 'textvariable'),
+          {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('text')},
+          False)
+    @case(VariableTwowaysRule(Radiobutton, 'selected_value', 'variable'),
+          {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('selected_value')},
+          True)
+    @case(VariableTwowaysRule(Radiobutton, 'selected_value', 'variable'),
+          {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('some_node_property')},
+          False)
+    @case(VariableTwowaysRule(Checkbutton, 'value', 'variable'),
+          {'node': WidgetNode(Checkbutton(), Mock()), 'attr': XmlAttr('value')},
+          True)
+    @case(VariableTwowaysRule(Checkbutton, 'value', 'variable'),
+          {'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('some_node_property')},
+          False)
+    def test_checks_widget_type_and_property(self, rule: VariableTwowaysRule, args: dict, expected: bool):
+        actual = rule.suitable(**args)
+
+        msg = 'should check passed widget type and node property with passed arguments'
+        self.assertEqual(expected, actual, msg)
+
+    @case({})
+    @case({'node': WidgetNode(Entry(), Mock())})
+    @case({'attr': XmlAttr('text')})
+    @case({'node': Node(Mock()), 'attr': XmlAttr('text')})
+    @case({'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('some_property')})
+    def test_false_for_bad_arguments(self, args: dict):
+        rule = VariableTwowaysRule(Entry, 'text', 'textvariable')
+
+        actual = rule.suitable(**args)
+
+        msg = 'should return False for bad arguments'
+        self.assertFalse(actual, msg)
 
 if __name__ == '__main__':
     main()

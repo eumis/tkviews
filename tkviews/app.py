@@ -3,7 +3,7 @@
 from os.path import abspath
 from pyviews.core import ioc
 from pyviews.dependencies import register_defaults
-from pyviews.rendering.binding import BindingFactory, add_default_rules
+from pyviews.rendering.binding import Binder, add_default_rules
 from pyviews.rendering.views import render_view
 from tkviews.rendering import create_node
 from tkviews.core.binding import add_rules as add_tkviews_binding_rules
@@ -70,7 +70,7 @@ def register_dependencies():
 
 def register_binding_factory(factory=None):
     '''Adds all needed rules to binding factory and registers dependency'''
-    factory = factory if factory else BindingFactory()
+    factory = factory if factory else Binder()
     add_default_rules(factory)
     add_tkviews_binding_rules(factory)
     ioc.register_single('binding_factory', factory)

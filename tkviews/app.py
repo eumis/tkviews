@@ -44,7 +44,7 @@ def register_dependencies():
     ioc.register_single('pipeline', get_layout_setup(), Row)
     ioc.register_single('pipeline', get_layout_setup(), Column)
 
-    register_binding_factory()
+    register_binder()
 
 # def _register_rendering_steps():
 #     ioc.register_single('rendering_steps', [apply_style_attrs, render_children], Style)
@@ -68,12 +68,12 @@ def register_dependencies():
 #         [apply_attributes, apply_text, canvas.render],
 #         canvas.Text)
 
-def register_binding_factory(factory=None):
+def register_binder(binder: Binder = None):
     '''Adds all needed rules to binding factory and registers dependency'''
-    factory = factory if factory else Binder()
-    add_default_rules(factory)
-    add_tkviews_binding_rules(factory)
-    ioc.register_single('binding_factory', factory)
+    binder = binder if binder else Binder()
+    add_default_rules(binder)
+    add_tkviews_binding_rules(binder)
+    ioc.register_single('binder', binder)
 
 def launch(root_view=None):
     '''Runs application. Widgets are created from passed xml_files'''

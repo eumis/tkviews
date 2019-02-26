@@ -1,16 +1,21 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring
+
+from unittest import TestCase
 from unittest.mock import Mock, patch, call
 from pyviews.testing import case
+from pyviews.core.ioc import Scope, register_func
 from pyviews.core.xml import XmlAttr
-from pyviews.rendering.pipeline import call_set_attr
+from pyviews.compilation import CompiledExpression
+from pyviews.rendering import call_set_attr
 from tkviews.core.ttk import TtkStyle
 from tkviews.setup.ttk import setup_value_setter, apply_style_attributes, configure
+
+with Scope('ttk_tests'):
+    register_func('expression', CompiledExpression)
 
 def increment(node, key, value):
     '''Increments value'''
     call_set_attr(node, key, value + 1)
-
-from tests.setup.ttk_test import increment
 
 class SetupTests(TestCase):
     def test_setup_value_setter_sets_name(self):
@@ -38,11 +43,11 @@ class SetupTests(TestCase):
     @case([], {})
     @case([('one', '1', None)], {'one': '1'})
     @case([('one', '{1}', None)], {'one': 1})
-    @case([('one', '{5}', 'tests.setup.ttk_test.increment')], {'one': 6})
+    @case([('one', '{5}', __name__ + '.increment')], {'one': 6})
     @case(
         [
             ('one', '{1 + 1}', None),
-            ('two', '{1 + 1}', 'tests.setup.ttk_test.increment'),
+            ('two', '{1 + 1}', __name__ + '.increment'),
             ('key', ' string value ', None)
         ],
         {
@@ -57,7 +62,8 @@ class SetupTests(TestCase):
         node = TtkStyle(xml_node)
         setup_value_setter(node)
 
-        apply_style_attributes(node)
+        with Scope('ttk_tests'):
+            apply_style_attributes(node)
 
         msg = 'apply_style_attributes should set attribte values'
         self.assertDictEqual(node.values, expected, msg)
@@ -77,6 +83,3 @@ class SetupTests(TestCase):
 
         msg = 'configure should call configure on ttk style and pass values'
         self.assertEqual(ttk_style_mock.configure.call_args, call(node.full_name, **values), msg)
-
-if __name__ == '__main__':
-    main()

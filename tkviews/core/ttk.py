@@ -1,9 +1,7 @@
 '''ttk specific implementation'''
 
 from tkinter.ttk import Style, Widget
-from pyviews.core.xml import XmlNode
-from pyviews.core.node import Node, InstanceNode
-from pyviews.core.observable import InheritedDict
+from pyviews.core import XmlNode, Node, InstanceNode, InheritedDict
 from tkviews.core import TkNode
 
 class TtkWidgetNode(InstanceNode, TkNode):
@@ -41,7 +39,7 @@ class TtkStyle(Node):
         return '{0}.{1}'.format(self.name, self._parent_name) \
                if self._parent_name else self.name
 
-def theme_use(node, key, value):
+def theme_use(node, key, value): #pylint: disable=unused-argument
     '''Sets ttk style theme'''
     ttk_style = Style()
     ttk_style.theme_use(key)

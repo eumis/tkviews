@@ -4,7 +4,7 @@ Contains methods for node setups creation
 
 # pylint: disable=W0613
 
-from pyviews.rendering.pipeline import RenderingPipeline, apply_attributes
+from pyviews.rendering import RenderingPipeline, apply_attributes
 from tkviews.core.geometry import LayoutSetup
 
 def get_layout_setup() -> RenderingPipeline:

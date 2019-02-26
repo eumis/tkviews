@@ -3,15 +3,13 @@
 from sys import exc_info
 from typing import Type
 from tkinter import Variable, Entry, Checkbutton, Radiobutton
-from pyviews import Modifier, Node
-from pyviews.core import CoreError
-from pyviews.core.compilation import Expression
-from pyviews.core.xml import XmlAttr
-from pyviews.core.binding import Binding, BindingTarget, BindingError
-from pyviews.core.binding import PropertyTarget, get_expression_target
-from pyviews.core.binding import ExpressionBinding, TwoWaysBinding
-from pyviews.rendering.binding import Binder, BindingRule
-from pyviews.rendering.expression import parse_expression
+from pyviews.core import CoreError, XmlAttr, Node, Modifier
+from pyviews.core import Binding, BindingTarget, BindingError, Binder, BindingRule
+from pyviews.core import Expression
+from pyviews.binding import PropertyTarget, get_expression_target
+from pyviews.binding import ExpressionBinding, TwoWaysBinding
+from pyviews.compilation import parse_expression
+from pyviews.container import expression
 from tkviews.core.widgets import WidgetNode
 
 class VariableTarget(BindingTarget):
@@ -25,6 +23,7 @@ class VariableTarget(BindingTarget):
 class VariableBinding(Binding):
     '''Binding is subscribed on tkinter Var changes'''
     def __init__(self, target: BindingTarget, var: Variable):
+        super().__init__()
         self._target = target
         self._var = var
         self._trace_id = None
@@ -33,7 +32,7 @@ class VariableBinding(Binding):
         self.destroy()
         self._trace_id = self._var.trace_add('write', self._callback)
 
-    def _callback(self, *args):
+    def _callback(self, *args): #pylint: disable=unused-argument
         try:
             value = self._var.get()
             self._target.on_change(value)
@@ -51,6 +50,7 @@ class VariableBinding(Binding):
             self._var.trace_remove('write', self._trace_id)
         self._trace_id = None
 
+#pylint: disable=arguments-differ
 class VariableTwowaysRule(BindingRule):
     '''Rule for two ways binding between property and expression using variable'''
     def __init__(self, widget_type: Type, node_property: str, variable_property: str):
@@ -79,9 +79,9 @@ class VariableTwowaysRule(BindingRule):
             self._set_variable(node, variable_type_key)
         variable = getattr(node, self._variable_property)
 
-        expression = Expression(expr_body)
-        expr_binding = self._create_expression_binding(node, expression, attr, modifier)
-        var_binding = self._create_variable_binding(node, expression, variable)
+        expression_ = expression(expr_body)
+        expr_binding = self._create_expression_binding(node, expression_, attr, modifier)
+        var_binding = self._create_variable_binding(node, expression_, variable)
 
         two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
         two_ways_binding.bind()

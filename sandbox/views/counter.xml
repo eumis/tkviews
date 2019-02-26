@@ -2,7 +2,7 @@
 <w:Container xmlns="tkinter"
              xmlns:w="tkviews"
              xmlns:import="pyviews.rendering.modifiers.import_global"
-             xmlns:bind="tkviews.core.setters.bind"
+             xmlns:bind="tkviews.core.modifiers.bind"
              xmlns:global='pyviews.rendering.modifiers.set_global'
 
              import:Counter="counter.Counter"

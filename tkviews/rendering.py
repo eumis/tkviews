@@ -2,9 +2,8 @@
 
 from tkinter import Entry, Checkbutton, Radiobutton
 from tkinter.ttk import Widget as TtkWidget
-from pyviews import Node
-from pyviews.rendering.node import get_inst_type, create_inst
-from pyviews.core.xml import XmlNode
+from pyviews.core import Node, XmlNode
+from pyviews.rendering import get_inst_type, create_inst
 from tkviews.core.widgets import WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 from tkviews.core.ttk import TtkWidgetNode
 

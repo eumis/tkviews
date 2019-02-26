@@ -4,9 +4,7 @@ Containers don't represent any widget.
 '''
 
 from tkinter import Widget
-from pyviews.core.xml import XmlNode
-from pyviews.core.observable import InheritedDict
-from pyviews.core.node import Node
+from pyviews.core import XmlNode, InheritedDict, Node
 from tkviews.core import TkNode
 
 class Container(Node, TkNode):

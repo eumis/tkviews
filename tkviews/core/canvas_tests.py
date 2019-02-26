@@ -1,13 +1,14 @@
+#pylint: disable=missing-docstring
 
 from unittest import TestCase, main
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from tkviews.core.canvas import CanvasNode
+from .canvas import CanvasNode
 
 class CanvasItem(CanvasNode):
-    def __init__(self, canvas, id):
+    def __init__(self, canvas, item_id):
         super().__init__(canvas, None)
-        self._id = id
+        self._id = item_id
         self.options = None
 
     def _create(self, **options):

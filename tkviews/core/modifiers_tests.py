@@ -1,7 +1,9 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring
+
+from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from tkviews.core.setters import bind, bind_all, set_attr, config, visible
+from .modifiers import bind, bind_all, set_attr, config, visible
 
 class TkModifiersTests(TestCase):
     def test_bind(self):
@@ -55,6 +57,3 @@ class TkModifiersTests(TestCase):
 
         msg = "visible should call geometry forget if false"
         self.assertEqual(node.geometry.forget.call_args, call(node.instance), msg)
-
-if __name__ == '__main__':
-    main()

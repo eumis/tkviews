@@ -1,33 +1,34 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring
+
+from unittest import TestCase
 from unittest.mock import Mock
 from pyviews.testing import case
-from pyviews.core.xml import XmlAttr
-from pyviews.core.observable import InheritedDict
-from pyviews.rendering.pipeline import call_set_attr
+from pyviews.core import XmlAttr, InheritedDict
+from pyviews.core.ioc import Scope, register_func
+from pyviews.compilation import CompiledExpression
+from pyviews.rendering import call_set_attr
 from tkviews.core.styles import Style, StyleError
-from tkviews.setup.styles import apply_style_items
-from tkviews.setup.styles import apply_parent_items, store_to_node_styles
+from .styles import apply_style_items, apply_parent_items, store_to_node_styles
+
+with Scope('styles_tests'):
+    register_func('expression', CompiledExpression)
 
 def some_setter():
     '''Some test setter'''
-    pass
 
 def another_setter():
     '''Another test setter'''
-    pass
-
-from tests.setup.styles_test import some_setter, another_setter
 
 class ApplyStyleItemsTests(TestCase):
     @case([('one', '1', None)], [('one', '1', call_set_attr)])
     @case([('one', '{1}', None)], [('one', 1, call_set_attr)])
     @case([('one', ' value ', None)], [('one', ' value ', call_set_attr)])
-    @case([('one', 'value', 'tests.setup.styles_test.some_setter')], [('one', 'value', some_setter)])
+    @case([('one', 'value', __name__ + '.some_setter')], [('one', 'value', some_setter)])
     @case(
         [
-            ('one', 'value', 'tests.setup.styles_test.some_setter'),
+            ('one', 'value', __name__ + '.some_setter'),
             ('two', '{1 + 1}', None),
-            ('key', '', 'tests.setup.styles_test.another_setter')
+            ('key', '', __name__ + '.another_setter')
         ],
         [
             ('one', 'value', some_setter),
@@ -40,7 +41,8 @@ class ApplyStyleItemsTests(TestCase):
         xml_node = Mock(attrs=attrs)
         node = Style(xml_node)
 
-        apply_style_items(node)
+        with Scope('styles_tests'):
+            apply_style_items(node)
         actual = {name: (item.name, item.value, item.setter) for name, item in node.items.items()}
         expected = {item[0]: item for item in expected}
 
@@ -63,7 +65,8 @@ class ApplyStyleItemsTests(TestCase):
         xml_node = Mock(attrs=[XmlAttr('name', name)])
         node = Style(xml_node)
 
-        apply_style_items(node)
+        with Scope('styles_tests'):
+            apply_style_items(node)
 
         msg = 'apply_style_items should set style name from attributes'
         self.assertEqual(node.name, name, msg)
@@ -105,6 +108,3 @@ class StoreToNodeStylesTests(TestCase):
 
         msg = 'store_to_node_styles should store style items to node_styles'
         self.assertEqual(node_styles[node.name], node.items.values(), msg)
-
-if __name__ == '__main__':
-    main()

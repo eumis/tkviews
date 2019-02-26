@@ -3,10 +3,9 @@
 # pylint: disable=W0613
 
 from tkinter.ttk import Style
-from pyviews import RenderingPipeline
-from pyviews.core.compilation import Expression
-from pyviews.rendering.expression import is_code_expression, parse_expression
-from pyviews.rendering.pipeline import get_setter
+from pyviews.compilation import is_expression, parse_expression
+from pyviews.rendering import get_setter, RenderingPipeline
+from pyviews.container import expression
 from tkviews.core.ttk import TtkStyle
 
 def get_ttk_style_setup() -> RenderingPipeline:
@@ -34,9 +33,9 @@ def apply_style_attributes(node: TtkStyle, **args):
     for attr in node.xml_node.attrs:
         setter = get_setter(attr)
         value = attr.value if attr.value else ''
-        if is_code_expression(value):
-            expression = Expression(parse_expression(value)[1])
-            value = expression.execute(node.node_globals.to_dictionary())
+        if is_expression(value):
+            expression_ = expression(parse_expression(value)[1])
+            value = expression_.execute(node.node_globals.to_dictionary())
         setter(node, attr.name, value)
 
 def configure(node: TtkStyle, **args):

@@ -2,7 +2,7 @@
 Contains methods for node setups creation
 '''
 
-from pyviews.rendering.pipeline import RenderingPipeline, apply_attributes
+from pyviews.rendering import RenderingPipeline, apply_attributes
 from tkviews.core.canvas import CanvasNode
 
 def get_canvas_setup() -> RenderingPipeline:

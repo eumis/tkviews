@@ -1,7 +1,10 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring
+
+from unittest import TestCase
 from unittest.mock import call, Mock, patch
 from pyviews.testing import case
-from tkviews.core.ttk import TtkStyle, theme_use
+from . import ttk
+from .ttk import TtkStyle, theme_use
 
 class TtkStyleTests(TestCase):
     @case('name', 'parent_name', 'name.parent_name')
@@ -17,7 +20,7 @@ class TtkStyleTests(TestCase):
         self.assertEqual(expected, style.full_name, msg=msg)
 
 class ModifiersTest(TestCase):
-    @patch('tkviews.core.ttk.Style')
+    @patch(ttk.__name__ + '.Style')
     @case('default')
     @case('custom')
     def test_theme_use(self, ttk_style: Mock, theme):
@@ -28,6 +31,3 @@ class ModifiersTest(TestCase):
 
         msg = 'theme_use should call theme_use for ttk.Style'
         self.assertEqual(ttk_style_mock.theme_use.call_args, call(theme), msg)
-
-if __name__ == '__main__':
-    main()

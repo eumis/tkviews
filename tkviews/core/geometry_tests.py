@@ -1,8 +1,9 @@
+#pylint: disable=missing-docstring
+
 from unittest import TestCase, main
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from tkviews.core.geometry import GridGeometry, PackGeometry, PlaceGeometry
-from tkviews.core.geometry import Row, Column
+from .geometry import GridGeometry, PackGeometry, PlaceGeometry
 
 class TestGridGeometry(TestCase):
     def setUp(self):

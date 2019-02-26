@@ -1,12 +1,12 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring,invalid-name
+
+from unittest import TestCase
 from unittest.mock import Mock, call
 from tkinter import Variable, Tk
 from pyviews.testing import case
-from pyviews import Node
-from pyviews.core.xml import XmlAttr
+from pyviews.core import XmlAttr, Node
 from tkviews.core.widgets import WidgetNode
-from tkviews.core.binding import VariableTarget, VariableBinding
-from tkviews.core.binding import VariableTwowaysRule
+from .binding import VariableTarget, VariableBinding, VariableTwowaysRule
 
 class TestVariableTarget(TestCase):
     def setUp(self):
@@ -117,6 +117,3 @@ class VariableTwowaysRule_suitable_tests(TestCase):
 
         msg = 'should return False for bad arguments'
         self.assertFalse(actual, msg)
-
-if __name__ == '__main__':
-    main()

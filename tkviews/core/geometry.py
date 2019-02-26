@@ -1,10 +1,10 @@
 '''Geometry managers wrappers'''
 
-from pyviews.core import get_not_implemented_message
+from abc import ABC, abstractmethod
 from pyviews.core.xml import XmlNode
 from pyviews.core.node import Node
 
-class Geometry:
+class Geometry(ABC):
     '''Base for wrapper'''
     def __init__(self, **args):
         self._args = args if args else {}
@@ -13,13 +13,12 @@ class Geometry:
         '''Sets geometry parameter'''
         self._args[key] = value
 
+    @abstractmethod
     def apply(self, widget):
         '''Applies geomtery with passed parameters'''
-        raise NotImplementedError(get_not_implemented_message(self, 'apply'))
 
     def forget(self, widget):
         '''Calls forget method for geometry'''
-        pass
 
 class GridGeometry(Geometry):
     '''Grid geometry wrapper'''
@@ -45,7 +44,7 @@ class PlaceGeometry(Geometry):
     def forget(self, widget):
         widget.place_forget()
 
-class LayoutSetup(Node):
+class LayoutSetup(Node, ABC):
     '''Base for wrappers under methods calls of geometry'''
     def __init__(self, master, xml_node: XmlNode, parent_context=None):
         super().__init__(xml_node, parent_context)
@@ -53,9 +52,9 @@ class LayoutSetup(Node):
         self.args = {}
         self.index = None
 
+    @abstractmethod
     def apply(self):
         '''Calls config with passed parameters'''
-        raise NotImplementedError(get_not_implemented_message(self, 'apply'))
 
 class Row(LayoutSetup):
     '''Wrapper under grid_rowconfigure method'''

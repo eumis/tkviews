@@ -1,13 +1,11 @@
 '''Contains rendering steps for style nodes'''
 
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 
-from pyviews import RenderingPipeline
-from pyviews.core.xml import XmlAttr
-from pyviews.core.compilation import Expression
-from pyviews.core.observable import InheritedDict
-from pyviews.rendering.pipeline import get_setter, render_children
-from pyviews.rendering.expression import is_code_expression, parse_expression
+from pyviews.core import XmlAttr, InheritedDict
+from pyviews.compilation import is_expression, parse_expression
+from pyviews.rendering import get_setter, render_children, RenderingPipeline
+from pyviews.container import expression
 from tkviews.core.styles import Style, StyleItem, StyleError
 
 def get_style_setup() -> RenderingPipeline:
@@ -34,12 +32,15 @@ def apply_style_items(node: Style, **args):
 def _get_style_item(node: Style, attr: XmlAttr):
     setter = get_setter(attr)
     value = attr.value if attr.value else ''
-    if is_code_expression(value):
-        expression = Expression(parse_expression(value)[1])
-        value = expression.execute(node.node_globals.to_dictionary())
+    if is_expression(value):
+        expression_ = expression(parse_expression(value)[1])
+        value = expression_.execute(node.node_globals.to_dictionary())
     return StyleItem(setter, attr.name, value)
 
-def apply_parent_items(node: Style, parent_name: str = None, node_styles: InheritedDict = None, **args):
+def apply_parent_items(node: Style,
+                       parent_name: str = None,
+                       node_styles: InheritedDict = None,
+                       **args):
     '''Sets style items from parent style'''
     if parent_name:
         parent_items = node_styles[parent_name]

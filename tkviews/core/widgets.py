@@ -2,9 +2,7 @@
 
 from tkinter import Tk, Widget
 from tkinter import StringVar, BooleanVar, IntVar
-from pyviews.core.xml import XmlNode
-from pyviews.core.node import InstanceNode
-from pyviews.core.observable import InheritedDict
+from pyviews.core import XmlNode, InstanceNode, InheritedDict
 from tkviews.core import TkNode
 
 class Root(InstanceNode, TkNode):

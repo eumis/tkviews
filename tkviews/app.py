@@ -1,10 +1,10 @@
 '''tkinter application entry point'''
 
 from os.path import abspath
-from pyviews.core import ioc
+from pyviews.core import ioc, Binder
+from pyviews.binding import add_default_rules
+from pyviews.rendering import render_view
 from pyviews.dependencies import register_defaults
-from pyviews.rendering.binding import Binder, add_default_rules
-from pyviews.rendering.views import render_view
 from tkviews.rendering import create_node
 from tkviews.core.binding import add_rules as add_tkviews_binding_rules
 from tkviews.core.widgets import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode

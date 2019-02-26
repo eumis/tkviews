@@ -1,13 +1,11 @@
 '''Wrappers for canvas elements'''
 
+from abc import ABC, abstractmethod
 from tkinter import Canvas
-from pyviews.core.xml import XmlNode
-from pyviews.core.observable import InheritedDict
-from pyviews.core import get_not_implemented_message
-from pyviews.core.node import Node
+from pyviews.core import XmlNode, InheritedDict, Node
 from tkviews.core import TkNode
 
-class CanvasNode(Node, TkNode):
+class CanvasNode(Node, TkNode, ABC):
     '''Base class for wrappers'''
     def __init__(self, master: Canvas, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
@@ -31,8 +29,9 @@ class CanvasNode(Node, TkNode):
         '''Creates canvas element'''
         self._item_id = self._create(**options)
 
+    @abstractmethod
     def _create(self, **options):
-        raise NotImplementedError(get_not_implemented_message(self, '_create'))
+        pass
 
     def bind(self, event: str, command):
         '''Binds element to event'''

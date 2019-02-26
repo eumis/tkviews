@@ -5,8 +5,8 @@
 from unittest import TestCase, main
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from pyviews.core.xml import XmlNode
-from tkviews.core.containers import View, For, If
+from pyviews.core import XmlNode
+from .containers import View, For, If
 
 class View_init_tests(TestCase):
     def test_name_is_none_by_default(self):

@@ -1,11 +1,11 @@
 '''Core package'''
 
-from pyviews import InheritedDict
-from pyviews.core import get_not_implemented_message
+from abc import ABC, abstractproperty
+from pyviews.core import InheritedDict
 
-class TkNode:
+class TkNode(ABC):
     '''Node interface'''
     @property
+    @abstractproperty
     def node_styles(self) -> InheritedDict:
         '''Returns node styles'''
-        raise NotImplementedError(get_not_implemented_message(self, '_create'))

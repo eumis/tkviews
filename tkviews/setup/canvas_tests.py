@@ -1,4 +1,6 @@
-from unittest import TestCase, main
+#pylint: disable=missing-docstring
+
+from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
 from tkviews.core.canvas import CanvasNode
@@ -6,12 +8,16 @@ from tkviews.setup.canvas import setup_temp_setter, setup_temp_binding, create_i
 from tkviews.setup.canvas import setup_config_setter, apply_temp_events, setup_event_binding
 from tkviews.setup.canvas import clear_temp
 
+class TestCanvasNode(CanvasNode):
+    def _create(self, **options):
+        return "id"
+
 class RenderStepsTest(TestCase):
     @case({'key': 1})
     @case({'key': 1, 'one': 'one'})
     @case({'key': None, 'list': [1], 'obj': object()})
     def test_setup_temp_setter_stores_attributes(self, attrs: dict):
-        canvas = CanvasNode(Mock(), Mock())
+        canvas = TestCanvasNode(Mock(), Mock())
 
         setup_temp_setter(canvas)
         for key, value in attrs.items():
@@ -23,7 +29,7 @@ class RenderStepsTest(TestCase):
     @case({'key': lambda: None})
     @case({'key': lambda: None, 'two': lambda: None})
     def test_setup_temp_binding_stores_commands(self, events):
-        canvas = CanvasNode(Mock(), Mock())
+        canvas = TestCanvasNode(Mock(), Mock())
 
         setup_temp_binding(canvas)
         for key, command in events.items():
@@ -44,7 +50,7 @@ class RenderStepsTest(TestCase):
     @case('key', 1)
     @case('other_key', 'value')
     def test_setup_config_setter_calls_config(self, key, value):
-        canvas = CanvasNode(Mock(), Mock())
+        canvas = TestCanvasNode(Mock(), Mock())
         canvas.config = Mock()
 
         setup_config_setter(canvas)
@@ -78,7 +84,8 @@ class RenderStepsTest(TestCase):
         self.assertEqual(canvas.bind.call_args_list, expected_calls, msg)
 
     def test_clear_temp_deletes_temp_vars(self):
-        canvas = CanvasNode(Mock(), Mock())
+        #pylint: disable=attribute-defined-outside-init
+        canvas = TestCanvasNode(Mock(), Mock())
         canvas.attr_values = {}
         canvas.events = {}
         canvas.bind_source = {}
@@ -89,6 +96,3 @@ class RenderStepsTest(TestCase):
         self.assertFalse(hasattr(canvas, 'attr_values'), msg)
         self.assertFalse(hasattr(canvas, 'events'), msg)
         self.assertFalse(hasattr(canvas, 'bind_source'), msg)
-
-if __name__ == '__main__':
-    main()

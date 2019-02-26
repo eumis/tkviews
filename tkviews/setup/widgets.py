@@ -2,11 +2,8 @@
 
 # pylint: disable=W0613
 
-from pyviews import Node, RenderingPipeline
-from pyviews.core.xml import XmlAttr
-from pyviews.core.node import Property
-from pyviews.core.observable import InheritedDict
-from pyviews.rendering.pipeline import apply_attributes, render_children, apply_attribute
+from pyviews.core import XmlAttr, Node, Property, InheritedDict
+from pyviews.rendering import RenderingPipeline, apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
 from tkviews.core.styles import StyleError
 from tkviews.core.widgets import WidgetNode

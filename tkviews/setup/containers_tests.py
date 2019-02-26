@@ -3,18 +3,19 @@
 # pylint: disable=C0111,C0103
 
 from math import floor
-from unittest import TestCase, main
+from unittest import TestCase
 from unittest.mock import Mock, call, patch
 from pyviews.testing import case
 from tkviews.core.containers import Container, View, For, If
-from tkviews.setup.containers import render_container_children
-from tkviews.setup.containers import render_view_children, rerender_on_view_change
-from tkviews.setup.containers import render_for_items, rerender_on_items_change
-from tkviews.setup.containers import get_if_setup, render_if, subscribe_to_condition_change
+from . import containers
+from .containers import render_container_children
+from .containers import render_view_children, rerender_on_view_change
+from .containers import render_for_items, rerender_on_items_change
+from .containers import get_if_setup, render_if, subscribe_to_condition_change
 
 class render_container_children_tests(TestCase):
-    @patch('tkviews.setup.containers.render_children')
-    @patch('tkviews.setup.containers.InheritedDict')
+    @patch(containers.__name__ + '.render_children')
+    @patch(containers.__name__ + '.InheritedDict')
     @case([])
     @case(['item1'])
     @case(['item1', 'item2'])
@@ -36,7 +37,7 @@ class render_container_children_tests(TestCase):
         self.assertEqual(render_children.call_args, call(node, **child_args), msg)
 
 class render_view_children_tests(TestCase):
-    @patch('tkviews.setup.containers.render_view')
+    @patch(containers.__name__ + '.render_view')
     def test_renders_view(self, render_view: Mock):
         view_name = 'name'
         child = Mock()
@@ -51,8 +52,8 @@ class render_view_children_tests(TestCase):
         msg = 'should render view by node name and set result as view child'
         self.assertEqual(node.set_content.call_args, call(child), msg)
 
-    @patch('tkviews.setup.containers.render_view')
-    @patch('tkviews.setup.containers.InheritedDict')
+    @patch(containers.__name__ + '.render_view')
+    @patch(containers.__name__ + '.InheritedDict')
     def test_renders_view_with_args(self, inherit_dict:Mock, render_view: Mock):
         view_name = 'name'
         inherit_dict.side_effect = lambda source: source
@@ -76,7 +77,7 @@ class render_view_children_tests(TestCase):
         msg = 'should render view by node name and set result as view child'
         self.assertEqual(node.set_content.call_args, call(args), msg)
 
-    @patch('tkviews.setup.containers.render_view')
+    @patch(containers.__name__ + '.render_view')
     @case('')
     @case(None)
     def test_not_render_empty_view_name(self, render_view: Mock, view_name):
@@ -90,8 +91,8 @@ class render_view_children_tests(TestCase):
         self.assertFalse(node.set_content.called or render_view.called, msg)
 
 class rerender_on_view_change_tests(TestCase):
-    @patch('tkviews.setup.containers.render_view_children')
-    def test_renders_new_view(self, render_view_children: Mock):
+    @patch(containers.__name__ + '.render_view_children')
+    def test_renders_new_view(self, render_view_children: Mock):#pylint: disable=redefined-outer-name
         node = View(Mock(), Mock())
         node.destroy_children = Mock()
         view_name = 'name'
@@ -106,7 +107,7 @@ class rerender_on_view_change_tests(TestCase):
         msg = 'render_view_children should be called on view change'
         self.assertEqual(render_view_children.call_args, call(node, **args), msg)
 
-    @patch('tkviews.setup.containers.render_view')
+    @patch(containers.__name__ + '.render_view')
     @case('')
     @case(None)
     def test_not_render_empty_name(self, render_view: Mock, view_name):
@@ -121,7 +122,7 @@ class rerender_on_view_change_tests(TestCase):
         msg = 'should not render in case name is not set or empty'
         self.assertFalse(render_view.called or node.set_content.called, msg)
 
-    @patch('tkviews.setup.containers.render_view_children')
+    @patch(containers.__name__ + '.render_view_children')
     def test_not_rerender_same_view(self, render_view_children: Mock):
         node = View(Mock(), Mock())
         node.destroy_children = Mock()
@@ -138,7 +139,7 @@ class rerender_on_view_change_tests(TestCase):
         self.assertFalse(render_view_children.called, msg)
 
 class render_for_items_tests(TestCase):
-    @patch('tkviews.setup.containers.deps')
+    @patch(containers.__name__ + '.deps')
     @case([], [], [])
     @case(['item1'], ['node1'], ['node1'])
     @case(['item1'], ['node1', 'node2'], ['node1', 'node2'])
@@ -155,7 +156,7 @@ class render_for_items_tests(TestCase):
         msg = 'should render all xml children for every item'
         self.assertEqual(node.children, expected_children, msg)
 
-    @patch('tkviews.setup.containers.deps')
+    @patch(containers.__name__ + '.deps')
     @case([], [], [])
     @case(['item1'], ['node1'], [(0, 'item1')])
     @case(['item1'], ['node1', 'node2'], [(0, 'item1'), (0, 'item1')])
@@ -175,7 +176,7 @@ class render_for_items_tests(TestCase):
         self.assertEqual(node.children, expected_children, msg)
 
 class rerender_on_items_change_tests(TestCase):
-    @patch('tkviews.setup.containers.deps')
+    @patch(containers.__name__ + '.deps')
     @case(2, 4, 4)
     @case(2, 4, 2)
     @case(1, 4, 2)
@@ -202,7 +203,7 @@ class rerender_on_items_change_tests(TestCase):
         msg = 'should remove destroyed from children'
         self.assertEqual(node.children, to_left, msg)
 
-    @patch('tkviews.setup.containers.deps')
+    @patch(containers.__name__ + '.deps')
     @case(2, 4, 4)
     @case(2, 0, 4)
     @case(2, 4, 2)
@@ -227,7 +228,7 @@ class rerender_on_items_change_tests(TestCase):
             item = node.items[floor(i / xml_child_count)]
             self.assertEqual(child.node_globals['item'], item, msg)
 
-    @patch('tkviews.setup.containers.deps')
+    @patch(containers.__name__ + '.deps')
     @case(2, 4, 6)
     @case(2, 4, 10)
     @case(1, 4, 4)
@@ -245,7 +246,7 @@ class rerender_on_items_change_tests(TestCase):
         self.assertEqual(len(node.children), xml_child_count * new_items_count, msg)
 
 class render_if_tests(TestCase):
-    @patch('tkviews.setup.containers.render_children')
+    @patch(containers.__name__ + '.render_children')
     @case(True)
     @case(False)
     def test_renders_children(self, render_children, condition):
@@ -259,7 +260,7 @@ class render_if_tests(TestCase):
         self.assertEqual(render_children.called, condition, msg)
 
 class subscribe_to_condition_change_tests(TestCase):
-    @patch('tkviews.setup.containers.render_children')
+    @patch(containers.__name__ + '.render_children')
     def test_renders_children(self, render_children):
         node = If(Mock(), Mock())
         node.condition = False
@@ -270,8 +271,8 @@ class subscribe_to_condition_change_tests(TestCase):
         msg = 'should render children if condition is changed to True'
         self.assertTrue(render_children.called, msg)
 
-    @patch('tkviews.setup.containers.render_children')
-    def test_destroy_children(self, render_children):
+    @patch(containers.__name__ + '.render_children')
+    def test_destroy_children(self, render_children): #pylint: disable=unused-argument
         node = Mock(destroy_children=Mock())
         node.condition = True
 
@@ -280,6 +281,3 @@ class subscribe_to_condition_change_tests(TestCase):
 
         msg = 'should destroy children if condition is changed to False'
         self.assertTrue(node.destroy_children, msg)
-
-if __name__ == '__main__':
-    main()

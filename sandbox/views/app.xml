@@ -3,7 +3,7 @@
         xmlns:w="tkviews"
         xmlns:import='pyviews.rendering.modifiers.import_global'
         xmlns:global='pyviews.rendering.modifiers.set_global'
-        xmlns:bind='tkviews.core.setters.bind'
+        xmlns:bind='tkviews.core.modifiers.bind'
 
         import:AppViewModel='view_model.AppViewModel'
         import:Grid='tkviews.core.geometry.GridGeometry'

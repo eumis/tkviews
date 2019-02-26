@@ -3,7 +3,7 @@
            xmlns:w="tkviews"
            xmlns:sb='widgets'
            xmlns:import="pyviews.rendering.modifiers.import_global"
-           xmlns:bind="tkviews.core.setters.bind"
+           xmlns:bind="tkviews.core.modifiers.bind"
            xmlns:global='pyviews.rendering.modifiers.set_global'
 
            import:Pack='tkviews.core.geometry.PackGeometry'

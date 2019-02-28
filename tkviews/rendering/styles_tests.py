@@ -7,7 +7,7 @@ from pyviews.core import XmlAttr, InheritedDict
 from pyviews.core.ioc import Scope, register_func
 from pyviews.compilation import CompiledExpression
 from pyviews.rendering import call_set_attr
-from tkviews.core.styles import Style, StyleError
+from tkviews.node import Style, StyleError
 from .styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 with Scope('styles_tests'):

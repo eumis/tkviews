@@ -6,7 +6,7 @@ from tkinter.ttk import Style
 from pyviews.compilation import is_expression, parse_expression
 from pyviews.rendering import get_setter, RenderingPipeline
 from pyviews.container import expression
-from tkviews.core.ttk import TtkStyle
+from tkviews.node import TtkStyle
 
 def get_ttk_style_setup() -> RenderingPipeline:
     '''Returns RenderingPipeline for TtkStyle'''

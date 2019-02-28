@@ -3,10 +3,10 @@
 from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
-from tkviews.core.canvas import CanvasNode
-from tkviews.setup.canvas import setup_temp_setter, setup_temp_binding, create_item
-from tkviews.setup.canvas import setup_config_setter, apply_temp_events, setup_event_binding
-from tkviews.setup.canvas import clear_temp
+from tkviews.node import CanvasNode
+from .canvas import setup_temp_setter, setup_temp_binding, create_item
+from .canvas import setup_config_setter, apply_temp_events, setup_event_binding
+from .canvas import clear_temp
 
 class TestCanvasNode(CanvasNode):
     def _create(self, **options):

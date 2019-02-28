@@ -6,7 +6,7 @@ from math import floor
 from unittest import TestCase
 from unittest.mock import Mock, call, patch
 from pyviews.testing import case
-from tkviews.core.containers import Container, View, For, If
+from tkviews.node import Container, View, For, If
 from . import containers
 from .containers import render_container_children
 from .containers import render_view_children, rerender_on_view_change
@@ -123,7 +123,7 @@ class rerender_on_view_change_tests(TestCase):
         self.assertFalse(render_view.called or node.set_content.called, msg)
 
     @patch(containers.__name__ + '.render_view_children')
-    def test_not_rerender_same_view(self, render_view_children: Mock):
+    def test_not_rerender_same_view(self, render_view_children: Mock): #pylint: disable=redefined-outer-name
         node = View(Mock(), Mock())
         node.destroy_children = Mock()
         node.name = 'name'

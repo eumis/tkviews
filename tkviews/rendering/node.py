@@ -1,11 +1,11 @@
-'''Customizing of tk parsing'''
+'''Node creation'''
 
 from tkinter import Entry, Checkbutton, Radiobutton
 from tkinter.ttk import Widget as TtkWidget
 from pyviews.core import Node, XmlNode
 from pyviews.rendering import get_inst_type, create_inst
-from tkviews.core.widgets import WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
-from tkviews.core.ttk import TtkWidgetNode
+from tkviews.node import WidgetNode, TtkWidgetNode
+from tkviews.node import EntryNode, CheckbuttonNode, RadiobuttonNode
 
 def create_node(xml_node: XmlNode, **init_args):
     '''Creates node from xml node using namespace as module and tag name as class name'''

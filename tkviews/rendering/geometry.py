@@ -1,11 +1,9 @@
-'''
-Contains methods for node setups creation
-'''
+'''Layout nodes pipeline'''
 
-# pylint: disable=W0613
+# pylint: disable=unused-argument
 
 from pyviews.rendering import RenderingPipeline, apply_attributes
-from tkviews.core.geometry import LayoutSetup
+from tkviews.node import LayoutSetup
 
 def get_layout_setup() -> RenderingPipeline:
     '''Returns setup for canvas'''

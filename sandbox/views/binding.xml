@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
-<w:Container xmlns="tkinter"
-             xmlns:w="tkviews"
-             xmlns:import="pyviews.rendering.modifiers.import_global"
-             xmlns:bind="tkviews.core.modifiers.bind"
-             xmlns:global='pyviews.rendering.modifiers.set_global'
+<tkw:Container xmlns="tkinter"
+               xmlns:tkw="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:bind="tkviews.bind"
+               xmlns:global='tkviews.set_global'
 
-             import:BindingViewModel="view_model.BindingViewModel"
-             import:Grid='tkviews.core.geometry.GridGeometry'
-             import:Pack='tkviews.core.geometry.PackGeometry'
-             import:int_var='tkinter.IntVar'
-             import:str_var='tkinter.StringVar'
+               import:BindingViewModel="view_model.BindingViewModel"
+               import:Grid='tkviews.GridGeometry'
+               import:Pack='tkviews.PackGeometry'
+               import:int_var='tkinter.IntVar'
+               import:str_var='tkinter.StringVar'
 
-             global:vm="{BindingViewModel()}">
+               global:vm="{BindingViewModel()}">
     <LabelFrame geometry='{Pack(fill="x")}'
                 text='Entry string binding'>
         <Entry geometry='{Pack(side="left")}'
@@ -64,15 +64,15 @@
     <LabelFrame geometry='{Pack(fill="x", pady=10)}'
                 global:var='{int_var()}'
                 text='Radiobuttons binding'>
-        <w:For items='{list(range(3))}'>
+        <tkw:For items='{list(range(3))}'>
             <Radiobutton geometry='{Pack(side="left")}'
-                        value='{item}'
-                        selected_value='{var:{vm.radio}}'>
+                         value='{item}'
+                         selected_value='{var:{vm.radio}}'>
                 {'{0} {1}'.format(item, 'checked' if vm.radio == item else 'unchecked')}
             </Radiobutton>
-        </w:For>
+        </tkw:For>
         <Label geometry='{Pack(side="left")}'>
             {str(vm.radio)}
         </Label>
     </LabelFrame>
-</w:Container>
+</tkw:Container>

@@ -2,29 +2,28 @@
 
 from os.path import abspath
 from pyviews.core import ioc, Binder
-from pyviews.binding import add_default_rules
-from pyviews.rendering import render_view
-from pyviews.dependencies import register_defaults
+from pyviews.compilation import CompiledExpression
+from pyviews.binding import add_one_way_rules
+from pyviews.rendering import render_node, render_view
+from pyviews.code import Code, get_code_setup
+from tkviews.binding import add_two_ways_rules
+from tkviews.node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
+from tkviews.node import Container, View, For, If
+from tkviews.node import Style
+from tkviews.node import TtkWidgetNode, TtkStyle
+from tkviews.node import Row, Column
+from tkviews.rendering import get_root_setup, get_widget_setup
+from tkviews.rendering import get_container_setup, get_view_setup
+from tkviews.rendering import get_for_setup, get_if_setup
+from tkviews.rendering import get_style_setup
+from tkviews.rendering import get_ttk_style_setup
+from tkviews.rendering import get_layout_setup
 from tkviews.rendering import create_node
-from tkviews.core.binding import add_rules as add_tkviews_binding_rules
-from tkviews.core.widgets import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
-from tkviews.core.containers import Container, View, For, If
-from tkviews.core.styles import Style
-from tkviews.core.ttk import TtkWidgetNode, TtkStyle
-from tkviews.core.geometry import Row, Column
-from tkviews.setup.widgets import get_root_setup, get_widget_setup
-from tkviews.setup.containers import get_container_setup, get_view_setup
-from tkviews.setup.containers import get_for_setup, get_if_setup
-from tkviews.setup.styles import get_style_setup
-from tkviews.setup.ttk import get_ttk_style_setup
-from tkviews.setup.geometry import get_layout_setup
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
-    register_defaults()
-    ioc.register_single('views_folder', abspath('views'))
-    ioc.register_single('view_ext', 'xml')
     ioc.register_func('create_node', create_node)
+    ioc.register_func('render', render_node)
 
     ioc.register_single('pipeline', get_root_setup(), Root)
     ioc.register_single('pipeline', get_widget_setup(), WidgetNode)
@@ -44,36 +43,19 @@ def register_dependencies():
     ioc.register_single('pipeline', get_layout_setup(), Row)
     ioc.register_single('pipeline', get_layout_setup(), Column)
 
-    register_binder()
+    ioc.register_single('pipeline', get_code_setup(), Code)
 
-# def _register_rendering_steps():
-#     ioc.register_single('rendering_steps', [apply_style_attrs, render_children], Style)
-#     ioc.register_single('rendering_steps',
-#                         [apply_attributes, apply_ttk_style, render_children],
-#                         TtkStyle)
-#     ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Row)
-#     ioc.register_single('rendering_steps', [apply_attributes, apply_layout], Column)
-#     _register_canvas_rendering_steps()
+    ioc.register_func('expression', CompiledExpression)
+    ioc.register_single('binder', setup_binder())
+    ioc.register_single('views_folder', abspath('views'))
+    ioc.register_single('view_ext', 'xml')
 
-# def _register_canvas_rendering_steps():
-#     canvas_node_types = [
-#         canvas.Arc, canvas.Bitmap, canvas.Image,
-#         canvas.Line, canvas.Oval, canvas.Polygon,
-#         canvas.Rectangle, canvas.Window
-#     ]
-#     for node_type in canvas_node_types:
-#         ioc.register_single('rendering_steps', [apply_attributes, canvas.render], node_type)
-#     ioc.register_single(
-#         'rendering_steps',
-#         [apply_attributes, apply_text, canvas.render],
-#         canvas.Text)
-
-def register_binder(binder: Binder = None):
+def setup_binder() -> Binder:
     '''Adds all needed rules to binding factory and registers dependency'''
-    binder = binder if binder else Binder()
-    add_default_rules(binder)
-    add_tkviews_binding_rules(binder)
-    ioc.register_single('binder', binder)
+    binder = Binder()
+    add_one_way_rules(binder)
+    add_two_ways_rules(binder)
+    return binder
 
 def launch(root_view=None):
     '''Runs application. Widgets are created from passed xml_files'''

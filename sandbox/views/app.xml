@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<w:Root xmlns='tkinter'
-        xmlns:w="tkviews"
-        xmlns:import='pyviews.rendering.modifiers.import_global'
-        xmlns:global='pyviews.rendering.modifiers.set_global'
-        xmlns:bind='tkviews.core.modifiers.bind'
+<tkw:Root xmlns='tkinter'
+          xmlns:tkw="tkviews"
+          xmlns:import='tkviews.import_global'
+          xmlns:global='tkviews.set_global'
+          xmlns:bind='tkviews.bind'
 
-        import:AppViewModel='view_model.AppViewModel'
-        import:Grid='tkviews.core.geometry.GridGeometry'
-        import:Pack='tkviews.core.geometry.PackGeometry'
-        import:show_message='commands.show_message'
-        import:show_view='commands.show_view'
+          import:AppViewModel='view_model.AppViewModel'
+          import:Grid='tkviews.GridGeometry'
+          import:Pack='tkviews.PackGeometry'
+          import:show_message='commands.show_message'
+          import:show_view='commands.show_view'
 
-        background="white"
-        global:vm='{AppViewModel()}'>
+          background="white"
+          global:vm='{AppViewModel()}'>
         <Frame geometry='{Pack(fill="x")}'>
                 <Button geometry='{Grid(row=0, column=0, sticky="e")}'
                         bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
@@ -30,5 +30,5 @@
                         bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
                         text='Binding' />
         </Frame>
-        <w:View name='{vm.view}' />
-</w:Root>
+        <tkw:View name='{vm.view}' />
+</tkw:Root>

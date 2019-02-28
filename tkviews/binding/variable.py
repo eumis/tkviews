@@ -10,7 +10,6 @@ from pyviews.binding import PropertyTarget, get_expression_target
 from pyviews.binding import ExpressionBinding, TwoWaysBinding
 from pyviews.compilation import parse_expression
 from pyviews.container import expression
-from tkviews.core.widgets import WidgetNode
 
 class VariableTarget(BindingTarget):
     '''Target is tkinter Var'''
@@ -68,7 +67,7 @@ class VariableTwowaysRule(BindingRule):
             return False
 
     def apply(self,
-              node: WidgetNode = None,
+              node: Node = None,
               expr_body: str = None,
               modifier: Modifier = None,
               attr: XmlAttr = None,
@@ -102,7 +101,7 @@ class VariableTwowaysRule(BindingRule):
         target = get_expression_target(expr, node.node_globals)
         return VariableBinding(target, variable)
 
-def add_rules(binder: Binder):
+def add_two_ways_rules(binder: Binder):
     '''Adds tkviews binding rules to passed factory'''
     binder.add_rule('twoways', VariableTwowaysRule(Entry, 'text', 'textvariable'))
     binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'value', 'variable'))

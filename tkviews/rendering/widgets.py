@@ -5,8 +5,7 @@
 from pyviews.core import XmlAttr, Node, Property, InheritedDict
 from pyviews.rendering import RenderingPipeline, apply_attributes, render_children, apply_attribute
 from tkviews.core.geometry import Geometry
-from tkviews.core.styles import StyleError
-from tkviews.core.widgets import WidgetNode
+from tkviews.node import WidgetNode, StyleError
 
 def get_root_setup():
     '''Returns setup for root'''

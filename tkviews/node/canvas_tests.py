@@ -1,6 +1,6 @@
 #pylint: disable=missing-docstring
 
-from unittest import TestCase, main
+from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
 from .canvas import CanvasNode
@@ -44,7 +44,3 @@ class CanvasNodeTest(TestCase):
         msg = 'config should call itemconfig of canvas'
         call_args = call(item.item_id, **options)
         self.assertEqual(self.canvas.itemconfig.call_args, call_args, msg)
-
-
-if __name__ == '__main__':
-    main()

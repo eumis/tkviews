@@ -1,6 +1,6 @@
 #pylint: disable=missing-docstring
 
-from unittest import TestCase, main
+from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
 from .geometry import GridGeometry, PackGeometry, PlaceGeometry
@@ -131,6 +131,3 @@ class TestPlaceGeometry(TestCase):
 
         msg = 'pack should be called with arguments passed to geometry'
         self.assertEqual(self._widget.place.call_args, call(**args), msg)
-
-if __name__ == '__main__':
-    main()

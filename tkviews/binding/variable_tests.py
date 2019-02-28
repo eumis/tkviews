@@ -5,8 +5,8 @@ from unittest.mock import Mock, call
 from tkinter import Variable, Tk
 from pyviews.testing import case
 from pyviews.core import XmlAttr, Node
-from tkviews.core.widgets import WidgetNode
-from .binding import VariableTarget, VariableBinding, VariableTwowaysRule
+from tkviews.node import WidgetNode
+from .variable import VariableTarget, VariableBinding, VariableTwowaysRule
 
 class TestVariableTarget(TestCase):
     def setUp(self):

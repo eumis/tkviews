@@ -7,8 +7,9 @@ from pyviews.core.ioc import Scope, register_func
 from pyviews.core.xml import XmlAttr
 from pyviews.compilation import CompiledExpression
 from pyviews.rendering import call_set_attr
-from tkviews.core.ttk import TtkStyle
-from tkviews.setup.ttk import setup_value_setter, apply_style_attributes, configure
+from tkviews.node import TtkStyle
+from . import ttk 
+from .ttk import setup_value_setter, apply_style_attributes, configure
 
 with Scope('ttk_tests'):
     register_func('expression', CompiledExpression)
@@ -68,13 +69,13 @@ class SetupTests(TestCase):
         msg = 'apply_style_attributes should set attribte values'
         self.assertDictEqual(node.values, expected, msg)
 
-    @patch('tkviews.setup.ttk.Style')
+    @patch(ttk.__name__ + '.Style')
     @case('name', {})
     @case('Button.Some', {'one': 1})
     @case('Label', {'one': 1, 'two': 'two'})
     def test_configure_pass_values(self, ttk_style: Mock, name: str, values: dict):
-        ttk_style_mock = Mock(configure=Mock())
-        ttk_style.return_value = ttk_style_mock
+        configure_mock = Mock()
+        ttk_style.return_value = Mock(configure=configure_mock)
         node = TtkStyle(Mock())
         node.values = values
         node.name = name
@@ -82,4 +83,4 @@ class SetupTests(TestCase):
         configure(node)
 
         msg = 'configure should call configure on ttk style and pass values'
-        self.assertEqual(ttk_style_mock.configure.call_args, call(node.full_name, **values), msg)
+        self.assertEqual(configure_mock.call_args, call(node.full_name, **node.values), msg)

@@ -1,8 +1,6 @@
-'''Container nodes tests'''
-
 # pylint: disable=C0111,C0103
 
-from unittest import TestCase, main
+from unittest import TestCase
 from unittest.mock import Mock, call
 from pyviews.testing import case
 from pyviews.core import XmlNode
@@ -73,6 +71,3 @@ class If_condition_changed_tests(TestCase):
         self.assertEqual(node.condition_changed.call_args,
                          call(node, new_condition, old_condition),
                          msg)
-
-if __name__ == '__main__':
-    main()

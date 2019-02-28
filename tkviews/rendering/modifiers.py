@@ -2,7 +2,7 @@
 
 from sys import exc_info
 from pyviews.core import CoreError
-from tkviews.core.widgets import WidgetNode
+from tkviews.node import WidgetNode
 
 class CallbackError(CoreError):
     '''Error from callback'''

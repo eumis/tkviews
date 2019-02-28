@@ -6,7 +6,7 @@ from pyviews.core import XmlAttr, InheritedDict
 from pyviews.compilation import is_expression, parse_expression
 from pyviews.rendering import get_setter, render_children, RenderingPipeline
 from pyviews.container import expression
-from tkviews.core.styles import Style, StyleItem, StyleError
+from tkviews.node import Style, StyleItem, StyleError
 
 def get_style_setup() -> RenderingPipeline:
     '''Returns setup for style node'''

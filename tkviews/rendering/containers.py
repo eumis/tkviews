@@ -8,7 +8,7 @@ from pyviews.core.ioc import SERVICES as deps
 from pyviews.core import InheritedDict
 from pyviews.rendering import RenderingPipeline, render_view
 from pyviews.rendering import apply_attributes, render_children
-from tkviews.core.containers import Container, View, For, If
+from tkviews.node import Container, View, For, If
 
 def get_container_setup() -> RenderingPipeline:
     '''Returns setup for container'''

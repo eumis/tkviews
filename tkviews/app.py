@@ -5,7 +5,7 @@ from pyviews.core import ioc, Binder
 from pyviews.compilation import CompiledExpression
 from pyviews.binding import add_one_way_rules
 from pyviews.rendering import render_node, render_view
-from pyviews.code import Code, get_code_setup
+from pyviews.code import Code, get_code_pipeline
 from tkviews.binding import add_two_ways_rules
 from tkviews.node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 from tkviews.node import Container, View, For, If
@@ -22,8 +22,12 @@ from tkviews.rendering import create_node
 
 def register_dependencies():
     '''Registers all dependencies needed for application'''
+    ioc.register_single('views_folder', abspath('views'))
+    ioc.register_single('view_ext', 'xml')
     ioc.register_func('create_node', create_node)
     ioc.register_func('render', render_node)
+    ioc.register_func('expression', CompiledExpression)
+    ioc.register_single('binder', setup_binder())
 
     ioc.register_single('pipeline', get_root_setup(), Root)
     ioc.register_single('pipeline', get_widget_setup(), WidgetNode)
@@ -43,15 +47,10 @@ def register_dependencies():
     ioc.register_single('pipeline', get_layout_setup(), Row)
     ioc.register_single('pipeline', get_layout_setup(), Column)
 
-    ioc.register_single('pipeline', get_code_setup(), Code)
-
-    ioc.register_func('expression', CompiledExpression)
-    ioc.register_single('binder', setup_binder())
-    ioc.register_single('views_folder', abspath('views'))
-    ioc.register_single('view_ext', 'xml')
+    ioc.register_single('pipeline', get_code_pipeline(), Code)
 
 def setup_binder() -> Binder:
-    '''Adds all needed rules to binding factory and registers dependency'''
+    '''Adds all needed rules to binder'''
     binder = Binder()
     add_one_way_rules(binder)
     add_two_ways_rules(binder)

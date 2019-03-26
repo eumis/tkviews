@@ -1,6 +1,5 @@
 pylint
 setuptools
 wheel
-twine
-pyviews
+pyviews>=2.0.0
 -e .

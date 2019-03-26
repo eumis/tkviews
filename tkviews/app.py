@@ -4,8 +4,8 @@ from os.path import abspath
 from pyviews.core import ioc, Binder
 from pyviews.compilation import CompiledExpression
 from pyviews.binding import add_one_way_rules
-from pyviews.rendering import render_node, render_view
-from pyviews.code import Code, get_code_pipeline
+from pyviews.rendering import render_node, render_view, RenderingPipeline
+from pyviews.code import Code, run_code
 from tkviews.binding import add_two_ways_rules
 from tkviews.node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 from tkviews.node import Container, View, For, If
@@ -47,7 +47,7 @@ def register_dependencies():
     ioc.register_single('pipeline', get_layout_setup(), Row)
     ioc.register_single('pipeline', get_layout_setup(), Column)
 
-    ioc.register_single('pipeline', get_code_pipeline(), Code)
+    ioc.register_single('pipeline', RenderingPipeline(steps=[run_code]), Code)
 
 def setup_binder() -> Binder:
     '''Adds all needed rules to binder'''

@@ -1,5 +1,7 @@
 '''Package adapts pyviews for using with tkinter'''
 
+__version__ = '2.0.0'
+
 from .core import PackGeometry, GridGeometry, PlaceGeometry
 
 from .node import CanvasNode, Rectangle, Text, Image, Arc, Bitmap, Line, Oval, Polygon, Window

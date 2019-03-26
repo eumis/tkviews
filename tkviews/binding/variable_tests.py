@@ -2,20 +2,38 @@
 
 from unittest import TestCase
 from unittest.mock import Mock, call
-from tkinter import Variable, Tk
 from pyviews.testing import case
 from pyviews.core import XmlAttr, Node
 from tkviews.node import WidgetNode
 from .variable import VariableTarget, VariableBinding, VariableTwowaysRule
 
-class TestVariableTarget(TestCase):
-    def setUp(self):
-        self.root = Tk()
+class TestVariable:
+    def __init__(self):
+        self._val = None
+        self._callback = None
 
+    def set(self, value):
+        self._val = value
+        if self._callback:
+            self._callback()
+
+    def get(self):
+        return self._val
+
+    def trace_add(self, mode, callback):
+        if mode == 'write':
+            self._callback = callback
+        return 'trace id'
+
+    def trace_remove(self, mode, trace_id):
+        if mode == 'write' and trace_id == 'trace id':
+            self._callback = None
+
+class TestVariableTarget(TestCase):
     @case(1)
     @case('value')
     def test_on_change_set_var(self, value):
-        var = Variable()
+        var = TestVariable()
         target = VariableTarget(var)
 
         target.on_change(value)
@@ -23,17 +41,11 @@ class TestVariableTarget(TestCase):
         msg = 'on_change set value to variable'
         self.assertEqual(var.get(), value, msg)
 
-    def tearDown(self):
-        self.root.destroy()
-
 class TestVariableBinding(TestCase):
-    def setUp(self):
-        self.root = Tk()
-
     @case(1)
     @case('value')
     def test_bind_should_subscribe_to_var_changes(self, value):
-        var = Variable()
+        var = TestVariable()
         target = Mock()
         target.on_change = Mock()
         binding = VariableBinding(target, var)
@@ -49,7 +61,7 @@ class TestVariableBinding(TestCase):
     @case(None)
     @case([1, 'str'])
     def test_destroy_removes_binding(self, value):
-        var = Variable()
+        var = TestVariable()
         target = Mock()
         target.on_change = Mock()
         binding = VariableBinding(target, var)
@@ -62,14 +74,11 @@ class TestVariableBinding(TestCase):
         self.assertFalse(target.on_change.called, msg)
 
     def test_destroy_does_nothing_if_bind_not_called(self):
-        var = Variable()
+        var = TestVariable()
         target = Mock()
         binding = VariableBinding(target, var)
 
         binding.destroy()
-
-    def tearDown(self):
-        self.root.destroy()
 
 class Entry:
     pass

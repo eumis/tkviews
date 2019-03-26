@@ -91,13 +91,13 @@ class VariableTwowaysRule(BindingRule):
         variable = variable_type() if callable(variable_type) else variable_type
         node.set_attr(self._variable_property, variable)
 
-    def _create_expression_binding(self,
-                                   node: Node, expr: Expression, attr: XmlAttr, modifier: Modifier):
+    @staticmethod
+    def _create_expression_binding(node: Node, expr: Expression, attr: XmlAttr, modifier: Modifier):
         target = PropertyTarget(node, attr.name, modifier)
         return ExpressionBinding(target, expr, node.node_globals)
 
-    def _create_variable_binding(self,
-                                 node: Node, expr: Expression, variable: Variable):
+    @staticmethod
+    def _create_variable_binding(node: Node, expr: Expression, variable: Variable):
         target = get_expression_target(expr, node.node_globals)
         return VariableBinding(target, variable)
 

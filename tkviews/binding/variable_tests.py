@@ -73,13 +73,6 @@ class TestVariableBinding(TestCase):
         msg = 'destroy should remove subscribtion to var changes'
         self.assertFalse(target.on_change.called, msg)
 
-    def test_destroy_does_nothing_if_bind_not_called(self):
-        var = TestVariable()
-        target = Mock()
-        binding = VariableBinding(target, var)
-
-        binding.destroy()
-
 class Entry:
     pass
 

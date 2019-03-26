@@ -8,7 +8,7 @@ from pyviews.core.xml import XmlAttr
 from pyviews.compilation import CompiledExpression
 from pyviews.rendering import call_set_attr
 from tkviews.node import TtkStyle
-from . import ttk 
+from . import ttk
 from .ttk import setup_value_setter, apply_style_attributes, configure
 
 with Scope('ttk_tests'):

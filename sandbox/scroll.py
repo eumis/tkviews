@@ -5,11 +5,13 @@ class ScrollVm(ObservableEntity):
         super().__init__()
         self.items = [ScrollItem(i) for i in range(100)]
 
+    @staticmethod
     def get_node_id(self, index):
         return 'item' + str(index)
 
     def scroll_to(self, index):
-        node_id = self.get_node_id(index)
+        pass
+        # node_id = self.get_node_id(index)
         # scroll_to(find_node('scroll_id'), node_id)
 
 class ScrollItem(ObservableEntity):

@@ -21,25 +21,29 @@ class Scroll(Node, TkNode):
         self._geometry = None
         self._node_styles = node_styles
 
-    def _create_scroll_frame(self, master):
+    @staticmethod
+    def _create_scroll_frame(master):
         frame = Frame(master)
         frame.columnconfigure(0, weight=1)
         frame.rowconfigure(0, weight=1)
         return frame
 
 
-    def _create_canvas(self, master):
+    @staticmethod
+    def _create_canvas(master):
         canvas = Canvas(master)
         canvas.grid(row=0, column=0, sticky='wens')
         return canvas
 
-    def _create_scroll(self, master, canvas):
+    @staticmethod
+    def _create_scroll(master, canvas):
         scroll = Scrollbar(master, orient='vertical', command=canvas.yview)
         scroll.grid(row=0, column=1, sticky='ns')
         canvas.config(yscrollcommand=scroll.set, highlightthickness=0, bg='green')
         return scroll
 
-    def _create_container(self, canvas):
+    @staticmethod
+    def _create_container(canvas):
         container = Frame(canvas)
         container.pack(fill='both', expand=True)
         container_window_sets = {

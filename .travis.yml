@@ -1,0 +1,17 @@
+dist: xenial
+language: python
+python: 3.7
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install -e .
+# command to run tests
+script:
+  - python -m unittest discover -s tkviews -p *_tests.py
+deploy:
+  on:
+    branch: dev
+    tags: true
+  provider: pypi
+  user: $pypi_user
+  password: $pypi_password

@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <sb:Scroll xmlns="tkinter"
-          xmlns:w="tkviews"
-          xmlns:sb='widgets'
-          xmlns:import="pyviews.rendering.modifiers.import_global"
-          xmlns:bind="tkviews.modifiers.bind"
-          xmlns:global='pyviews.rendering.modifiers.set_global'
+           xmlns:tkw="tkviews"
+           xmlns:sb='widgets'
+           xmlns:import="tkviews.import_global"
+           xmlns:bind="tkviews.bind"
+           xmlns:global='tkviews.set_global'
 
-          import:Pack='tkviews.geometry.PackGeometry'
-          import:ScrollVm="scroll.ScrollVm"
+           import:Pack='tkviews.PackGeometry'
+           import:ScrollVm="scroll.ScrollVm"
 
-          geometry='{Pack(fill="both", expand=True)}'
-          global:vm='{ScrollVm()}'>
-    <w:For items='{vm.items}'>
+           geometry='{Pack(fill="both", expand=True)}'
+           global:vm='{ScrollVm()}'>
+    <tkw:For items='{vm.items}'>
         <Label geometry='{Pack(fill="x")}'
                bind:Button-1='once:{lambda e: item.add()}'>
             {item.text}
         </Label>
-    </w:For>
+    </tkw:For>
 </sb:Scroll>

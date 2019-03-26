@@ -1,10 +1,15 @@
 '''Package adapts pyviews for using with tkinter'''
 
-from pyviews.rendering.node import Code
-from pyviews.rendering.modifiers import set_global, import_global, inject_global
-from .node import Root
-from .containers import Container, For, View, If
-from .styles import Style
-from .geometry import Row, Column
-from .canvas import Rectangle, Text, Image, Arc, Bitmap, Line, Oval, Polygon, Window
-from .modifiers import bind, bind_all, call, set_attr, config, visible
+__version__ = '2.0.0'
+
+from .core import PackGeometry, GridGeometry, PlaceGeometry
+
+from .node import CanvasNode, Rectangle, Text, Image, Arc, Bitmap, Line, Oval, Polygon, Window
+from .node import Container, View, For, If
+from .node import LayoutSetup, Row, Column
+from .node import Style, StyleItem, StyleError
+from .node import TtkWidgetNode, TtkStyle
+from .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
+
+from .rendering import import_global, set_global, inject_global
+from .rendering import bind, bind_all, set_attr, config, visible

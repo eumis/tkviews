@@ -18,5 +18,17 @@
         "pip-selfcheck.json": true,
         "build": true,
         "dist": true
-    }
+    },
+    "python.unitTest.pyTestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.unittestEnabled": true,
+    "python.unitTest.cwd": "${workspaceRoot}\\tkviews",
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-v",
+        "-p",
+        "*_tests.py"
+    ]
 }

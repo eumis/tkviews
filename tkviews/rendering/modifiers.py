@@ -11,8 +11,9 @@ class CallbackError(CoreError):
         self.add_info('Event', event)
 
 def bind(node: WidgetNode, event_name, command):
-    '''Calls widget's bind method'''
-    node.bind(event_name, _get_handled_command(command, node.xml_node.view_info, event_name))
+    '''Calls widget node bind method'''
+    command = _get_handled_command(command, node.xml_node.view_info, event_name)
+    node.bind('<{0}>'.format(event_name), command)
 
 def _get_handled_command(command, view_info, event):
     return lambda *args, **kwargs: _call_command(command, view_info, event, args, kwargs)
@@ -30,7 +31,8 @@ def _call_command(command, view_info, event, args, kwargs):
 
 def bind_all(node: WidgetNode, event_name, command):
     '''Calls widget's bind_all method'''
-    node.bind_all(event_name, _get_handled_command(command, node, event_name))
+    command = _get_handled_command(command, node.xml_node.view_info, event_name)
+    node.bind_all('<{0}>'.format(event_name), command, '+')
 
 def set_attr(node: WidgetNode, key, value):
     '''Calls nodes's set_attr method'''
@@ -38,15 +40,11 @@ def set_attr(node: WidgetNode, key, value):
 
 def config(node: WidgetNode, key, value):
     '''Calls widget's config method'''
-    node.widget.config(**{key: value})
+    node.instance.config(**{key: value})
 
 def visible(node: WidgetNode, key, value):
     '''Changes widget visibility'''
     if value:
-        node.geometry.apply(node.widget)
+        node.geometry.apply(node.instance)
     else:
-        node.geometry.forget(node.widget)
-
-def call(node: WidgetNode, key, args):
-    '''Calls node's call'''
-    node.call(key, args)
+        node.geometry.forget(node.instance)

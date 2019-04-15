@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
-<tkw:Container xmlns='tkinter'
-               xmlns:tkw="tkviews"
+<tkw:Container xmlns:tkw="tkviews"
                xmlns:import='tkviews.import_global'
                xmlns:bind='tkviews.bind'
 
                import:Pack='tkviews.PackGeometry'
                import:show_message='commands.show_message'>
-        <Button geometry='{Pack(fill="x")}'
-                text='show message'
-                bind:Button-1="once:{lambda e:show_message('message title', 'hohohoho')}">
-        </Button>
+    <Button geometry='{Pack(fill="x")}'
+            text='show message'
+            bind:Button-1="once:{lambda e:show_message('message title', 'hohohoho')}">
+    </Button>
 </tkw:Container>

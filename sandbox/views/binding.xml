@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<tkw:Container xmlns="tkinter"
-               xmlns:tkw="tkviews"
+<tkw:Container xmlns:tkw="tkviews"
                xmlns:import="tkviews.import_global"
-               xmlns:bind="tkviews.bind"
                xmlns:global='tkviews.set_global'
 
                import:BindingViewModel="view_model.BindingViewModel"

@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<tkw:Container xmlns="tkinter"
-               xmlns:tkw="tkviews"
+<tkw:Container xmlns:tkw="tkviews"
                xmlns:import="tkviews.import_global"
                xmlns:bind="tkviews.bind"
                xmlns:global='tkviews.set_global'
@@ -18,7 +17,7 @@
         <Button geometry='{Pack(side="left")}'
                 style='button'
                 bind:Button-1="once:{lambda e: vm.up_count()}"
-                text='+1' />
+                text='+1'/>
 
         <Entry geometry='{Pack(side="left")}'
                text='{int_var:{vm.count}}'>
@@ -32,8 +31,8 @@
     </Frame>
 
     <Frame geometry='{Pack(anchor="nw", side="left")}'>
-        <tkw:Row index='{0}' weight='{1}' />
-        <tkw:Column index='{0}' weight='{1}' />
+        <tkw:Row index='{0}' weight='{1}'/>
+        <tkw:Column index='{0}' weight='{1}'/>
         <Frame geometry='{Grid(row=0, column=0)}'
                background='white'>
             <tkw:For items='{vm.range}'>

@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<sb:Scroll xmlns="tkinter"
-           xmlns:tkw="tkviews"
+<sb:Scroll xmlns:tkw="tkviews"
            xmlns:sb='widgets'
            xmlns:import="tkviews.import_global"
            xmlns:bind="tkviews.bind"

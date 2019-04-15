@@ -1,4 +1,4 @@
-'''tkinter application entry point'''
+"""tkinter application entry point"""
 
 from os.path import abspath
 from pyviews.core import ioc, Binder
@@ -20,10 +20,12 @@ from tkviews.rendering import get_ttk_style_setup
 from tkviews.rendering import get_layout_setup
 from tkviews.rendering import create_node
 
+
 def register_dependencies():
-    '''Registers all dependencies needed for application'''
+    """Registers all dependencies needed for application"""
     ioc.register_single('views_folder', abspath('views'))
     ioc.register_single('view_ext', 'xml')
+    ioc.register_single('namespaces', {'': 'tkinter'})
     ioc.register_func('create_node', create_node)
     ioc.register_func('render', render_node)
     ioc.register_func('expression', CompiledExpression)
@@ -49,15 +51,17 @@ def register_dependencies():
 
     ioc.register_single('pipeline', RenderingPipeline(steps=[run_code]), Code)
 
+
 def setup_binder() -> Binder:
-    '''Adds all needed rules to binder'''
+    """Adds all needed rules to binder"""
     binder = Binder()
     add_one_way_rules(binder)
     add_two_ways_rules(binder)
     return binder
 
+
 def launch(root_view=None):
-    '''Runs application. Widgets are created from passed xml_files'''
+    """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
     root = render_view(root_view)
     root.instance.mainloop()

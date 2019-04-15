@@ -1,4 +1,0 @@
-pylint
-setuptools
-wheel
-pyviews>=2.0.0

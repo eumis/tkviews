@@ -1,4 +1,4 @@
-'''Package adapts pyviews for using with tkinter'''
+"""Package adapts pyviews for using with tkinter"""
 
 __version__ = '2.0.1'
 

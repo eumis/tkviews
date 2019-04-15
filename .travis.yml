@@ -3,11 +3,11 @@ language: python
 python: 3.7
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
-  - pip install -e .
+  - pip install pipenv
+  - pipenv install
 # command to run tests
 script:
-  - python -m unittest discover -s tkviews -p *_tests.py
+  - pipenv run python -m unittest discover -s tkviews -p *_tests.py
 deploy:
   on:
     branch: dev

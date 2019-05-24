@@ -28,18 +28,18 @@ def setup_package():
             'Programming Language :: Python :: 3.6'
         ],
         python_requires='>=3.6',
-        install_requires=['pyviews>=2.0.2'],
+        install_requires=['pyviews>=2.1.0'],
         keywords='binding tkinter tk tkviews pyviews python mvvm views',
-        packages=find_packages(exclude=['sandbox']))
+        packages=find_packages(exclude=['sandbox', '*.tests']))
 
 
 _HERE = dirname(__file__)
 
 
 def _get_version() -> str:
-    with open(join_path(_HERE, "tkviews", "__init__.py")) as f:
+    with open(join_path(_HERE, "tkviews", "__init__.py")) as package:
         pattern = re.compile(r"__version__ = '(.*)'")
-        match = pattern.search(f.read())
+        match = pattern.search(package.read())
         return match.group(1)
 
 

@@ -1,6 +1,6 @@
 """Package adapts pyviews for using with tkinter"""
 
-__version__ = '2.0.2'
+__version__ = '2.1.0'
 
 from .core import PackGeometry, GridGeometry, PlaceGeometry
 
@@ -11,5 +11,5 @@ from .node import Style, StyleItem, StyleError
 from .node import TtkWidgetNode, TtkStyle
 from .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 
-from .rendering import import_global, set_global, inject_global
+from pyviews.rendering.modifiers import import_global, set_global, inject_global
 from .rendering import bind, bind_all, set_attr, config, visible

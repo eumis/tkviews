@@ -1,0 +1,63 @@
+Index: CHANGELOG.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- CHANGELOG.md	(date 1558697990942)
++++ CHANGELOG.md	(date 1558697990942)
+@@ -0,0 +1,6 @@
++# Changelog
++
++## 2.1.0
++
++- used pytest for unit tests
++- updates to use pyviews 2.1.0
+Index: tkviews/__init__.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"Package adapts pyviews for using with tkinter\"\"\"\r\n\r\n__version__ = '2.0.2'\r\n\r\nfrom .core import PackGeometry, GridGeometry, PlaceGeometry\r\n\r\nfrom .node import CanvasNode, Rectangle, Text, Image, Arc, Bitmap, Line, Oval, Polygon, Window\r\nfrom .node import Container, View, For, If\r\nfrom .node import LayoutSetup, Row, Column\r\nfrom .node import Style, StyleItem, StyleError\r\nfrom .node import TtkWidgetNode, TtkStyle\r\nfrom .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode\r\n\r\nfrom .rendering import import_global, set_global, inject_global\r\nfrom .rendering import bind, bind_all, set_attr, config, visible\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- tkviews/__init__.py	(date 1558697411000)
++++ tkviews/__init__.py	(date 1558698007870)
+@@ -1,6 +1,6 @@
+ """Package adapts pyviews for using with tkinter"""
+ 
+-__version__ = '2.0.2'
++__version__ = '2.1.0'
+ 
+ from .core import PackGeometry, GridGeometry, PlaceGeometry
+ 
+Index: setup.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import codecs\r\nimport re\r\nfrom os.path import join as join_path, dirname\r\nfrom setuptools import setup, find_packages\r\n\r\n\r\ndef setup_package():\r\n    \"\"\"Package setup\"\"\"\r\n    setup(\r\n        name='tkviews',\r\n        version=_get_version(),\r\n        description='Package for creating tkinter applications in declarative way.',\r\n        long_description=_get_long_description(),\r\n        long_description_content_type='text/markdown',\r\n        url='https://github.com/eumis/tkviews',\r\n        author='eumis(Eugen Misievich)',\r\n        author_email='misievich@gmail.com',\r\n        license='MIT',\r\n        classifiers=[\r\n            #   2 - Pre-Alpha\r\n            #   3 - Alpha\r\n            #   4 - Beta\r\n            #   5 - Production/Stable\r\n            'Development Status :: 5 - Production/Stable',\r\n            'Intended Audience :: Developers',\r\n            'Topic :: Software Development :: Libraries',\r\n            'License :: OSI Approved :: MIT License',\r\n            'Programming Language :: Python :: 3.6'\r\n        ],\r\n        python_requires='>=3.6',\r\n        install_requires=['pyviews>=2.0.2'],\r\n        keywords='binding tkinter tk tkviews pyviews python mvvm views',\r\n        packages=find_packages(exclude=['sandbox']))\r\n\r\n\r\n_HERE = dirname(__file__)\r\n\r\n\r\ndef _get_version() -> str:\r\n    with open(join_path(_HERE, \"tkviews\", \"__init__.py\")) as f:\r\n        pattern = re.compile(r\"__version__ = '(.*)'\")\r\n        match = pattern.search(f.read())\r\n        return match.group(1)\r\n\r\n\r\ndef _get_long_description():\r\n    readme_path = join_path(_HERE, \"README.md\")\r\n    with codecs.open(readme_path, encoding=\"utf-8\") as f:\r\n        return \"\\n\" + f.read()\r\n\r\n\r\nif __name__ == '__main__':\r\n    setup_package()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- setup.py	(date 1558697411000)
++++ setup.py	(date 1558698070734)
+@@ -28,18 +28,18 @@
+             'Programming Language :: Python :: 3.6'
+         ],
+         python_requires='>=3.6',
+-        install_requires=['pyviews>=2.0.2'],
++        install_requires=['pyviews>=2.1.0'],
+         keywords='binding tkinter tk tkviews pyviews python mvvm views',
+-        packages=find_packages(exclude=['sandbox']))
++        packages=find_packages(exclude=['sandbox', '*.tests']))
+ 
+ 
+ _HERE = dirname(__file__)
+ 
+ 
+ def _get_version() -> str:
+-    with open(join_path(_HERE, "tkviews", "__init__.py")) as f:
++    with open(join_path(_HERE, "tkviews", "__init__.py")) as package:
+         pattern = re.compile(r"__version__ = '(.*)'")
+-        match = pattern.search(f.read())
++        match = pattern.search(package.read())
+         return match.group(1)
+ 
+ 

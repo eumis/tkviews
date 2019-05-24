@@ -1,5 +1,6 @@
 from tkinter import StringVar
 
+
 class IntVar(StringVar):
     def get(self):
         return self._to_int(super().get())

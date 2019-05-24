@@ -1,4 +1,5 @@
 import codecs
+import re
 from os.path import join as join_path, dirname
 from setuptools import setup, find_packages
 
@@ -35,11 +36,11 @@ def setup_package():
 _HERE = dirname(__file__)
 
 
-def _get_version():
-    about = {}
-    with open(join_path(_HERE, "tkviews", "__version__.py")) as f:
-        exec(f.read(), about)
-    return about['__version__']
+def _get_version() -> str:
+    with open(join_path(_HERE, "tkviews", "__init__.py")) as f:
+        pattern = re.compile(r"__version__ = '(.*)'")
+        match = pattern.search(f.read())
+        return match.group(1)
 
 
 def _get_long_description():

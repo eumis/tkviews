@@ -1,4 +1,5 @@
-from pyviews.core.observable import ObservableEntity
+from pyviews.core import ObservableEntity
+
 
 class Counter(ObservableEntity):
     def __init__(self):

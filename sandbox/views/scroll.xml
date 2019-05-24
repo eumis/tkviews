@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <sb:Scroll xmlns:tkw="tkviews"
-           xmlns:sb='widgets'
+           xmlns:sb='sandbox.widgets'
            xmlns:import="tkviews.import_global"
            xmlns:bind="tkviews.bind"
            xmlns:global='tkviews.set_global'

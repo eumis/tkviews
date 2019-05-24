@@ -5,6 +5,7 @@ from pyviews.rendering.pipeline import RenderingPipeline, render_children, apply
 from pyviews.core.node import Node
 from tkviews.core import TkNode
 
+
 class Scroll(Node, TkNode):
     def __init__(self, master, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
@@ -27,7 +28,6 @@ class Scroll(Node, TkNode):
         frame.columnconfigure(0, weight=1)
         frame.rowconfigure(0, weight=1)
         return frame
-
 
     @staticmethod
     def _create_canvas(master):
@@ -61,7 +61,7 @@ class Scroll(Node, TkNode):
 
     def _on_mouse_scroll(self, event):
         if Scroll.active_canvas and self._is_active():
-            Scroll.active_canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            Scroll.active_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def _is_active(self):
         (up_offset, down_offset) = self._scroll.get()
@@ -86,7 +86,7 @@ class Scroll(Node, TkNode):
 
     @property
     def node_styles(self) -> InheritedDict:
-        '''Returns node styles'''
+        """Returns node styles"""
         return self._node_styles
 
     @property
@@ -98,13 +98,14 @@ class Scroll(Node, TkNode):
         return self._canvas
 
     def bind(self, event, handler):
-        self._container.bind('<'+event+'>', handler)
+        self._container.bind('<' + event + '>', handler)
         if 'Button-' in event:
-            self._canvas.bind('<'+event+'>', handler)
+            self._canvas.bind('<' + event + '>', handler)
 
     def destroy(self):
         super().destroy()
         self._frame.destroy()
+
 
 def get_scroll_pipeline():
     return RenderingPipeline(steps=[
@@ -113,8 +114,10 @@ def get_scroll_pipeline():
         render_scroll_children
     ])
 
+
 def setup_setter(node: Scroll, **args):
     node.attr_setter = _scroll_attr_setter
+
 
 def _scroll_attr_setter(node: Scroll, key: str, value):
     if hasattr(node, key):
@@ -126,10 +129,10 @@ def _scroll_attr_setter(node: Scroll, key: str, value):
         if key == 'bg' or key == 'background':
             node.canvas.config(**{key: value})
 
+
 def render_scroll_children(node: Scroll, **args):
     render_children(node,
                     parent_node=node,
                     node_styles=node.node_styles,
                     node_globals=node.node_globals,
                     master=node.container)
-    

@@ -1,26 +1,31 @@
-'''Bindings specific for tkinter'''
+"""Bindings specific for tkinter"""
 
 from sys import exc_info
 from typing import Type
 from tkinter import Variable, Entry, Checkbutton, Radiobutton
+
+from injectool import resolve
 from pyviews.core import CoreError, XmlAttr, Node, Modifier
-from pyviews.core import Binding, BindingTarget, BindingError, Binder, BindingRule
+from pyviews.core import Binding, BindingTarget, BindingError, BindingRule
 from pyviews.core import Expression
-from pyviews.binding import PropertyTarget, get_expression_target
+from pyviews.binding import PropertyTarget, get_expression_target, Binder
 from pyviews.binding import ExpressionBinding, TwoWaysBinding
 from pyviews.compilation import parse_expression
-from pyviews.container import expression
+
 
 class VariableTarget(BindingTarget):
-    '''Target is tkinter Var'''
+    """Target is tkinter Var"""
+
     def __init__(self, var: Variable):
         self._var = var
 
     def on_change(self, value):
         self._var.set(value)
 
+
 class VariableBinding(Binding):
-    '''Binding is subscribed on tkinter Var changes'''
+    """Binding is subscribed on tkinter Var changes"""
+
     def __init__(self, target: BindingTarget, var: Variable):
         super().__init__()
         self._target = target
@@ -31,7 +36,7 @@ class VariableBinding(Binding):
         self.destroy()
         self._trace_id = self._var.trace_add('write', self._callback)
 
-    def _callback(self, *args): #pylint: disable=unused-argument
+    def _callback(self, *_):
         try:
             value = self._var.get()
             self._target.on_change(value)
@@ -49,9 +54,10 @@ class VariableBinding(Binding):
             self._var.trace_remove('write', self._trace_id)
         self._trace_id = None
 
-#pylint: disable=arguments-differ
+
 class VariableTwowaysRule(BindingRule):
-    '''Rule for two ways binding between property and expression using variable'''
+    """Rule for two ways binding between property and expression using variable"""
+
     def __init__(self, widget_type: Type, node_property: str, variable_property: str):
         self._widget_type = widget_type
         self._node_property = node_property
@@ -74,11 +80,11 @@ class VariableTwowaysRule(BindingRule):
               **args):
         (variable_type_key, expr_body) = parse_expression(expr_body)
 
-        if node.node_globals.has_key(variable_type_key):
+        if variable_type_key in node.node_globals:
             self._set_variable(node, variable_type_key)
         variable = getattr(node, self._variable_property)
 
-        expression_ = expression(expr_body)
+        expression_ = resolve(Expression)(expr_body)
         expr_binding = self._create_expression_binding(node, expression_, attr, modifier)
         var_binding = self._create_variable_binding(node, expression_, variable)
 
@@ -101,8 +107,9 @@ class VariableTwowaysRule(BindingRule):
         target = get_expression_target(expr, node.node_globals)
         return VariableBinding(target, variable)
 
-def add_two_ways_rules(binder: Binder):
-    '''Adds tkviews binding rules to passed factory'''
+
+def add_variables_rules(binder: Binder):
+    """Adds tkviews binding rules to passed factory"""
     binder.add_rule('twoways', VariableTwowaysRule(Entry, 'text', 'textvariable'))
     binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'value', 'variable'))
     binder.add_rule('twoways', VariableTwowaysRule(Radiobutton, 'selected_value', 'variable'))

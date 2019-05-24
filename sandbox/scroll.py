@@ -1,4 +1,5 @@
-from pyviews.core.observable import ObservableEntity
+from pyviews.core import ObservableEntity
+
 
 class ScrollVm(ObservableEntity):
     def __init__(self):
@@ -13,6 +14,7 @@ class ScrollVm(ObservableEntity):
         pass
         # node_id = self.get_node_id(index)
         # scroll_to(find_node('scroll_id'), node_id)
+
 
 class ScrollItem(ObservableEntity):
     def __init__(self, index):

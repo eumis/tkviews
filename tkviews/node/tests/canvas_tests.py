@@ -1,4 +1,3 @@
-from unittest import TestCase
 from unittest.mock import Mock, call
 
 from pytest import fixture, mark

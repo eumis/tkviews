@@ -33,11 +33,12 @@ class SetupValueSetterTests:
 
         assert node.name == name
 
+    @staticmethod
     @mark.parametrize('values', [
         ({'key': 'value'}),
         ({'key': 'value', 'another_key': 1})
     ])
-    def test_setup_value_setter_sets_values(self, values: dict):
+    def test_setup_value_setter_sets_values(values: dict):
         """should set setter that sets to "values" property"""
         node = TtkStyle(Mock())
 

@@ -46,7 +46,7 @@ class TtkStyle(Node):
             if self._parent_name else self.name
 
 
-def theme_use(_: Node, key: str, __: Any):
+def theme_use(_node: Node, key: str, _value: Any):
     """Sets ttk style theme"""
     ttk_style = Style()
     ttk_style.theme_use(key)

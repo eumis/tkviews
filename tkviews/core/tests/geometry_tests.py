@@ -9,7 +9,7 @@ from tkviews.core.geometry import GridGeometry, PackGeometry, PlaceGeometry
 def geometry_fixture(request):
     widget = Mock()
     widget.grid = Mock(grid_forget=Mock(), pack_forget=Mock())
-    request.cls._widget = widget
+    request.cls.widget = widget
 
 
 @mark.usefixtures('geometry_fixture')
@@ -20,19 +20,19 @@ class GridGeometryTests:
         """should call grid method of widget"""
         geometry = GridGeometry()
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.grid.called
-        assert self._widget.grid.call_count == 1
+        assert self.widget.grid.called
+        assert self.widget.grid.call_count == 1
 
     def test_forget(self):
         """should call grid_forget method of widget"""
         geometry = GridGeometry()
 
-        geometry.forget(self._widget)
+        geometry.forget(self.widget)
 
-        assert self._widget.grid_forget.called
-        assert self._widget.grid_forget.call_count == 1
+        assert self.widget.grid_forget.called
+        assert self.widget.grid_forget.call_count == 1
 
     @mark.parametrize('args', [
         {},
@@ -42,9 +42,9 @@ class GridGeometryTests:
         """grid should be called with arguments passed to geometry"""
         geometry = GridGeometry(**args)
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.grid.call_args == call(**args)
+        assert self.widget.grid.call_args == call(**args)
 
     @mark.parametrize('args', [
         {'row': 1},
@@ -58,8 +58,8 @@ class GridGeometryTests:
         for key, value in args.items():
             geometry.set(key, value)
 
-        geometry.apply(self._widget)
-        assert self._widget.grid.call_args == call(**args)
+        geometry.apply(self.widget)
+        assert self.widget.grid.call_args == call(**args)
 
 
 @mark.usefixtures('geometry_fixture')
@@ -70,18 +70,18 @@ class PackGeometryTests:
         """apply() should call pack method of widget"""
         geometry = PackGeometry()
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.pack.called
-        assert self._widget.pack.call_count == 1
+        assert self.widget.pack.called
+        assert self.widget.pack.call_count == 1
 
     def test_forget(self):
         """forget() should call pack_forget method of widget"""
         geometry = PackGeometry()
 
-        geometry.forget(self._widget)
+        geometry.forget(self.widget)
 
-        assert self._widget.pack_forget.called
+        assert self.widget.pack_forget.called
 
     @mark.parametrize('args', [
         {},
@@ -91,9 +91,9 @@ class PackGeometryTests:
         """__init__() should call Widget.pack() with arguments passed to geometry"""
         geometry = PackGeometry(**args)
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.pack.call_args == call(**args)
+        assert self.widget.pack.call_args == call(**args)
 
     @mark.parametrize('args', [
         {'expand': True},
@@ -107,8 +107,8 @@ class PackGeometryTests:
         for key, value in args.items():
             geometry.set(key, value)
 
-        geometry.apply(self._widget)
-        assert self._widget.pack.call_args == call(**args)
+        geometry.apply(self.widget)
+        assert self.widget.pack.call_args == call(**args)
 
 
 @mark.usefixtures('geometry_fixture')
@@ -119,18 +119,18 @@ class PlaceGeometryTests:
         """apply() should call pack method of widget"""
         geometry = PlaceGeometry()
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.place.called
-        assert self._widget.place.call_count == 1
+        assert self.widget.place.called
+        assert self.widget.place.call_count == 1
 
     def test_forget(self):
         """forget() should call place_forget method of widget"""
         geometry = PlaceGeometry()
 
-        geometry.forget(self._widget)
+        geometry.forget(self.widget)
 
-        assert self._widget.place_forget.called
+        assert self.widget.place_forget.called
 
     @mark.parametrize('args', [
         {},
@@ -140,9 +140,9 @@ class PlaceGeometryTests:
         """__init__() should call Widget.place() with arguments passed to geometry"""
         geometry = PlaceGeometry(**args)
 
-        geometry.apply(self._widget)
+        geometry.apply(self.widget)
 
-        assert self._widget.place.call_args == call(**args)
+        assert self.widget.place.call_args == call(**args)
 
     @mark.parametrize('args', [
         {'expand': True},
@@ -156,5 +156,5 @@ class PlaceGeometryTests:
         for key, value in args.items():
             geometry.set(key, value)
 
-        geometry.apply(self._widget)
-        assert self._widget.place.call_args == call(**args)
+        geometry.apply(self.widget)
+        assert self.widget.place.call_args == call(**args)

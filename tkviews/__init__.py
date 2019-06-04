@@ -1,6 +1,6 @@
 """Package adapts pyviews for using with tkinter"""
 
-__version__ = '2.1.0'
+__version__ = '2.1.1'
 
 from .core import PackGeometry, GridGeometry, PlaceGeometry
 

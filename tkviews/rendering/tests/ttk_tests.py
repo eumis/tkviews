@@ -23,7 +23,7 @@ class SetupValueSetterTests:
     """setup_value_setter() tests"""
 
     @staticmethod
-    def test_setup_value_setter_sets_name():
+    def test_sets_name():
         """should set setter that sets node properties"""
         node = TtkStyle(Mock())
         name = 'some_name'
@@ -38,7 +38,7 @@ class SetupValueSetterTests:
         ({'key': 'value'}),
         ({'key': 'value', 'another_key': 1})
     ])
-    def test_setup_value_setter_sets_values(values: dict):
+    def test_sets_values(values: dict):
         """should set setter that sets to "values" property"""
         node = TtkStyle(Mock())
 
@@ -48,36 +48,36 @@ class SetupValueSetterTests:
 
         assert node.values == values
 
-    @staticmethod
-    @mark.parametrize('attrs, expected', [
-        ([], {}),
-        ([('one', '1', None)], {'one': '1'}),
-        ([('one', '{1}', None)], {'one': 1}),
-        ([('one', '{5}', __name__ + '.increment')], {'one': 6}),
-        (
-                [
-                    ('one', '{1 + 1}', None),
-                    ('two', '{1 + 1}', __name__ + '.increment'),
-                    ('key', ' string value ', None)
-                ],
-                {
-                    'one': 2,
-                    'two': 3,
-                    'key': ' string value '
-                }
-        )
-    ])
-    def test_apply_style_attributes_sets_values(attrs: list, expected: dict):
-        """should set attribute values"""
-        attrs = [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
-        xml_node = Mock(attrs=attrs)
-        node = TtkStyle(xml_node)
-        setup_value_setter(node)
 
-        with make_default('ttk_tests'):
-            apply_style_attributes(node)
+@mark.parametrize('attrs, expected', [
+    ([], {}),
+    ([('one', '1', None)], {'one': '1'}),
+    ([('one', '{1}', None)], {'one': 1}),
+    ([('one', '{5}', __name__ + '.increment')], {'one': 6}),
+    (
+            [
+                ('one', '{1 + 1}', None),
+                ('two', '{1 + 1}', __name__ + '.increment'),
+                ('key', ' string value ', None)
+            ],
+            {
+                'one': 2,
+                'two': 3,
+                'key': ' string value '
+            }
+    )
+])
+def test_apply_style_attributes(attrs: list, expected: dict):
+    """should set attribute values"""
+    attrs = [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
+    xml_node = Mock(attrs=attrs)
+    node = TtkStyle(xml_node)
+    setup_value_setter(node)
 
-        assert node.values == expected
+    with make_default('ttk_tests'):
+        apply_style_attributes(node)
+
+    assert node.values == expected
 
 
 @mark.parametrize('name, values', [

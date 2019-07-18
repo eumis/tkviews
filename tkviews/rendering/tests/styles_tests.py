@@ -42,7 +42,7 @@ class ApplyStyleItemsTests:
                 ]
         )
     ])
-    def test_apply_style_items_creates_style_items_from_attrs(attrs, expected):
+    def test_creates_style_items_from_attrs(attrs, expected):
         """should create style item for every attribute"""
         attrs = [XmlAttr('name', 'hoho')] + [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
         xml_node = Mock(attrs=attrs)
@@ -56,7 +56,7 @@ class ApplyStyleItemsTests:
         assert actual == expected
 
     @staticmethod
-    def test_apply_style_items_requires_name_attribute():
+    def test_requires_name_attribute():
         """should raise StyleError if name attribute is missing"""
         xml_node = Mock(attrs=[])
         node = Style(xml_node)
@@ -71,7 +71,7 @@ class ApplyStyleItemsTests:
         'some name'
         ' some name    '
     ])
-    def test_apply_style_items_sets_style_name(name):
+    def test_sets_style_name(name):
         """should set style name from attributes"""
         xml_node = Mock(attrs=[XmlAttr('name', name)])
         node = Style(xml_node)

@@ -7,13 +7,14 @@ from tkviews.node.ttk import TtkStyle, theme_use
 
 
 class TtkStyleTests:
+    @staticmethod
     @mark.parametrize('name, parent_name, expected', [
         ('name', 'parent_name', 'name.parent_name'),
         ('name', None, 'name'),
         ('name', '', 'name'),
         ('name', ' ', 'name. ')
     ])
-    def test_full_name(self, name, parent_name, expected):
+    def test_full_name(name, parent_name, expected):
         """full name should be in format "parent_name.name"""
         style = TtkStyle(None, parent_name=parent_name)
 

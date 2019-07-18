@@ -78,7 +78,7 @@ class IfTests:
         (False, True),
         (True, False)
     ])
-    def test_called_on_condition_changed(old_condition, new_condition):
+    def test_condition_changed_called(old_condition, new_condition):
         """condition_changed should be called on condition change"""
         node = If(Mock(), Mock())
         node.condition = old_condition

@@ -127,8 +127,9 @@ class RenderViewChangeTests:
 
             assert not (render_view.called or node.set_content.called)
 
+    @staticmethod
     @patch(containers.__name__ + '.render_view_children')
-    def test_not_rerender_same_view(self, render_view_children: Mock):
+    def test_not_rerender_same_view(render_view_children: Mock):
         """render_view_children should be called on view change"""
         node = View(Mock(), Mock())
         node.destroy_children = Mock()

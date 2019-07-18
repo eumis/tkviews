@@ -2,7 +2,7 @@
 
 from os.path import abspath
 
-from injectool import register_single, register_func
+from injectool import add_singleton, SingletonResolver, add_resolver, add_resolve_function
 from pyviews.binding import Binder, OnceRule, OnewayRule
 from pyviews.compilation import CompiledExpression
 from pyviews.core import Expression, render, create_node
@@ -25,33 +25,14 @@ from tkviews.rendering import create_widget_node
 
 def register_dependencies():
     """Registers all dependencies needed for application"""
-    register_single('views_folder', abspath('views'))
-    register_single('view_ext', 'xml')
-    register_single('namespaces', {'': 'tkinter'})
-    register_func(create_node, create_widget_node)
-    register_func(render, render_node)
-    register_func(Expression, CompiledExpression)
-    register_single(Binder, setup_binder())
-
-    register_single(RenderingPipeline, get_root_setup(), Root)
-    register_single(RenderingPipeline, get_widget_setup(), WidgetNode)
-    register_single(RenderingPipeline, get_widget_setup(), EntryNode)
-    register_single(RenderingPipeline, get_widget_setup(), CheckbuttonNode)
-    register_single(RenderingPipeline, get_widget_setup(), RadiobuttonNode)
-    register_single(RenderingPipeline, get_widget_setup(), TtkWidgetNode)
-
-    register_single(RenderingPipeline, get_container_setup(), Container)
-    register_single(RenderingPipeline, get_view_setup(), View)
-    register_single(RenderingPipeline, get_for_setup(), For)
-    register_single(RenderingPipeline, get_if_setup(), If)
-
-    register_single(RenderingPipeline, get_style_setup(), Style)
-    register_single(RenderingPipeline, get_ttk_style_setup(), TtkStyle)
-
-    register_single(RenderingPipeline, get_layout_setup(), Row)
-    register_single(RenderingPipeline, get_layout_setup(), Column)
-
-    register_single(RenderingPipeline, RenderingPipeline(steps=[run_code]), Code)
+    add_singleton('views_folder', abspath('views'))
+    add_singleton('view_ext', 'xml')
+    add_singleton('namespaces', {'': 'tkinter'})
+    add_singleton(create_node, create_widget_node)
+    add_singleton(render, render_node)
+    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_singleton(Binder, setup_binder())
+    add_resolver(RenderingPipeline, get_pipeline_resolver())
 
 
 def setup_binder() -> Binder:
@@ -61,6 +42,32 @@ def setup_binder() -> Binder:
     binder.add_rule('oneway', OnewayRule())
     add_variables_rules(binder)
     return binder
+
+
+def get_pipeline_resolver() -> SingletonResolver:
+    pipeline_resolver = SingletonResolver()
+
+    pipeline_resolver.add_value(get_root_setup(), Root)
+    pipeline_resolver.add_value(get_widget_setup(), WidgetNode)
+    pipeline_resolver.add_value(get_widget_setup(), EntryNode)
+    pipeline_resolver.add_value(get_widget_setup(), CheckbuttonNode)
+    pipeline_resolver.add_value(get_widget_setup(), RadiobuttonNode)
+    pipeline_resolver.add_value(get_widget_setup(), TtkWidgetNode)
+
+    pipeline_resolver.add_value(get_container_setup(), Container)
+    pipeline_resolver.add_value(get_view_setup(), View)
+    pipeline_resolver.add_value(get_for_setup(), For)
+    pipeline_resolver.add_value(get_if_setup(), If)
+
+    pipeline_resolver.add_value(get_style_setup(), Style)
+    pipeline_resolver.add_value(get_ttk_style_setup(), TtkStyle)
+
+    pipeline_resolver.add_value(get_layout_setup(), Row)
+    pipeline_resolver.add_value(get_layout_setup(), Column)
+
+    pipeline_resolver.add_value(RenderingPipeline(steps=[run_code]), Code)
+
+    return pipeline_resolver
 
 
 def launch(root_view=None):

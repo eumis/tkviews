@@ -33,7 +33,7 @@ def _get_style_item(node: Style, attr: XmlAttr):
     setter = get_setter(attr)
     value = attr.value if attr.value else ''
     if is_expression(value):
-        expression_ = resolve(Expression)(parse_expression(value)[1])
+        expression_ = resolve(Expression, parse_expression(value)[1])
         value = expression_.execute(node.node_globals.to_dictionary())
     return StyleItem(setter, attr.name, value)
 

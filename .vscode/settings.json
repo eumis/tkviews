@@ -19,11 +19,11 @@
         "build": true,
         "dist": true
     },
-    "python.unitTest.pyTestEnabled": false,
-    "python.unitTest.nosetestsEnabled": false,
-    "python.unitTest.unittestEnabled": true,
-    "python.unitTest.cwd": "${workspaceRoot}\\tkviews",
-    "python.unitTest.unittestArgs": [
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.testing.cwd": "${workspaceRoot}\\tkviews",
+    "python.testing.unittestArgs": [
         "-v",
         "-s",
         ".",

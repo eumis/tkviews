@@ -84,7 +84,7 @@ class VariableTwowaysRule(BindingRule):
             self._set_variable(node, variable_type_key)
         variable = getattr(node, self._variable_property)
 
-        expression_ = resolve(Expression)(expr_body)
+        expression_ = resolve(Expression, expr_body)
         expr_binding = self._create_expression_binding(node, expression_, attr, modifier)
         var_binding = self._create_variable_binding(node, expression_, variable)
 

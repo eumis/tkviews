@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from injectool import Scope, register_func
+from injectool import make_default, add_resolve_function
 from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict, Expression
 from pyviews.compilation import CompiledExpression
@@ -8,8 +8,8 @@ from pyviews.rendering import call_set_attr
 from tkviews.node import Style, StyleError
 from tkviews.rendering.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
-with Scope('styles_tests'):
-    register_func(Expression, CompiledExpression)
+with make_default('styles_tests'):
+    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
 
 
 def some_setter():
@@ -48,7 +48,7 @@ class ApplyStyleItemsTests:
         xml_node = Mock(attrs=attrs)
         node = Style(xml_node)
 
-        with Scope('styles_tests'):
+        with make_default('styles_tests'):
             apply_style_items(node)
         actual = {name: (item.name, item.value, item.setter) for name, item in node.items.items()}
         expected = {item[0]: item for item in expected}
@@ -76,7 +76,7 @@ class ApplyStyleItemsTests:
         xml_node = Mock(attrs=[XmlAttr('name', name)])
         node = Style(xml_node)
 
-        with Scope('styles_tests'):
+        with make_default('styles_tests'):
             apply_style_items(node)
 
         assert node.name == name

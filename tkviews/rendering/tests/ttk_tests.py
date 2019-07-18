@@ -1,6 +1,6 @@
 from unittest.mock import Mock, patch, call
 
-from injectool import Scope, register_func
+from injectool import make_default, add_resolve_function
 from pytest import mark
 from pyviews.core import Expression
 from pyviews.core.xml import XmlAttr
@@ -10,8 +10,8 @@ from tkviews.node import TtkStyle
 from tkviews.rendering import ttk
 from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
 
-with Scope('ttk_tests'):
-    register_func(Expression, CompiledExpression)
+with make_default('ttk_tests'):
+    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
 
 
 def increment(node, key, value):
@@ -74,7 +74,7 @@ class SetupValueSetterTests:
         node = TtkStyle(xml_node)
         setup_value_setter(node)
 
-        with Scope('ttk_tests'):
+        with make_default('ttk_tests'):
             apply_style_attributes(node)
 
         assert node.values == expected

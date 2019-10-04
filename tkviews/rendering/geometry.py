@@ -2,6 +2,7 @@
 
 from pyviews.rendering import RenderingPipeline, apply_attributes
 from tkviews.node import LayoutSetup
+from tkviews.rendering.common import TkRenderingContext
 
 
 def get_layout_setup() -> RenderingPipeline:
@@ -13,7 +14,7 @@ def get_layout_setup() -> RenderingPipeline:
     ])
 
 
-def setup_setter(node: LayoutSetup, **_):
+def setup_setter(node: LayoutSetup, _: TkRenderingContext):
     """Sets attributes setter"""
     node.attr_setter = _set_layout_attr
 
@@ -26,6 +27,6 @@ def _set_layout_attr(node: LayoutSetup, key, value):
         node.args[key] = value
 
 
-def apply_layout(node: LayoutSetup, **_):
+def apply_layout(node: LayoutSetup, _: TkRenderingContext):
     """Calls apply method"""
     node.apply()

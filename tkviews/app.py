@@ -8,6 +8,7 @@ from pyviews.compilation import CompiledExpression
 from pyviews.core import Expression, render, create_node
 from pyviews.rendering import render_node, render_view, RenderingPipeline
 from pyviews.code import Code, run_code
+
 from tkviews.binding import add_variables_rules
 from tkviews.node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 from tkviews.node import Container, View, For, If
@@ -21,6 +22,7 @@ from tkviews.rendering import get_style_setup
 from tkviews.rendering import get_ttk_style_setup
 from tkviews.rendering import get_layout_setup
 from tkviews.rendering import create_widget_node
+from tkviews.rendering.common import TkRenderingContext
 
 
 def register_dependencies():
@@ -73,5 +75,5 @@ def get_pipeline_resolver() -> SingletonResolver:
 def launch(root_view=None):
     """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
-    root = render_view(root_view)
+    root = render_view(root_view, TkRenderingContext())
     root.instance.mainloop()

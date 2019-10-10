@@ -4,6 +4,7 @@ from unittest.mock import Mock, call, patch
 from pytest import mark
 from tkviews.node import Container, View, For, If
 from tkviews.rendering import containers
+from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.containers import render_container_children
 from tkviews.rendering.containers import render_view_children, rerender_on_view_change
 from tkviews.rendering.containers import render_for_items, rerender_on_items_change
@@ -30,9 +31,9 @@ def test_render_container_children(nodes):
                 'node_styles': node.node_styles
             }
 
-            render_container_children(node)
+            render_container_children(node, TkRenderingContext())
 
-        assert render_children.call_args == call(node, **child_args)
+        assert render_children.call_args == call(node, TkRenderingContext(child_args))
 
 
 class ViewRenderingTests:
@@ -44,13 +45,13 @@ class ViewRenderingTests:
         """should render view by node name and set result as view child"""
         view_name = 'name'
         child = Mock()
-        render_view.side_effect = lambda name, **args: child if name == view_name else None
+        render_view.side_effect = lambda name, ctx: child if name == view_name else None
 
         node = Mock(node_globals=None)
         node.set_content = Mock()
         node.name = view_name
 
-        render_view_children(node)
+        render_view_children(node, TkRenderingContext())
 
         assert node.set_content.call_args == call(child)
 
@@ -61,7 +62,7 @@ class ViewRenderingTests:
         """should render view by node name and set result as view child"""
         view_name = 'name'
         inherit_dict.side_effect = lambda source: source
-        render_view.side_effect = lambda name, **a: a
+        render_view.side_effect = lambda name, a: a
 
         node = Mock()
         node.node_globals = Mock()
@@ -69,14 +70,14 @@ class ViewRenderingTests:
         node.set_content = Mock()
         node.master = Mock()
         node.name = view_name
-        args = {
+        args = TkRenderingContext({
             'parent_node': node,
             'master': node.master,
             'node_globals': inherit_dict(node.node_globals),
             'node_styles': node.node_styles
-        }
+        })
 
-        render_view_children(node)
+        render_view_children(node, TkRenderingContext())
 
         assert node.set_content.call_args == call(args)
 
@@ -89,7 +90,7 @@ class ViewRenderingTests:
         node.name = view_name
 
         with patch(containers.__name__ + '.render_view') as render_view:
-            render_view_children(node)
+            render_view_children(node, TkRenderingContext())
 
             assert not (node.set_content.called or render_view.called)
 
@@ -104,13 +105,13 @@ class RenderViewChangeTests:
         node = View(Mock(), Mock())
         node.destroy_children = Mock()
         view_name = 'name'
-        args = {}
+        context = TkRenderingContext()
 
-        rerender_on_view_change(node, **args)
+        rerender_on_view_change(node, context)
         node.name = view_name
 
         assert node.destroy_children.called
-        assert render_view_children.call_args == call(node, **args)
+        assert render_view_children.call_args == call(node, context)
 
     @staticmethod
     @mark.parametrize('view_name', ['', None])
@@ -122,7 +123,7 @@ class RenderViewChangeTests:
         node.name = 'some name'
 
         with patch(containers.__name__ + '.render_view') as render_view:
-            rerender_on_view_change(node, **{})
+            rerender_on_view_change(node, TkRenderingContext())
             node.name = view_name
 
             assert not (render_view.called or node.set_content.called)
@@ -136,7 +137,7 @@ class RenderViewChangeTests:
         node.name = 'name'
         args = {}
 
-        rerender_on_view_change(node, **args)
+        rerender_on_view_change(node, TkRenderingContext(args))
         node.name = node.name
 
         assert not node.destroy_children.called
@@ -160,9 +161,9 @@ class RenderForItemsTests:
             xml_node = Mock(children=nodes)
             node = For(Mock(), xml_node)
             node.items = items
-            render.side_effect = lambda xmlnode, **args: xmlnode
+            render.side_effect = lambda xmlnode, ctx: xmlnode
 
-            render_for_items(node)
+            render_for_items(node, TkRenderingContext())
 
             assert node.children == expected_children
 
@@ -182,10 +183,10 @@ class RenderForItemsTests:
             xml_node = Mock(children=nodes)
             node = For(Mock(), xml_node)
             node.items = items
-            render.side_effect = lambda xmlnode, **args: \
-                (args['node_globals']['index'], args['node_globals']['item'])
+            render.side_effect = lambda xmlnode, ctx: \
+                (ctx.node_globals['index'], ctx.node_globals['item'])
 
-            render_for_items(node)
+            render_for_items(node, TkRenderingContext())
 
             assert node.children == expected_children
 
@@ -214,7 +215,7 @@ class RenderOnItemsChangeTests:
             to_destroy = node.children[xml_child_count * new_items_count:]
             to_left = node.children[:xml_child_count * new_items_count]
 
-            rerender_on_items_change(node)
+            rerender_on_items_change(node, TkRenderingContext())
             node.items = [Mock() for _ in range(new_items_count)]
 
             for child in to_destroy:
@@ -239,10 +240,10 @@ class RenderOnItemsChangeTests:
             node = For(Mock(), xml_node)
             node.items = [Mock() for _ in range(items_count)]
             node.add_children([Mock(destroy=Mock(), node_globals={}) for _ in range(xml_child_count * items_count)])
-            render.side_effect = lambda xmlnode, **args: Mock()
+            render.side_effect = lambda xmlnode, args: Mock()
             children_to_update = node.children[:xml_child_count * new_items_count]
 
-            rerender_on_items_change(node)
+            rerender_on_items_change(node, TkRenderingContext())
             node.items = [Mock() for _ in range(new_items_count)]
 
             for i, child in enumerate(children_to_update):
@@ -262,9 +263,9 @@ class RenderOnItemsChangeTests:
             node = For(Mock(), xml_node)
             node.items = [Mock() for _ in range(items_count)]
             node.add_children([Mock(destroy=Mock(), node_globals={}) for _ in range(xml_child_count * items_count)])
-            render.side_effect = lambda xmlnode, **args: Mock()
+            render.side_effect = lambda xmlnode, args: Mock()
 
-            rerender_on_items_change(node)
+            rerender_on_items_change(node, TkRenderingContext())
             node.items = [Mock() for _ in range(new_items_count)]
 
             assert len(node.children) == xml_child_count * new_items_count
@@ -277,7 +278,7 @@ def test_render_if(condition):
         node = If(Mock(), Mock())
         node.condition = condition
 
-        render_if(node)
+        render_if(node, TkRenderingContext())
 
         assert render_children.called == condition
 
@@ -292,7 +293,7 @@ class SubscribeToConditionTests:
             node = If(Mock(), Mock())
             node.condition = False
 
-            subscribe_to_condition_change(node)
+            subscribe_to_condition_change(node, TkRenderingContext())
             node.condition = True
 
             assert render_children.called
@@ -304,7 +305,7 @@ class SubscribeToConditionTests:
             node = Mock(destroy_children=Mock())
             node.condition = True
 
-            subscribe_to_condition_change(node)
+            subscribe_to_condition_change(node, TkRenderingContext())
             node.condition = False
 
             assert node.destroy_children

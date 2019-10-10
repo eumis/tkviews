@@ -6,6 +6,7 @@ from tkviews.node import CanvasNode
 from tkviews.rendering.canvas import setup_temp_setter, setup_temp_binding, create_item
 from tkviews.rendering.canvas import setup_config_setter, apply_temp_events, setup_event_binding
 from tkviews.rendering.canvas import clear_temp
+from tkviews.rendering.common import TkRenderingContext
 
 
 class TestCanvasNode(CanvasNode):
@@ -24,7 +25,7 @@ class RenderStepsTests:
         """setup_temp_setter() should set setter that stores attrs it attr_values property"""
         canvas = TestCanvasNode(Mock(), Mock())
 
-        setup_temp_setter(canvas)
+        setup_temp_setter(canvas, TkRenderingContext())
 
         for key, value in attrs.items():
             canvas.set_attr(key, value)
@@ -39,7 +40,7 @@ class RenderStepsTests:
         """setup_temp_binding() should set bind that stores callbacks it events property"""
         canvas = TestCanvasNode(Mock(), Mock())
 
-        setup_temp_binding(canvas)
+        setup_temp_binding(canvas, TkRenderingContext())
 
         for key, command in events.items():
             canvas.bind(key, command)
@@ -51,7 +52,7 @@ class RenderStepsTests:
         canvas = Mock()
         canvas.create = Mock()
 
-        create_item(canvas)
+        create_item(canvas, TkRenderingContext())
 
         assert canvas.create.called
 
@@ -65,7 +66,7 @@ class RenderStepsTests:
         canvas = TestCanvasNode(Mock(), Mock())
         canvas.config = Mock()
 
-        setup_config_setter(canvas)
+        setup_config_setter(canvas, TkRenderingContext())
 
         canvas.set_attr(key, value)
         assert canvas.config.call_args == call(**{key: value})
@@ -76,8 +77,8 @@ class RenderStepsTests:
         canvas = Mock()
         canvas.bind = Mock()
 
-        setup_temp_binding(canvas)
-        setup_event_binding(canvas)
+        setup_temp_binding(canvas, TkRenderingContext())
+        setup_event_binding(canvas, TkRenderingContext())
         canvas.bind()
 
         assert canvas.bind.called
@@ -93,7 +94,7 @@ class RenderStepsTests:
         canvas.bind = Mock()
         canvas.events = events
 
-        apply_temp_events(canvas)
+        apply_temp_events(canvas, TkRenderingContext())
 
         expected_calls = [call(event, command) for event, command in events.items()]
         assert canvas.bind.call_args_list == expected_calls
@@ -106,7 +107,7 @@ class RenderStepsTests:
         canvas.events = {}
         canvas.bind_source = {}
 
-        clear_temp(canvas)
+        clear_temp(canvas, TkRenderingContext())
 
         assert not hasattr(canvas, 'attr_values')
         assert not hasattr(canvas, 'events')

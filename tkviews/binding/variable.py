@@ -6,9 +6,8 @@ from tkinter import Variable, Entry, Checkbutton, Radiobutton
 
 from injectool import resolve
 from pyviews.core import CoreError, XmlAttr, Node, Modifier
-from pyviews.core import Binding, BindingTarget, BindingError, BindingRule
-from pyviews.core import Expression
-from pyviews.binding import PropertyTarget, get_expression_target, Binder
+from pyviews.core import Binding, BindingTarget, BindingError, Expression
+from pyviews.binding import PropertyTarget, get_expression_target, Binder, BindingRule, BindingContext
 from pyviews.binding import ExpressionBinding, TwoWaysBinding
 from pyviews.compilation import parse_expression
 
@@ -43,7 +42,7 @@ class VariableBinding(Binding):
         except CoreError as error:
             self.add_error_info(error)
             raise
-        except:
+        except BaseException:
             info = exc_info()
             error = BindingError(BindingError.TargetUpdateError)
             self.add_error_info(error)
@@ -63,34 +62,28 @@ class VariableTwowaysRule(BindingRule):
         self._node_property = node_property
         self._variable_property = variable_property
 
-    def suitable(self,
-                 node: Node = None,
-                 attr: XmlAttr = None,
-                 **args) -> bool:
+    def suitable(self, context: BindingContext) -> bool:
         try:
-            return isinstance(node.instance, self._widget_type) and attr.name == self._node_property
+            right_type = isinstance(context.node.instance, self._widget_type)
+            right_property = context.xml_attr.name == self._node_property
+            return right_type and right_property
         except AttributeError:
             return False
 
-    def apply(self,
-              node: Node = None,
-              expr_body: str = None,
-              modifier: Modifier = None,
-              attr: XmlAttr = None,
-              **args):
-        (variable_type_key, expr_body) = parse_expression(expr_body)
+    def apply(self, context: BindingContext):
+        (variable_type_key, expr_body) = parse_expression(context.expression_body)
 
-        if variable_type_key in node.node_globals:
-            self._set_variable(node, variable_type_key)
-        variable = getattr(node, self._variable_property)
+        if variable_type_key in context.node.node_globals:
+            self._set_variable(context.node, variable_type_key)
+        variable = getattr(context.node, self._variable_property)
 
         expression_ = resolve(Expression, expr_body)
-        expr_binding = self._create_expression_binding(node, expression_, attr, modifier)
-        var_binding = self._create_variable_binding(node, expression_, variable)
+        expr_binding = self._create_expression_binding(context.node, expression_, context.xml_attr, context.modifier)
+        var_binding = self._create_variable_binding(context.node, expression_, variable)
 
         two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
         two_ways_binding.bind()
-        node.add_binding(two_ways_binding)
+        return two_ways_binding
 
     def _set_variable(self, node: Node, variable_type_key: str):
         variable_type = node.node_globals[variable_type_key]

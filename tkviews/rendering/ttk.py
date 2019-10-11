@@ -13,13 +13,11 @@ from tkviews.rendering.common import TkRenderingContext
 
 def get_ttk_style_setup() -> RenderingPipeline:
     """Returns RenderingPipeline for TtkStyle"""
-    setup = RenderingPipeline()
-    setup.steps = [
+    return RenderingPipeline([
         setup_value_setter,
         apply_style_attributes,
         configure
-    ]
-    return setup
+    ])
 
 
 def setup_value_setter(node: TtkStyle, _: TkRenderingContext):

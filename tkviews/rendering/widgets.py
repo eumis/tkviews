@@ -10,14 +10,12 @@ from tkviews.rendering.common import TkRenderingContext
 
 def get_root_setup():
     """Returns setup for root"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         render_widget_children
-    ]
-    return node_setup
+    ])
 
 
 def setup_widget_setter(node: Node, _: TkRenderingContext):
@@ -58,16 +56,14 @@ def render_widget_children(node: WidgetNode, _: TkRenderingContext):
 
 def get_widget_setup():
     """Returns setup for widget"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         setup_properties,
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         apply_text,
         render_widget_children
-    ]
-    return node_setup
+    ])
 
 
 def setup_properties(node: WidgetNode, _: TkRenderingContext):

@@ -9,15 +9,13 @@ from tkviews.rendering.common import TkRenderingContext
 
 def get_style_setup() -> RenderingPipeline:
     """Returns setup for style node"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        render_child_styles,
+        render_child_styles
         # remove_style_on_destroy
-    ]
-    return node_setup
+    ])
 
 
 def apply_style_items(node: Style, _: TkRenderingContext):

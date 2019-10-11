@@ -9,12 +9,10 @@ from tkviews.rendering.common import TkRenderingContext
 
 def get_container_setup() -> RenderingPipeline:
     """Returns setup for container"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_attributes,
         render_container_children
-    ]
-    return node_setup
+    ])
 
 
 def render_container_children(node, _: TkRenderingContext):
@@ -24,13 +22,11 @@ def render_container_children(node, _: TkRenderingContext):
 
 def get_view_setup() -> RenderingPipeline:
     """Returns setup for container"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_attributes,
         render_view_children,
         rerender_on_view_change
-    ]
-    return node_setup
+    ])
 
 
 def render_view_children(node: View, _: TkRenderingContext):
@@ -54,13 +50,11 @@ def _rerender_view(node: View, context: TkRenderingContext):
 
 def get_for_setup() -> RenderingPipeline:
     """Returns setup for For node"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_attributes,
         render_for_items,
         rerender_on_items_change
-    ]
-    return node_setup
+    ])
 
 
 def render_for_items(node: For, _: TkRenderingContext):
@@ -134,13 +128,11 @@ def _create_not_existing(node: For):
 
 def get_if_setup() -> RenderingPipeline:
     """Returns setup for For node"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_attributes,
         render_if,
         subscribe_to_condition_change
-    ]
-    return node_setup
+    ])
 
 
 def render_if(node: If, _: TkRenderingContext):

@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 setuptools = "*"
-pyviews = {editable = true, path = "c:\\projects\\own\\pyviews"}
+pyviews = {editable = true, path = "/home/hohoho/projects/pyviews"}
 tkviews = {editable = true, path = "."}
 pytest = "*"
 

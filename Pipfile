@@ -5,11 +5,13 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
+pylint = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 setuptools = "*"
 pyviews = "*"
-tkviews = {editable = true, path = "."}
+tkviews = {editable = true,path = "."}
 
 [requires]
 python_version = "3"

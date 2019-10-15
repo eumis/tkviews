@@ -2,23 +2,23 @@
 
 from pyviews.core import XmlAttr, Node, Property, InheritedDict
 from pyviews.rendering import RenderingPipeline, apply_attributes, render_children, apply_attribute
+
 from tkviews.core.geometry import Geometry
 from tkviews.node import WidgetNode, StyleError
+from tkviews.rendering.common import TkRenderingContext
 
 
 def get_root_setup():
     """Returns setup for root"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         render_widget_children
-    ]
-    return node_setup
+    ])
 
 
-def setup_widget_setter(node: Node, **_):
+def setup_widget_setter(node: Node, _: TkRenderingContext):
     """Sets up setter"""
     node.attr_setter = _widget_node_setter
 
@@ -35,7 +35,7 @@ def _widget_node_setter(node: WidgetNode, key: str, value):
         node.instance.configure(**{key: value})
 
 
-def setup_widget_destroy(node: WidgetNode, **_):
+def setup_widget_destroy(node: WidgetNode, _: TkRenderingContext):
     """Sets up on destroy method"""
     node.on_destroy = _on_widget_destroy
 
@@ -44,30 +44,29 @@ def _on_widget_destroy(node: WidgetNode):
     node.instance.destroy()
 
 
-def render_widget_children(node: WidgetNode, **_):
+def render_widget_children(node: WidgetNode, _: TkRenderingContext):
     """Renders child widgets"""
-    render_children(node,
-                    parent_node=node,
-                    master=node.instance,
-                    node_globals=InheritedDict(node.node_globals),
-                    node_styles=node.node_styles)
+    child_context = TkRenderingContext()
+    child_context.parent_node = node
+    child_context.master = node.instance
+    child_context.node_globals = InheritedDict(node.node_globals)
+    child_context.node_styles = node.node_styles
+    render_children(node, child_context)
 
 
 def get_widget_setup():
     """Returns setup for widget"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         setup_properties,
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         apply_text,
         render_widget_children
-    ]
-    return node_setup
+    ])
 
 
-def setup_properties(node: WidgetNode, **_):
+def setup_properties(node: WidgetNode, _: TkRenderingContext):
     """Sets up widget node properties"""
     node.properties['geometry'] = Property('geometry', _geometry_setter, node=node)
     node.properties['style'] = Property('style', _style_setter, node=node)
@@ -100,7 +99,7 @@ def apply_styles(node: WidgetNode, style_keys: str):
         raise error from key_error
 
 
-def apply_text(node: WidgetNode, **_):
+def apply_text(node: WidgetNode, _: TkRenderingContext):
     """Applies xml node content to WidgetNode"""
     if node.xml_node.text is None or not node.xml_node.text.strip():
         return

@@ -4,6 +4,7 @@ from pyviews.core.xml import XmlNode
 from pyviews.rendering.pipeline import RenderingPipeline, render_children, apply_attributes
 from pyviews.core.node import Node
 from tkviews.core import TkNode
+from tkviews.rendering.common import TkRenderingContext
 
 
 class Scroll(Node, TkNode):
@@ -115,7 +116,7 @@ def get_scroll_pipeline():
     ])
 
 
-def setup_setter(node: Scroll, **args):
+def setup_setter(node: Scroll, _: TkRenderingContext):
     node.attr_setter = _scroll_attr_setter
 
 
@@ -130,9 +131,10 @@ def _scroll_attr_setter(node: Scroll, key: str, value):
             node.canvas.config(**{key: value})
 
 
-def render_scroll_children(node: Scroll, **args):
-    render_children(node,
-                    parent_node=node,
-                    node_styles=node.node_styles,
-                    node_globals=node.node_globals,
-                    master=node.container)
+def render_scroll_children(node: Scroll, _: TkRenderingContext):
+    child_context = TkRenderingContext()
+    child_context.parent_node = node
+    child_context.node_styles = node.node_styles
+    child_context.node_globals = node.node_globals
+    child_context.master = node.container
+    render_children(node, child_context)

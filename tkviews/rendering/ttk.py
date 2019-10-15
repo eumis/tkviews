@@ -6,21 +6,21 @@ from injectool import resolve
 from pyviews.compilation import is_expression, parse_expression
 from pyviews.core import Expression
 from pyviews.rendering import get_setter, RenderingPipeline
+
 from tkviews.node import TtkStyle
+from tkviews.rendering.common import TkRenderingContext
 
 
 def get_ttk_style_setup() -> RenderingPipeline:
     """Returns RenderingPipeline for TtkStyle"""
-    setup = RenderingPipeline()
-    setup.steps = [
+    return RenderingPipeline([
         setup_value_setter,
         apply_style_attributes,
         configure
-    ]
-    return setup
+    ])
 
 
-def setup_value_setter(node: TtkStyle, **_):
+def setup_value_setter(node: TtkStyle, _: TkRenderingContext):
     """Sets TtkStyle attribute setter"""
     node.attr_setter = _value_setter
 
@@ -32,7 +32,7 @@ def _value_setter(node: TtkStyle, key: str, value):
         node.values[key] = value
 
 
-def apply_style_attributes(node: TtkStyle, **_):
+def apply_style_attributes(node: TtkStyle, _: TkRenderingContext):
     """Applies attributes"""
     for attr in node.xml_node.attrs:
         setter = get_setter(attr)
@@ -43,7 +43,7 @@ def apply_style_attributes(node: TtkStyle, **_):
         setter(node, attr.name, value)
 
 
-def configure(node: TtkStyle, **_):
+def configure(node: TtkStyle, _: TkRenderingContext):
     """Sets style to widget"""
     ttk_style = Style()
     if not node.name:

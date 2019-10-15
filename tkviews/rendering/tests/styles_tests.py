@@ -1,15 +1,16 @@
 from unittest.mock import Mock
 
-from injectool import make_default, add_resolve_function
+from injectool import make_default, add_function_resolver
 from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict, Expression
 from pyviews.compilation import CompiledExpression
 from pyviews.rendering import call_set_attr
 from tkviews.node import Style, StyleError
+from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 with make_default('styles_tests'):
-    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
 
 
 def some_setter():
@@ -49,7 +50,7 @@ class ApplyStyleItemsTests:
         node = Style(xml_node)
 
         with make_default('styles_tests'):
-            apply_style_items(node)
+            apply_style_items(node, TkRenderingContext())
         actual = {name: (item.name, item.value, item.setter) for name, item in node.items.items()}
         expected = {item[0]: item for item in expected}
 
@@ -62,7 +63,7 @@ class ApplyStyleItemsTests:
         node = Style(xml_node)
 
         with raises(StyleError):
-            apply_style_items(node)
+            apply_style_items(node, TkRenderingContext())
 
     @staticmethod
     @mark.parametrize('name', [
@@ -77,7 +78,7 @@ class ApplyStyleItemsTests:
         node = Style(xml_node)
 
         with make_default('styles_tests'):
-            apply_style_items(node)
+            apply_style_items(node, TkRenderingContext())
 
         assert node.name == name
 
@@ -106,7 +107,10 @@ def test_apply_parent_items_(items, parent_items, expected):
     node_styles = InheritedDict({'parent': {item[0]: item for item in parent_items}})
     expected = {item[0]: item for item in expected}
 
-    apply_parent_items(node, parent_name='parent', node_styles=node_styles)
+    apply_parent_items(node, TkRenderingContext({
+        'parent_name': 'parent',
+        'node_styles': node_styles
+    }))
 
     assert node.items == expected
 
@@ -117,6 +121,6 @@ def test_store_to_node_styles():
     node = Style(Mock())
     node.items = Mock()
 
-    store_to_node_styles(node, node_styles=node_styles)
+    store_to_node_styles(node, TkRenderingContext({'node_styles': node_styles}))
 
     assert node_styles[node.name] == node.items.values()

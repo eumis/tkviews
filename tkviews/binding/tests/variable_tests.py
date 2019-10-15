@@ -1,6 +1,7 @@
 from unittest.mock import Mock, call
 
 from pytest import mark
+from pyviews.binding import BindingContext
 from pyviews.core import XmlAttr, Node
 from tkviews.node import WidgetNode
 from tkviews.binding.variable import VariableTarget, VariableBinding, VariableTwowaysRule
@@ -92,40 +93,40 @@ class VariableTwowaysRuleTests:
     @staticmethod
     @mark.parametrize('rule_args, suitable_args, expected', [
         ((Entry, 'text', 'textvariable'),
-         {'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('text')},
+         {'node': WidgetNode(Entry(), Mock()), 'xml_attr': XmlAttr('text')},
          True),
         ((Entry, 'text', 'textvariable'),
-         {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('text')},
+         {'node': WidgetNode(Radiobutton(), Mock()), 'xml_attr': XmlAttr('text')},
          False),
         ((Radiobutton, 'selected_value', 'variable'),
-         {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('selected_value')},
+         {'node': WidgetNode(Radiobutton(), Mock()), 'xml_attr': XmlAttr('selected_value')},
          True),
         ((Radiobutton, 'selected_value', 'variable'),
-         {'node': WidgetNode(Radiobutton(), Mock()), 'attr': XmlAttr('some_node_property')},
+         {'node': WidgetNode(Radiobutton(), Mock()), 'xml_attr': XmlAttr('some_node_property')},
          False),
         ((Checkbutton, 'value', 'variable'),
-         {'node': WidgetNode(Checkbutton(), Mock()), 'attr': XmlAttr('value')},
+         {'node': WidgetNode(Checkbutton(), Mock()), 'xml_attr': XmlAttr('value')},
          True),
         ((Checkbutton, 'value', 'variable'),
-         {'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('some_node_property')},
+         {'node': WidgetNode(Entry(), Mock()), 'xml_attr': XmlAttr('some_node_property')},
          False)
     ])
     def test_suitable(rule_args: tuple, suitable_args: dict, expected: bool):
         """suitable() should check passed widget type and node property with passed arguments"""
         rule = VariableTwowaysRule(*rule_args)
 
-        assert rule.suitable(**suitable_args) == expected
+        assert rule.suitable(BindingContext(suitable_args)) == expected
 
     @staticmethod
     @mark.parametrize('args', [
         {},
         {'node': WidgetNode(Entry(), Mock())},
-        {'attr': XmlAttr('text')},
-        {'node': Node(Mock()), 'attr': XmlAttr('text')},
-        {'node': WidgetNode(Entry(), Mock()), 'attr': XmlAttr('some_property')}
+        {'xml_attr': XmlAttr('text')},
+        {'node': Node(Mock()), 'xml_attr': XmlAttr('text')},
+        {'node': WidgetNode(Entry(), Mock()), 'xml_attr': XmlAttr('some_property')}
     ])
     def test_suitable_checks_args(args: dict):
         """suitable() should return False for bad arguments"""
         rule = VariableTwowaysRule(Entry, 'text', 'textvariable')
 
-        assert not rule.suitable(**args)
+        assert not rule.suitable(BindingContext(args))

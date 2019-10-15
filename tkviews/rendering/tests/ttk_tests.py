@@ -1,6 +1,6 @@
 from unittest.mock import Mock, patch, call
 
-from injectool import make_default, add_resolve_function
+from injectool import make_default, add_function_resolver
 from pytest import mark
 from pyviews.core import Expression
 from pyviews.core.xml import XmlAttr
@@ -8,10 +8,11 @@ from pyviews.compilation import CompiledExpression
 from pyviews.rendering import call_set_attr
 from tkviews.node import TtkStyle
 from tkviews.rendering import ttk
+from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
 
 with make_default('ttk_tests'):
-    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
 
 
 def increment(node, key, value):
@@ -28,7 +29,7 @@ class SetupValueSetterTests:
         node = TtkStyle(Mock())
         name = 'some_name'
 
-        setup_value_setter(node)
+        setup_value_setter(node, TkRenderingContext())
         node.set_attr('name', name)
 
         assert node.name == name
@@ -42,7 +43,7 @@ class SetupValueSetterTests:
         """should set setter that sets to "values" property"""
         node = TtkStyle(Mock())
 
-        setup_value_setter(node)
+        setup_value_setter(node, TkRenderingContext())
         for key, value in values.items():
             node.set_attr(key, value)
 
@@ -72,10 +73,10 @@ def test_apply_style_attributes(attrs: list, expected: dict):
     attrs = [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
     xml_node = Mock(attrs=attrs)
     node = TtkStyle(xml_node)
-    setup_value_setter(node)
+    setup_value_setter(node, TkRenderingContext())
 
     with make_default('ttk_tests'):
-        apply_style_attributes(node)
+        apply_style_attributes(node, TkRenderingContext())
 
     assert node.values == expected
 
@@ -94,6 +95,6 @@ def test_configure_pass_values(name: str, values: dict):
         node.values = values
         node.name = name
 
-        configure(node)
+        configure(node, TkRenderingContext())
 
         assert configure_mock.call_args == call(node.full_name, **node.values)

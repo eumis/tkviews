@@ -10,7 +10,7 @@ def run_sandbox():
     """Entry point"""
     register_dependencies()
     resolver = get_pipeline_resolver()
-    resolver.add_value(get_scroll_pipeline(), Scroll)
+    resolver.set_value(get_scroll_pipeline(), Scroll)
     add_resolver(RenderingPipeline, resolver)
     launch('app')
 

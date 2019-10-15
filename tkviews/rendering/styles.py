@@ -4,22 +4,21 @@ from pyviews.core import XmlAttr, InheritedDict, Expression
 from pyviews.compilation import is_expression, parse_expression
 from pyviews.rendering import get_setter, render_children, RenderingPipeline
 from tkviews.node import Style, StyleItem, StyleError
+from tkviews.rendering.common import TkRenderingContext
 
 
 def get_style_setup() -> RenderingPipeline:
     """Returns setup for style node"""
-    node_setup = RenderingPipeline()
-    node_setup.steps = [
+    return RenderingPipeline([
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        render_child_styles,
+        render_child_styles
         # remove_style_on_destroy
-    ]
-    return node_setup
+    ])
 
 
-def apply_style_items(node: Style, **_):
+def apply_style_items(node: Style, _: TkRenderingContext):
     """Parsing step. Parses attributes to style items and sets them to style"""
     attrs = node.xml_node.attrs
     try:
@@ -38,30 +37,29 @@ def _get_style_item(node: Style, attr: XmlAttr):
     return StyleItem(setter, attr.name, value)
 
 
-def apply_parent_items(node: Style,
-                       parent_name: str = None,
-                       node_styles: InheritedDict = None,
-                       **_):
+def apply_parent_items(node: Style, context: TkRenderingContext):
     """Sets style items from parent style"""
+    parent_name = context.get('parent_name', None)
     if parent_name:
-        parent_items = node_styles[parent_name]
+        parent_items = context.node_styles[parent_name]
         node.items = {**parent_items, **node.items}
 
 
-def store_to_node_styles(node: Style, node_styles: InheritedDict = None, **_):
+def store_to_node_styles(node: Style, context: TkRenderingContext):
     """Store styles to node styles"""
-    node_styles[node.name] = node.items.values()
+    context.node_styles[node.name] = node.items.values()
 
 
-def render_child_styles(node: Style, node_styles: InheritedDict = None, **_):
+def render_child_styles(node: Style, context: TkRenderingContext):
     """Renders child styles"""
-    render_children(node,
-                    parent_node=node,
-                    parent_name=node.name,
-                    node_globals=InheritedDict(node.node_globals),
-                    node_styles=node_styles)
+    child_context = TkRenderingContext()
+    child_context.parent_node = node
+    child_context['parent_name'] = node.name
+    child_context.node_globals = InheritedDict(node.node_globals)
+    child_context.node_styles = context.node_styles
+    render_children(node, child_context)
 
 
-def remove_style_on_destroy(node: Style, node_styles: InheritedDict = None, **_):
+def remove_style_on_destroy(node: Style, context: TkRenderingContext):
     """Removes style from styles on destroying"""
-    node_styles.remove_key(node.name)
+    context.node_styles.remove_key(node.name)

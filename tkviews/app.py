@@ -2,11 +2,11 @@
 
 from os.path import abspath
 
-from injectool import add_singleton, SingletonResolver, add_resolver, add_resolve_function
+from injectool import add_singleton, SingletonResolver, add_resolver, add_function_resolver
 from pyviews.binding import Binder, OnceRule, OnewayRule
 from pyviews.compilation import CompiledExpression
-from pyviews.core import Expression, render, create_node
-from pyviews.rendering import render_node, render_view, RenderingPipeline
+from pyviews.core import Expression
+from pyviews.rendering import render_view, RenderingPipeline, create_node
 from pyviews.code import Code, run_code
 
 from tkviews.binding import add_variables_rules
@@ -31,8 +31,7 @@ def register_dependencies():
     add_singleton('view_ext', 'xml')
     add_singleton('namespaces', {'': 'tkinter'})
     add_singleton(create_node, create_widget_node)
-    add_singleton(render, render_node)
-    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
     add_singleton(Binder, setup_binder())
     add_resolver(RenderingPipeline, get_pipeline_resolver())
 
@@ -49,25 +48,25 @@ def setup_binder() -> Binder:
 def get_pipeline_resolver() -> SingletonResolver:
     pipeline_resolver = SingletonResolver()
 
-    pipeline_resolver.add_value(get_root_setup(), Root)
-    pipeline_resolver.add_value(get_widget_setup(), WidgetNode)
-    pipeline_resolver.add_value(get_widget_setup(), EntryNode)
-    pipeline_resolver.add_value(get_widget_setup(), CheckbuttonNode)
-    pipeline_resolver.add_value(get_widget_setup(), RadiobuttonNode)
-    pipeline_resolver.add_value(get_widget_setup(), TtkWidgetNode)
+    pipeline_resolver.set_value(get_root_setup(), Root)
+    pipeline_resolver.set_value(get_widget_setup(), WidgetNode)
+    pipeline_resolver.set_value(get_widget_setup(), EntryNode)
+    pipeline_resolver.set_value(get_widget_setup(), CheckbuttonNode)
+    pipeline_resolver.set_value(get_widget_setup(), RadiobuttonNode)
+    pipeline_resolver.set_value(get_widget_setup(), TtkWidgetNode)
 
-    pipeline_resolver.add_value(get_container_setup(), Container)
-    pipeline_resolver.add_value(get_view_setup(), View)
-    pipeline_resolver.add_value(get_for_setup(), For)
-    pipeline_resolver.add_value(get_if_setup(), If)
+    pipeline_resolver.set_value(get_container_setup(), Container)
+    pipeline_resolver.set_value(get_view_setup(), View)
+    pipeline_resolver.set_value(get_for_setup(), For)
+    pipeline_resolver.set_value(get_if_setup(), If)
 
-    pipeline_resolver.add_value(get_style_setup(), Style)
-    pipeline_resolver.add_value(get_ttk_style_setup(), TtkStyle)
+    pipeline_resolver.set_value(get_style_setup(), Style)
+    pipeline_resolver.set_value(get_ttk_style_setup(), TtkStyle)
 
-    pipeline_resolver.add_value(get_layout_setup(), Row)
-    pipeline_resolver.add_value(get_layout_setup(), Column)
+    pipeline_resolver.set_value(get_layout_setup(), Row)
+    pipeline_resolver.set_value(get_layout_setup(), Column)
 
-    pipeline_resolver.add_value(RenderingPipeline(steps=[run_code]), Code)
+    pipeline_resolver.set_value(RenderingPipeline(steps=[run_code]), Code)
 
     return pipeline_resolver
 

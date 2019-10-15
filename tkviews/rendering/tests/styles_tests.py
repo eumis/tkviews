@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from injectool import make_default, add_resolve_function
+from injectool import make_default, add_function_resolver
 from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict, Expression
 from pyviews.compilation import CompiledExpression
@@ -10,7 +10,7 @@ from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 with make_default('styles_tests'):
-    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
 
 
 def some_setter():

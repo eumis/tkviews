@@ -1,7 +1,7 @@
 """Contains methods for node setups creation"""
 
-from pyviews.core import InheritedDict, render
-from pyviews.rendering import RenderingPipeline, render_view
+from pyviews.core import InheritedDict
+from pyviews.rendering import RenderingPipeline, render_view, render
 from pyviews.rendering import apply_attributes, render_children
 from tkviews.node import Container, View, For, If
 from tkviews.rendering.common import TkRenderingContext

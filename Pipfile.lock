@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f3a7be726483e36ba7903442949d4a6ab28ea9e7f4d2a7d00f6af0a63a9bf325"
+            "sha256": "ef4aa8371369fa53889b535a1246aa1a77ee7b48a9a9005e10b232c9f2156d54"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_version": "3.6"
+            "python_version": "3"
         },
         "sources": [
             {
@@ -16,6 +16,25 @@
         ]
     },
     "default": {
+        "injectool": {
+            "hashes": [
+                "sha256:74d0a4b699efbedd595841b8f91cb5cadacd8fc57076c41ca0dff3f7cf75aac8"
+            ],
+            "version": "==1.1.2"
+        },
+        "pyviews": {
+            "hashes": [
+                "sha256:0267c26ecb15c5dff97582cc4c50eb84a7a9bac2bf379c3799580b71abc98d0c"
+            ],
+            "index": "pypi",
+            "version": "==2.3.0"
+        },
+        "tkviews": {
+            "editable": true,
+            "path": "."
+        }
+    },
+    "develop": {
         "atomicwrites": {
             "hashes": [
                 "sha256:03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4",
@@ -25,10 +44,10 @@
         },
         "attrs": {
             "hashes": [
-                "sha256:ec20e7a4825331c1b5ebf261d111e16fa9612c1f7a5e1f884f12bd53a664dfd2",
-                "sha256:f913492e1663d3c36f502e5e9ba6cd13cf19d7fab50aa13239e420fef95e1396"
+                "sha256:08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c",
+                "sha256:f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72"
             ],
-            "version": "==19.2.0"
+            "version": "==19.3.0"
         },
         "colorama": {
             "hashes": [
@@ -45,12 +64,6 @@
             ],
             "markers": "python_version < '3.8'",
             "version": "==0.23"
-        },
-        "injectool": {
-            "hashes": [
-                "sha256:f06eddbf5c9134417195762e8e5f2c8f6d423062ab63f5bd2340f4641eb6a0a7"
-            ],
-            "version": "==1.1.1"
         },
         "more-itertools": {
             "hashes": [
@@ -89,15 +102,11 @@
         },
         "pytest": {
             "hashes": [
-                "sha256:13c1c9b22127a77fc684eee24791efafcef343335d855e3573791c68588fe1a5",
-                "sha256:d8ba7be9466f55ef96ba203fc0f90d0cf212f2f927e69186e1353e30bc7f62e5"
+                "sha256:7e4800063ccfc306a53c461442526c5571e1462f61583506ce97e4da6a1d88c8",
+                "sha256:ca563435f4941d0cb34767301c27bc65c510cb82e90b9ecf9cb52dc2c63caaa0"
             ],
             "index": "pypi",
-            "version": "==5.2.0"
-        },
-        "pyviews": {
-            "editable": true,
-            "path": "c:\\projects\\own\\pyviews"
+            "version": "==5.2.1"
         },
         "six": {
             "hashes": [
@@ -105,10 +114,6 @@
                 "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
             ],
             "version": "==1.12.0"
-        },
-        "tkviews": {
-            "editable": true,
-            "path": "."
         },
         "wcwidth": {
             "hashes": [
@@ -124,6 +129,5 @@
             ],
             "version": "==0.6.0"
         }
-    },
-    "develop": {}
+    }
 }

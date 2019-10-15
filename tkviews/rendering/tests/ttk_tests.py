@@ -1,6 +1,6 @@
 from unittest.mock import Mock, patch, call
 
-from injectool import make_default, add_resolve_function
+from injectool import make_default, add_function_resolver
 from pytest import mark
 from pyviews.core import Expression
 from pyviews.core.xml import XmlAttr
@@ -12,7 +12,7 @@ from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
 
 with make_default('ttk_tests'):
-    add_resolve_function(Expression, lambda c, p: CompiledExpression(p))
+    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
 
 
 def increment(node, key, value):

@@ -1,3 +1,5 @@
+from typing import List
+
 from pyviews.core import ObservableEntity
 
 
@@ -6,8 +8,8 @@ class Counter(ObservableEntity):
         super().__init__()
         self._count = None
         self._range = None
-        self._callbacks['range'] = []
-        self._callbacks['count'] = []
+        self._add_key('count')
+        self._add_key('range')
         self.count = 0
         self.index = 0
 
@@ -17,14 +19,15 @@ class Counter(ObservableEntity):
 
     @count.setter
     def count(self, value):
+        old_value = self._count
         self._count = value
         if value is not None:
-            old_val = self._range
+            self._notify('count', value, old_value)
             self._range = range(value)
-            self._notify('range', range(value), old_val)
+            self._notify('range', self._range, None)
 
     @property
-    def range(self):
+    def range(self) -> List[int]:
         return self._range
 
     def up_count(self):

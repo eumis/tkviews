@@ -4,12 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pytest = "*"
 
 [packages]
 setuptools = "*"
-pyviews = {editable = true, path = "c:\\projects\\own\\pyviews"}
+pyviews = "*"
 tkviews = {editable = true, path = "."}
-pytest = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3"

@@ -1,7 +1,7 @@
 from unittest.mock import Mock, call
 
 from pytest import mark
-from pyviews.binding import BindingContext, TwoWaysBinding
+from pyviews.binding import BindingContext
 from pyviews.core import XmlAttr, Node
 from tkviews.node import WidgetNode
 from tkviews.binding.variable import VariableTarget, VariableBinding, VariableTwowaysRule

@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 2.2.1
 
 - updated pyviews to 2.3.0
 

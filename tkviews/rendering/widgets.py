@@ -1,7 +1,7 @@
 """Contains rendering setup for widget nodes"""
 
-from pyviews.core import XmlAttr, Node, Property, InheritedDict
-from pyviews.rendering import RenderingPipeline, apply_attributes, render_children, apply_attribute
+from pyviews.core import XmlAttr, Node, InheritedDict
+from pyviews.rendering import RenderingPipeline
 
 from tkviews.core.geometry import Geometry
 from tkviews.node import WidgetNode, StyleError

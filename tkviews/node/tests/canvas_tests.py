@@ -7,7 +7,7 @@ from tkviews.node.canvas import CanvasNode
 
 class CanvasItem(CanvasNode):
     def __init__(self, canvas, item_id):
-        super().__init__(canvas, None)
+        super().__init__(canvas, Mock())
         self._id = item_id
         self.options = None
 

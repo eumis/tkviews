@@ -3,9 +3,9 @@
 from tkinter.ttk import Style
 
 from injectool import resolve
-from pyviews.compilation import is_expression, parse_expression
-from pyviews.core import Expression
-from pyviews.rendering import get_setter, RenderingPipeline
+from pyviews.compilation import is_expression, parse_expression, Expression
+from pyviews.pipes import get_setter
+from pyviews.rendering.pipeline import RenderingPipeline
 
 from tkviews.node import TtkStyle
 from tkviews.rendering.common import TkRenderingContext

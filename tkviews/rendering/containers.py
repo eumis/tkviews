@@ -1,8 +1,8 @@
 """Contains methods for node setups creation"""
 
 from pyviews.core import InheritedDict
-from pyviews.rendering import RenderingPipeline, render_view, render
-from pyviews.rendering import apply_attributes, render_children
+from pyviews.pipes import apply_attributes
+from pyviews.rendering import RenderingPipeline, render
 from tkviews.node import Container, View, For, If
 from tkviews.rendering.common import TkRenderingContext
 
@@ -15,7 +15,7 @@ def get_container_setup() -> RenderingPipeline:
     ])
 
 
-def render_container_children(node, _: TkRenderingContext):
+def render_container_children(node, _: TkRenderingContext, ):
     """Renders container children"""
     render_children(node, _get_child_context(node))
 

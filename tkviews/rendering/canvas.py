@@ -1,13 +1,28 @@
 """Contains methods for node setups creation"""
+from tkinter import Canvas
+from typing import Type, cast
 
-from pyviews.rendering import RenderingPipeline, apply_attributes
+from pyviews.core import Node
+from pyviews.pipes import apply_attributes
+from pyviews.rendering import RenderingPipeline, RenderingError
 from tkviews.node import CanvasNode
 from tkviews.rendering.common import TkRenderingContext
 
 
-def get_canvas_setup() -> RenderingPipeline:
+class CanvasRenderingPipeline(RenderingPipeline):
+    def __init__(self, canvas_type: Type[CanvasNode], pipes=None):
+        super().__init__(pipes)
+        self._type = canvas_type
+
+    def _create_node(self, context: TkRenderingContext) -> Node:
+        if not isinstance(context.master, Canvas):
+            raise RenderingError(f'{self._type.__name__} parent should be Canvas')
+        return self._type(cast(Canvas, context.master), context.xml_node, context.node_globals, context.node_styles)
+
+
+def get_canvas_setup(item_type: Type[CanvasNode]) -> RenderingPipeline:
     """Returns setup for canvas"""
-    return RenderingPipeline(steps=[
+    return CanvasRenderingPipeline(item_type, pipes=[
         setup_temp_setter,
         setup_temp_binding,
         apply_attributes,

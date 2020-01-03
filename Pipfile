@@ -8,7 +8,7 @@ pylint = "*"
 
 [packages]
 setuptools = "*"
-pyviews = "*"
+pyviews = {editable = true, path = "c:\\projects\\own\\pyviews"}
 tkviews = {editable = true, path = "."}
 pytest = "*"
 

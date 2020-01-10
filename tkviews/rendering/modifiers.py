@@ -1,11 +1,11 @@
 """Common modifiers"""
 
 from sys import exc_info
-from pyviews.core import CoreError
+from pyviews.core import ViewsError
 from tkviews.node import WidgetNode
 
 
-class CallbackError(CoreError):
+class CallbackError(ViewsError):
     """Error from callback"""
 
     def __init__(self, message, event, view_info=None):
@@ -26,7 +26,7 @@ def _get_handled_command(command, view_info, event):
 def _call_command(command, view_info, event, args, kwargs):
     try:
         command(*args, **kwargs)
-    except CoreError as error:
+    except ViewsError as error:
         error.add_view_info(view_info)
         raise
     except:

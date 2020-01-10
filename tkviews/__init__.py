@@ -11,5 +11,5 @@ from .node import Style, StyleItem, StyleError
 from .node import TtkWidgetNode, TtkStyle
 from .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
 
-from pyviews.rendering.modifiers import import_global, set_global, inject_global, call
+from pyviews.modifiers import import_global, set_global, inject_global, call
 from .rendering import bind, bind_all, set_attr, config, visible

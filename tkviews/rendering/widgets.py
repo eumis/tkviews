@@ -1,6 +1,7 @@
 """Contains rendering setup for widget nodes"""
 
-from pyviews.core import XmlAttr, Node, InheritedDict
+from pyviews.core import XmlAttr, Node, InheritedDict, XmlNode
+from pyviews.pipes import apply_attributes, render_children, apply_attribute
 from pyviews.rendering import RenderingPipeline
 
 from tkviews.core.geometry import Geometry
@@ -25,9 +26,7 @@ def setup_widget_setter(node: Node, _: TkRenderingContext):
 
 def _widget_node_setter(node: WidgetNode, key: str, value):
     """Applies passed attribute"""
-    if key in node.properties:
-        node.properties[key].set(value)
-    elif hasattr(node, key):
+    if hasattr(node, key):
         setattr(node, key, value)
     elif hasattr(node.instance, key):
         setattr(node.instance, key, value)
@@ -44,14 +43,19 @@ def _on_widget_destroy(node: WidgetNode):
     node.instance.destroy()
 
 
-def render_widget_children(node: WidgetNode, _: TkRenderingContext):
+def render_widget_children(node: WidgetNode, context: TkRenderingContext):
+    render_children(node, context, _get_child_context)
+
+
+def _get_child_context(xml_node: XmlNode, node: WidgetNode, _: TkRenderingContext):
     """Renders child widgets"""
     child_context = TkRenderingContext()
+    child_context.xml_node = xml_node
     child_context.parent_node = node
     child_context.master = node.instance
     child_context.node_globals = InheritedDict(node.node_globals)
-    child_context.node_styles = node.node_styles
-    render_children(node, child_context)
+    child_context.node_styles = InheritedDict(node.node_styles)
+    return child_context
 
 
 def get_widget_setup():
@@ -68,8 +72,8 @@ def get_widget_setup():
 
 def setup_properties(node: WidgetNode, _: TkRenderingContext):
     """Sets up widget node properties"""
-    node.properties['geometry'] = Property('geometry', _geometry_setter, node=node)
-    node.properties['style'] = Property('style', _style_setter, node=node)
+    # node.properties['geometry'] = Property('geometry', _geometry_setter, node=node)
+    # node.properties['style'] = Property('style', _style_setter, node=node)
 
 
 def _geometry_setter(node: WidgetNode, geometry: Geometry, previous: Geometry):

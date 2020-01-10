@@ -1,19 +1,20 @@
 """Contains rendering steps for style nodes"""
 from injectool import resolve
-from pyviews.core import XmlAttr, InheritedDict, Expression
-from pyviews.compilation import is_expression, parse_expression
-from pyviews.rendering import get_setter, render_children, RenderingPipeline
+from pyviews.core import XmlAttr, InheritedDict, XmlNode
+from pyviews.compilation import is_expression, parse_expression, Expression
+from pyviews.pipes import get_setter, render_children
+from pyviews.rendering import RenderingPipeline, RenderingContext
 from tkviews.node import Style, StyleItem, StyleError
 from tkviews.rendering.common import TkRenderingContext
 
 
 def get_style_setup() -> RenderingPipeline:
     """Returns setup for style node"""
-    return RenderingPipeline([
+    return RenderingPipeline(pipes=[
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        render_child_styles
+        lambda style, ctx: render_children(style, ctx, _get_style_child_context),
         # remove_style_on_destroy
     ])
 
@@ -50,14 +51,15 @@ def store_to_node_styles(node: Style, context: TkRenderingContext):
     context.node_styles[node.name] = node.items.values()
 
 
-def render_child_styles(node: Style, context: TkRenderingContext):
+def _get_style_child_context(xml_node: XmlNode, node: Style, context: TkRenderingContext) -> RenderingContext:
     """Renders child styles"""
     child_context = TkRenderingContext()
+    child_context.xml_node = xml_node
     child_context.parent_node = node
     child_context['parent_name'] = node.name
     child_context.node_globals = InheritedDict(node.node_globals)
     child_context.node_styles = context.node_styles
-    render_children(node, child_context)
+    return child_context
 
 
 def remove_style_on_destroy(node: Style, context: TkRenderingContext):

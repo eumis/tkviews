@@ -13,7 +13,7 @@ class TtkWidgetNode(InstanceNode, TkNode):
     def __init__(self, widget: Widget, xml_node: XmlNode,
                  node_globals: InheritedDict = None, node_styles: InheritedDict = None):
         super().__init__(widget, xml_node, node_globals=node_globals)
-        self._node_styles = InheritedDict(node_styles)
+        self._node_styles = node_styles
 
     @property
     def node_styles(self) -> InheritedDict:

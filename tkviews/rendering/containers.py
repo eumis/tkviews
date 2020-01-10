@@ -1,8 +1,10 @@
 """Contains methods for node setups creation"""
 
-from pyviews.core import InheritedDict
-from pyviews.pipes import apply_attributes
+from pyviews.core import InheritedDict, XmlNode
+from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering import RenderingPipeline, render
+from pyviews.rendering.views import render_view
+
 from tkviews.node import Container, View, For, If
 from tkviews.rendering.common import TkRenderingContext
 
@@ -15,9 +17,9 @@ def get_container_setup() -> RenderingPipeline:
     ])
 
 
-def render_container_children(node, _: TkRenderingContext, ):
+def render_container_children(node, context: TkRenderingContext):
     """Renders container children"""
-    render_children(node, _get_child_context(node))
+    render_children(node, context, _get_child_context)
 
 
 def get_view_setup() -> RenderingPipeline:
@@ -32,9 +34,9 @@ def get_view_setup() -> RenderingPipeline:
 def render_view_children(node: View, _: TkRenderingContext):
     """Finds view by name attribute and renders it as view node child"""
     if node.name:
-        child_context = _get_child_context(node)
-        content = render_view(node.name, child_context)
-        node.set_content(content)
+        child_context = _get_child_context(None, node)
+        render_view(node.name, child_context) \
+            .subscribe(node.set_content)
 
 
 def rerender_on_view_change(node: View, context: TkRenderingContext):
@@ -66,13 +68,13 @@ def _render_for_children(node: For, items: list, index_shift=0):
     item_xml_nodes = node.xml_node.children
     for index, item in enumerate(items):
         for xml_node in item_xml_nodes:
-            item_context = _get_for_child_args(node, index + index_shift, item)
-            child = render(xml_node, item_context)
-            node.add_child(child)
+            item_context = _get_for_child_args(xml_node, node, index + index_shift, item)
+            render(item_context) \
+                .subscribe(node.add_child)
 
 
-def _get_for_child_args(node: For, index, item) -> TkRenderingContext:
-    child_context = _get_child_context(node)
+def _get_for_child_args(xml_node: XmlNode, node: For, index, item) -> TkRenderingContext:
+    child_context = _get_child_context(xml_node, node)
     child_globals = child_context.node_globals
     child_globals['index'] = index
     child_globals['item'] = item
@@ -135,10 +137,10 @@ def get_if_setup() -> RenderingPipeline:
     ])
 
 
-def render_if(node: If, _: TkRenderingContext):
+def render_if(node: If, context: TkRenderingContext):
     """Renders children nodes if condition is true"""
     if node.condition:
-        render_children(node, _get_child_context(node))
+        render_children(node, context, _get_child_context)
 
 
 def subscribe_to_condition_change(node: If, context: TkRenderingContext):
@@ -153,10 +155,11 @@ def _on_condition_change(node: If, val: bool, old: bool, context: TkRenderingCon
     render_if(node, context)
 
 
-def _get_child_context(node: Container):
+def _get_child_context(child_xml_node: XmlNode, node: Container, _=None) -> TkRenderingContext:
     return TkRenderingContext({
         'parent_node': node,
         'master': node.master,
         'node_globals': InheritedDict(node.node_globals),
-        'node_styles': node.node_styles
+        'node_styles': node.node_styles,
+        'xml_node': child_xml_node
     })

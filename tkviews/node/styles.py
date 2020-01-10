@@ -1,10 +1,10 @@
 """Nodes for storing config options for widgets"""
 
 from typing import Any
-from pyviews.core import CoreError, XmlNode, Node, InheritedDict, Modifier
+from pyviews.core import ViewsError, XmlNode, Node, InheritedDict, Modifier
 
 
-class StyleError(CoreError):
+class StyleError(ViewsError):
     """Error for style"""
 
 

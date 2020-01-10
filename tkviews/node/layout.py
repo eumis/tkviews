@@ -14,6 +14,13 @@ class LayoutSetup(Node, ABC):
         self.args = {}
         self.index = None
 
+    def set_attr(self, key, value):
+        """Sets config parameter"""
+        if hasattr(self, key):
+            setattr(self, key, value)
+        else:
+            self.args[key] = value
+
     @abstractmethod
     def apply(self):
         """Calls config with passed parameters"""

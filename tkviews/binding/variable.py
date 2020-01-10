@@ -5,11 +5,11 @@ from typing import Type
 from tkinter import Variable, Entry, Checkbutton, Radiobutton
 
 from injectool import resolve
-from pyviews.core import CoreError, XmlAttr, Node, Modifier
-from pyviews.core import Binding, BindingTarget, BindingError, Expression
+from pyviews.core import ViewsError, XmlAttr, Node, Modifier
+from pyviews.core import Binding, BindingTarget, BindingError
 from pyviews.binding import PropertyTarget, get_expression_target, Binder, BindingRule, BindingContext
 from pyviews.binding import ExpressionBinding, TwoWaysBinding
-from pyviews.compilation import parse_expression
+from pyviews.compilation import parse_expression, Expression
 
 
 class VariableTarget(BindingTarget):
@@ -39,7 +39,7 @@ class VariableBinding(Binding):
         try:
             value = self._var.get()
             self._target.on_change(value)
-        except CoreError as error:
+        except ViewsError as error:
             self.add_error_info(error)
             raise
         except BaseException:

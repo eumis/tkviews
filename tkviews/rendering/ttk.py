@@ -5,8 +5,9 @@ from tkinter.ttk import Style
 from injectool import resolve
 from pyviews.compilation import is_expression, parse_expression, Expression
 from pyviews.pipes import get_setter
-from pyviews.rendering.pipeline import RenderingPipeline
+from pyviews.rendering.pipeline import RenderingPipeline, get_type, create_instance
 
+from tkviews import TtkWidgetNode
 from tkviews.node import TtkStyle
 from tkviews.rendering.common import TkRenderingContext
 
@@ -18,6 +19,12 @@ def get_ttk_style_setup() -> RenderingPipeline:
         apply_style_attributes,
         configure
     ])
+
+
+def _create_ttk_widget_node(context: TkRenderingContext):
+    inst_type = get_type(context.xml_node)
+    inst = create_instance(inst_type, context)
+    return create_instance(TtkWidgetNode, {'widget': inst, **context})
 
 
 def setup_value_setter(node: TtkStyle, _: TkRenderingContext):

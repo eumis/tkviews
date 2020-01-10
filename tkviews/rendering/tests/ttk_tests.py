@@ -1,18 +1,13 @@
 from unittest.mock import Mock, patch, call
 
-from injectool import make_default, add_function_resolver
 from pytest import mark
-from pyviews.core import Expression
 from pyviews.core.xml import XmlAttr
-from pyviews.compilation import CompiledExpression
-from pyviews.rendering import call_set_attr
-from tkviews.node import TtkStyle
+from pyviews.pipes import call_set_attr
+
+from tkviews import TtkStyle
 from tkviews.rendering import ttk
 from tkviews.rendering.common import TkRenderingContext
 from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
-
-with make_default('ttk_tests'):
-    add_function_resolver(Expression, lambda c, p: CompiledExpression(p))
 
 
 def increment(node, key, value):
@@ -75,8 +70,7 @@ def test_apply_style_attributes(attrs: list, expected: dict):
     node = TtkStyle(xml_node)
     setup_value_setter(node, TkRenderingContext())
 
-    with make_default('ttk_tests'):
-        apply_style_attributes(node, TkRenderingContext())
+    apply_style_attributes(node, TkRenderingContext())
 
     assert node.values == expected
 

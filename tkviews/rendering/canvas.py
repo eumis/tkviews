@@ -9,20 +9,9 @@ from tkviews.node import CanvasNode
 from tkviews.rendering.common import TkRenderingContext
 
 
-class CanvasRenderingPipeline(RenderingPipeline):
-    def __init__(self, canvas_type: Type[CanvasNode], pipes=None):
-        super().__init__(pipes)
-        self._type = canvas_type
-
-    def _create_node(self, context: TkRenderingContext) -> Node:
-        if not isinstance(context.master, Canvas):
-            raise RenderingError(f'{self._type.__name__} parent should be Canvas')
-        return self._type(cast(Canvas, context.master), context.xml_node, context.node_globals, context.node_styles)
-
-
-def get_canvas_setup(item_type: Type[CanvasNode]) -> RenderingPipeline:
+def get_canvas_pipeline(item_type: Type[CanvasNode]) -> RenderingPipeline:
     """Returns setup for canvas"""
-    return CanvasRenderingPipeline(item_type, pipes=[
+    return RenderingPipeline(pipes=[
         setup_temp_setter,
         setup_temp_binding,
         apply_attributes,
@@ -31,7 +20,13 @@ def get_canvas_setup(item_type: Type[CanvasNode]) -> RenderingPipeline:
         setup_event_binding,
         apply_temp_events,
         clear_temp
-    ])
+    ], create_node=lambda ctx: _create_canvas_node(ctx, item_type))
+
+
+def _create_canvas_node(context: TkRenderingContext, node_type) -> Node:
+    if not isinstance(context.master, Canvas):
+        raise RenderingError(f'{node_type.__name__} parent should be Canvas')
+    return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals, context.node_styles)
 
 
 def setup_temp_setter(node: CanvasNode, _: TkRenderingContext):

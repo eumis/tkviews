@@ -1,8 +1,10 @@
 from tkinter import Frame, Canvas, Scrollbar
 from pyviews.core.observable import InheritedDict
 from pyviews.core.xml import XmlNode
-from pyviews.rendering.pipeline import RenderingPipeline, render_children, apply_attributes
+from pyviews.pipes import apply_attributes, render_children
+from pyviews.rendering.pipeline import RenderingPipeline
 from pyviews.core.node import Node
+
 from tkviews.core import TkNode
 from tkviews.rendering.common import TkRenderingContext
 
@@ -109,7 +111,7 @@ class Scroll(Node, TkNode):
 
 
 def get_scroll_pipeline():
-    return RenderingPipeline(steps=[
+    return RenderingPipeline(pipes=[
         setup_setter,
         apply_attributes,
         render_scroll_children
@@ -131,10 +133,15 @@ def _scroll_attr_setter(node: Scroll, key: str, value):
             node.canvas.config(**{key: value})
 
 
-def render_scroll_children(node: Scroll, _: TkRenderingContext):
+def render_scroll_children(node: Scroll, context: TkRenderingContext):
+    render_children(node, context, _get_child_context)
+
+
+def _get_child_context(xml_node: XmlNode, node: Scroll, _: TkRenderingContext):
     child_context = TkRenderingContext()
+    child_context.xml_node = xml_node
     child_context.parent_node = node
     child_context.node_styles = node.node_styles
     child_context.node_globals = node.node_globals
     child_context.master = node.container
-    render_children(node, child_context)
+    return child_context

@@ -13,30 +13,30 @@
 
     <tkw:View name='styles'/>
 
-    <Frame geometry='{Pack(fill="x")}'>
-        <Button geometry='{Pack(side="left")}'
+    <Frame geometry:='{Pack(fill="x")}'>
+        <Button geometry:='{Pack(side="left")}'
                 style='button'
                 bind:Button-1="once:{lambda e: vm.up_count()}"
                 text='+1'/>
 
-        <Entry geometry='{Pack(side="left")}'
+        <Entry geometry:='{Pack(side="left")}'
                text='{int_var:{vm.count}}'>
         </Entry>
 
-        <Label geometry='{Pack(side="left")}'
+        <Label geometry:='{Pack(side="left")}'
                style='back'
                bind:Button-1="once:{lambda e: print(e)}">
             {vm.count}
         </Label>
     </Frame>
 
-    <Frame geometry='{Pack(anchor="nw", side="left")}'>
+    <Frame geometry:='{Pack(anchor="nw", side="left")}'>
         <tkw:Row index='{0}' weight='{1}'/>
         <tkw:Column index='{0}' weight='{1}'/>
-        <Frame geometry='{Grid(row=0, column=0)}'
+        <Frame geometry:='{Grid(row=0, column=0)}'
                background='white'>
             <tkw:For items='{vm.range}'>
-                <Label geometry='{Grid(row=index, column=index)}'
+                <Label geometry:='{Grid(row=index, column=index)}'
                        style='{"yellowbg" if index % 2 == 0 else "redbg"}'>
                     {str(item+1) + ' ' + str(index)}
                 </Label>

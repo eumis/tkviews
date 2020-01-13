@@ -4,6 +4,7 @@
           xmlns:import='tkviews.import_global'
           xmlns:global='tkviews.set_global'
           xmlns:bind='tkviews.bind'
+          xmlns:geometry="tkviews.rendering.modifiers.set_geometry"
 
           import:AppViewModel='view_model.AppViewModel'
           import:Grid='tkviews.GridGeometry'
@@ -13,22 +14,22 @@
 
           background="white"
           global:vm='{AppViewModel()}'>
-        <Frame geometry='{Pack(fill="x")}'>
-                <Button geometry='{Grid(row=0, column=0, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
-                        text='Message box' />
+    <Frame geometry:='{Pack(fill="x")}'>
+        <Button geometry:='{Grid(row=0, column=0, sticky="e")}'
+                bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
+                text='Message box'/>
 
-                <Button geometry='{Grid(row=0, column=1, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'counter')}"
-                        text='Counter' />
+        <Button geometry:='{Grid(row=0, column=1, sticky="e")}'
+                bind:Button-1="once:{lambda e: show_view(vm, 'counter')}"
+                text='Counter'/>
 
-                <Button geometry='{Grid(row=0, column=2, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}"
-                        text='Scroll' />
+        <Button geometry:='{Grid(row=0, column=2, sticky="e")}'
+                bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}"
+                text='Scroll'/>
 
-                <Button geometry='{Grid(row=0, column=3, sticky="e")}'
-                        bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
-                        text='Binding' />
-        </Frame>
-        <tkw:View name='{vm.view}' />
+        <Button geometry:='{Grid(row=0, column=3, sticky="e")}'
+                bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
+                text='Binding'/>
+    </Frame>
+    <tkw:View name='{vm.view}'/>
 </tkw:Root>

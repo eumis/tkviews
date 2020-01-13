@@ -2,7 +2,7 @@
 
 from pyviews.core import XmlAttr, Node, InheritedDict, XmlNode
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
-from pyviews.rendering import RenderingPipeline
+from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
 from tkviews.core.geometry import Geometry
 from tkviews.node import WidgetNode, StyleError
@@ -11,7 +11,7 @@ from tkviews.rendering.common import TkRenderingContext
 
 def get_root_setup():
     """Returns setup for root"""
-    return RenderingPipeline([
+    return RenderingPipeline(pipes=[
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
@@ -67,7 +67,13 @@ def get_widget_setup():
         apply_attributes,
         apply_text,
         render_widget_children
-    ])
+    ], create_node=_create_widget_node)
+
+
+def _create_widget_node(context: TkRenderingContext):
+    inst_type = get_type(context.xml_node)
+    inst = create_instance(inst_type, context)
+    return create_instance(WidgetNode, {'widget': inst, **context})
 
 
 def setup_properties(node: WidgetNode, _: TkRenderingContext):

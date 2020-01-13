@@ -18,7 +18,7 @@ def get_ttk_style_setup() -> RenderingPipeline:
         setup_value_setter,
         apply_style_attributes,
         configure
-    ])
+    ], create_node=_create_ttk_widget_node)
 
 
 def _create_ttk_widget_node(context: TkRenderingContext):

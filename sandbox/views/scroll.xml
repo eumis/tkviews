@@ -4,6 +4,7 @@
            xmlns:import="tkviews.import_global"
            xmlns:bind="tkviews.bind"
            xmlns:global='tkviews.set_global'
+           xmlns:geometry="tkviews.rendering.modifiers.set_geometry"
 
            import:Pack='tkviews.PackGeometry'
            import:ScrollVm="scroll.ScrollVm"
@@ -11,7 +12,7 @@
            geometry='{Pack(fill="both", expand=True)}'
            global:vm='{ScrollVm()}'>
     <tkw:For items='{vm.items}'>
-        <Label geometry='{Pack(fill="x")}'
+        <Label geometry:='{Pack(fill="x")}'
                bind:Button-1='once:{lambda e: item.add()}'>
             {item.text}
         </Label>

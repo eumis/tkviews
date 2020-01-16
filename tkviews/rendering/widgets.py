@@ -6,7 +6,7 @@ from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
 from tkviews.core.geometry import Geometry
 from tkviews.node import WidgetNode, StyleError
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def get_root_setup():

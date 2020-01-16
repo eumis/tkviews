@@ -1,5 +1,11 @@
 # Changelog
 
+## Dev
+
+- updated pyviews to 3.0.0
+- CanvasNode is renamed to CanvasItem
+- added geometry modifier instead of property
+
 ## 2.2.1
 
 - updated pyviews to 2.3.0

@@ -5,7 +5,7 @@ from pyviews.core import XmlAttr, InheritedDict
 from pyviews.pipes import call_set_attr
 
 from tkviews.node import Style, StyleError
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 from tkviews.rendering.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 

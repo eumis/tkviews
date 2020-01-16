@@ -6,7 +6,7 @@ from pyviews.rendering.pipeline import RenderingPipeline
 from pyviews.core.node import Node
 
 from tkviews.core import TkNode
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 class Scroll(Node, TkNode):

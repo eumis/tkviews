@@ -9,7 +9,7 @@ from pyviews.rendering.pipeline import RenderingPipeline, get_type, create_insta
 
 from tkviews import TtkWidgetNode
 from tkviews.node import TtkStyle
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def get_ttk_style_setup() -> RenderingPipeline:

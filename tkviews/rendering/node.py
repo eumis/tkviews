@@ -9,7 +9,7 @@ from pyviews.rendering import get_type, create_instance
 
 from tkviews.node import WidgetNode, TtkWidgetNode
 from tkviews.node import EntryNode, CheckbuttonNode, RadiobuttonNode
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def create_widget_node(xml_node: XmlNode, context: TkRenderingContext) -> WidgetNode:

@@ -2,7 +2,7 @@
 from pyviews.pipes import apply_attributes
 from pyviews.rendering import RenderingPipeline
 from tkviews.node import LayoutSetup
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def get_layout_setup() -> RenderingPipeline:

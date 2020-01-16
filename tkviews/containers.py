@@ -1,12 +1,35 @@
-"""Contains methods for node setups creation"""
+"""
+Nodes used as abstract containers, that used to incapsulate some logic.
+Containers don't represent any widget.
+"""
 
-from pyviews.core import InheritedDict, XmlNode
+from tkinter import Widget
+from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering import RenderingPipeline, render
 from pyviews.rendering.views import render_view
 
-from tkviews.node import Container, View, For, If
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core import TkNode
+from tkviews.core.common import TkRenderingContext
+
+
+class Container(Node, TkNode):
+    """Used to combine some xml elements"""
+
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(xml_node, node_globals=node_globals)
+        self._master = master
+        self._node_styles = node_styles
+
+    @property
+    def master(self):
+        """Master widget"""
+        return self._master
+
+    @property
+    def node_styles(self):
+        return self._node_styles
 
 
 def get_container_setup() -> RenderingPipeline:
@@ -22,21 +45,46 @@ def render_container_children(node, context: TkRenderingContext):
     render_children(node, context, _get_child_context)
 
 
+class View(Container):
+    """Loads xml from another file"""
+
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+        self._name = None
+        self.name_changed = lambda view, name, previous_name: None
+
+    @property
+    def name(self):
+        """Returns view name"""
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        old_name = self._name
+        self._name = value
+        self.name_changed(self, value, old_name)
+
+    def set_content(self, content: Node):
+        """Destroys current """
+        self._children = [content]
+
+
 def get_view_setup() -> RenderingPipeline:
     """Returns setup for container"""
     return RenderingPipeline([
         apply_attributes,
-        render_view_children,
+        render_view_content,
         rerender_on_view_change
     ])
 
 
-def render_view_children(node: View, _: TkRenderingContext):
+def render_view_content(node: View, _: TkRenderingContext):
     """Finds view by name attribute and renders it as view node child"""
     if node.name:
         child_context = _get_child_context(None, node)
-        render_view(node.name, child_context) \
-            .subscribe(node.set_content)
+        res = render_view(node.name, child_context)
+        res.subscribe(node.set_content)
 
 
 def rerender_on_view_change(node: View, context: TkRenderingContext):
@@ -47,7 +95,76 @@ def rerender_on_view_change(node: View, context: TkRenderingContext):
 
 def _rerender_view(node: View, context: TkRenderingContext):
     node.destroy_children()
-    render_view_children(node, context)
+    render_view_content(node, context)
+
+
+class If(Container):
+    """Renders children if condition is True"""
+
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+        self._condition = False
+        self.condition_changed = lambda node, cond, old_cond: None
+
+    @property
+    def condition(self):
+        """Returns condition"""
+        return self._condition
+
+    @condition.setter
+    def condition(self, value):
+        old_condition = self._condition
+        self._condition = value
+        self.condition_changed(self, value, old_condition)
+
+
+def get_if_setup() -> RenderingPipeline:
+    """Returns setup for For node"""
+    return RenderingPipeline([
+        apply_attributes,
+        render_if,
+        subscribe_to_condition_change
+    ])
+
+
+def render_if(node: If, context: TkRenderingContext):
+    """Renders children nodes if condition is true"""
+    if node.condition:
+        render_children(node, context, _get_child_context)
+
+
+def subscribe_to_condition_change(node: If, context: TkRenderingContext):
+    """Renders if on condition change"""
+    node.condition_changed = lambda n, v, o: _on_condition_change(n, v, o, context)
+
+
+def _on_condition_change(node: If, val: bool, old: bool, context: TkRenderingContext):
+    if val == old:
+        return
+    node.destroy_children()
+    render_if(node, context)
+
+
+class For(Container):
+    """Renders children for every item in items collection"""
+
+    def __init__(self, master: Widget, xml_node: XmlNode,
+                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+        self._items = []
+        self.items_changed = lambda node, items, old_items: None
+
+    @property
+    def items(self):
+        """Returns items"""
+        return self._items
+
+    @items.setter
+    def items(self, value):
+        old_items = self._items
+        self._items = value
+        self.items_changed(self, value, old_items)
 
 
 def get_for_setup() -> RenderingPipeline:
@@ -126,33 +243,6 @@ def _create_not_existing(node: For):
     end = len(node.items)
     items = [node.items[i] for i in range(start, end)]
     _render_for_children(node, items, start)
-
-
-def get_if_setup() -> RenderingPipeline:
-    """Returns setup for For node"""
-    return RenderingPipeline([
-        apply_attributes,
-        render_if,
-        subscribe_to_condition_change
-    ])
-
-
-def render_if(node: If, context: TkRenderingContext):
-    """Renders children nodes if condition is true"""
-    if node.condition:
-        render_children(node, context, _get_child_context)
-
-
-def subscribe_to_condition_change(node: If, context: TkRenderingContext):
-    """Renders if on condition change"""
-    node.condition_changed = lambda n, v, o: _on_condition_change(n, v, o, context)
-
-
-def _on_condition_change(node: If, val: bool, old: bool, context: TkRenderingContext):
-    if val == old:
-        return
-    node.destroy_children()
-    render_if(node, context)
 
 
 def _get_child_context(child_xml_node: XmlNode, node: Container, _=None) -> TkRenderingContext:

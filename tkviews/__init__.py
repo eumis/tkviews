@@ -4,8 +4,7 @@ __version__ = '2.2.1'
 
 from .core import PackGeometry, GridGeometry, PlaceGeometry
 
-from .node import CanvasNode, Rectangle, Text, Image, Arc, Bitmap, Line, Oval, Polygon, Window
-from .node import Container, View, For, If
+from .containers import Container, View, For, If
 from .node import LayoutSetup, Row, Column
 from .node import Style, StyleItem, StyleError
 from .node import TtkWidgetNode, TtkStyle

@@ -2,7 +2,7 @@
 
 from os.path import abspath
 
-from injectool import add_singleton, SingletonResolver, add_resolver, add_function_resolver
+from injectool import add_singleton, SingletonResolver, add_resolver
 from pyviews.binding import Binder, OnceRule, OnewayRule
 from pyviews.rendering import RenderingPipeline
 from pyviews.code import run_code
@@ -16,7 +16,7 @@ from tkviews.rendering import get_for_setup, get_if_setup
 from tkviews.rendering import get_style_setup
 from tkviews.rendering import get_ttk_style_setup
 from tkviews.rendering import get_layout_setup
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def register_dependencies():

@@ -5,7 +5,7 @@ from pyviews.compilation import is_expression, parse_expression, Expression
 from pyviews.pipes import get_setter, render_children
 from pyviews.rendering import RenderingPipeline, RenderingContext
 from tkviews.node import Style, StyleItem, StyleError
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 
 
 def get_style_setup() -> RenderingPipeline:

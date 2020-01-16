@@ -6,7 +6,7 @@ from pyviews.pipes import call_set_attr
 
 from tkviews import TtkStyle
 from tkviews.rendering import ttk
-from tkviews.rendering.common import TkRenderingContext
+from tkviews.core.common import TkRenderingContext
 from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
 
 

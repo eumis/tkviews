@@ -1,7 +1,5 @@
 """Rendering"""
 
-from .canvas import get_canvas_pipeline
-from .containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
 from .geometry import get_layout_setup
 from .modifiers import bind, bind_all, set_attr, config, visible
 from .node import create_widget_node

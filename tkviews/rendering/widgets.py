@@ -4,7 +4,7 @@ from pyviews.core import XmlAttr, Node, InheritedDict, XmlNode
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
-from tkviews.core.geometry import Geometry
+from tkviews.geometry import Geometry
 from tkviews.node import WidgetNode, StyleError
 from tkviews.core.common import TkRenderingContext
 

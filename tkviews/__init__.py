@@ -2,10 +2,10 @@
 
 __version__ = '2.2.1'
 
-from .core import PackGeometry, GridGeometry, PlaceGeometry
+from .geometry import PackGeometry, GridGeometry, PlaceGeometry
+from .geometry import LayoutSetup, Row, Column
 
 from .containers import Container, View, For, If
-from .node import LayoutSetup, Row, Column
 from .node import Style, StyleItem, StyleError
 from .node import TtkWidgetNode, TtkStyle
 from .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode

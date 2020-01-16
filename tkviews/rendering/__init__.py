@@ -1,6 +1,5 @@
 """Rendering"""
 
-from .geometry import get_layout_setup
 from .modifiers import bind, bind_all, set_attr, config, visible
 from .node import create_widget_node
 from .styles import get_style_setup

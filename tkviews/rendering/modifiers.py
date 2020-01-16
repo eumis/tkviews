@@ -3,7 +3,7 @@
 from sys import exc_info
 from pyviews.core import ViewsError
 
-from tkviews.core import Geometry
+from tkviews.geometry import Geometry
 from tkviews.node import WidgetNode
 
 
@@ -60,7 +60,3 @@ def visible(node: WidgetNode, _, value):
     else:
         node.geometry.forget(node.instance)
 
-
-def set_geometry(node: WidgetNode, _, geometry: Geometry):
-    if geometry is not None:
-        geometry.apply(node.instance)

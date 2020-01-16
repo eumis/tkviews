@@ -2,7 +2,9 @@ from unittest.mock import Mock, call
 
 from pytest import mark, fixture
 
-from tkviews.core.geometry import GridGeometry, PackGeometry, PlaceGeometry
+from tkviews import WidgetNode
+from tkviews.core.common import TkRenderingContext
+from tkviews.geometry import GridGeometry, PackGeometry, PlaceGeometry, apply_layout, set_geometry
 
 
 @fixture
@@ -158,3 +160,21 @@ class PlaceGeometryTests:
 
         geometry.apply(self.widget)
         assert self.widget.place.call_args == call(**args)
+
+
+def test_apply_layout():
+    """should call apply() method"""
+    node = Mock()
+
+    apply_layout(node, TkRenderingContext())
+
+    assert node.apply.called
+
+
+def test_set_geometry():
+    """should apply geometry for node"""
+    node, geometry = WidgetNode(Mock(), Mock()), Mock()
+
+    set_geometry(node, 'key', geometry)
+
+    assert geometry.apply.call_args == call(node.instance)

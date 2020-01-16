@@ -4,9 +4,9 @@ from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict
 from pyviews.pipes import call_set_attr
 
-from tkviews.node import Style, StyleError
 from tkviews.core.common import TkRenderingContext
-from tkviews.rendering.styles import apply_style_items, apply_parent_items, store_to_node_styles
+from tkviews.styles import Style, StyleError
+from tkviews.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 
 def some_setter():
@@ -17,6 +17,7 @@ def another_setter():
     """Another test setter"""
 
 
+@mark.usefixtures('container_fixture')
 class ApplyStyleItemsTests:
     """apply_style_items() tests"""
 

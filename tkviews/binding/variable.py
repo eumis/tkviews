@@ -77,7 +77,7 @@ class VariableTwowaysRule(BindingRule):
             self._set_variable(context.node, variable_type_key)
         variable = getattr(context.node, self._variable_property)
 
-        expression_ = resolve(Expression, expr_body)
+        expression_ = Expression(expr_body)
         expr_binding = self._create_expression_binding(context.node, expression_, context.xml_attr, context.modifier)
         var_binding = self._create_variable_binding(context.node, expression_, variable)
 

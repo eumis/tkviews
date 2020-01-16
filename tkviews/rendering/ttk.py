@@ -45,7 +45,7 @@ def apply_style_attributes(node: TtkStyle, _: TkRenderingContext):
         setter = get_setter(attr)
         value = attr.value if attr.value else ''
         if is_expression(value):
-            expression_ = resolve(Expression, parse_expression(value)[1])
+            expression_ = Expression(parse_expression(value)[1])
             value = expression_.execute(node.node_globals.to_dictionary())
         setter(node, attr.name, value)
 

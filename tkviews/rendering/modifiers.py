@@ -3,8 +3,7 @@
 from sys import exc_info
 from pyviews.core import ViewsError
 
-from tkviews.geometry import Geometry
-from tkviews.node import WidgetNode
+from tkviews.widgets import WidgetNode
 
 
 class CallbackError(ViewsError):

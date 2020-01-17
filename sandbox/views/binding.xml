@@ -13,7 +13,7 @@
     <LabelFrame geometry:='{Pack(fill="x")}'
                 text='Entry string binding'>
         <Entry geometry:='{Pack(side="left")}'
-               text='{{vm.entry}}'>
+               textvariable='StringVar:{vm.entry}'>
         </Entry>
 
         <Label geometry:='{Pack(side="left")}'>

@@ -8,7 +8,7 @@ from pyviews.core import Node, XmlNode
 from pyviews.pipes import apply_attributes
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.node import WidgetNode
+from tkviews.widgets import WidgetNode
 from tkviews.core.common import TkRenderingContext
 
 

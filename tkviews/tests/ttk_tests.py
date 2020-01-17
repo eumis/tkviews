@@ -1,13 +1,44 @@
-from unittest.mock import Mock, patch, call
+from unittest.mock import call, Mock, patch
 
 from pytest import mark
-from pyviews.core.xml import XmlAttr
+from pyviews.core import XmlAttr
 from pyviews.pipes import call_set_attr
 
-from tkviews import TtkStyle
-from tkviews.rendering import ttk
+from tkviews import ttk
 from tkviews.core.common import TkRenderingContext
-from tkviews.rendering.ttk import setup_value_setter, apply_style_attributes, configure
+from tkviews.ttk import TtkStyle, theme_use, setup_value_setter, configure, apply_style_attributes
+
+
+class TtkStyleTests:
+    @staticmethod
+    @mark.parametrize('name, parent_name, expected', [
+        ('name', 'parent_name', 'name.parent_name'),
+        ('name', None, 'name'),
+        ('name', '', 'name'),
+        ('name', ' ', 'name. ')
+    ])
+    def test_full_name(name, parent_name, expected):
+        """full name should be in format "parent_name.name"""
+        style = TtkStyle(None, parent_name=parent_name)
+
+        style.name = name
+
+        assert expected == style.full_name
+
+
+@mark.parametrize('theme', [
+    'default',
+    'custom'
+])
+def test_theme_use(theme):
+    """theme_use() should call theme_use for ttk.Style"""
+    with patch(ttk.__name__ + '.Style') as ttk_style:
+        ttk_style_mock = Mock(theme_use=Mock())
+        ttk_style.return_value = ttk_style_mock
+
+        theme_use(Mock(), theme, '')
+
+        assert ttk_style_mock.theme_use.call_args == call(theme)
 
 
 def increment(node, key, value):

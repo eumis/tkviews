@@ -6,9 +6,8 @@ from .geometry import PackGeometry, GridGeometry, PlaceGeometry
 from .geometry import LayoutSetup, Row, Column
 
 from .containers import Container, View, For, If
-from .styles import Style, StyleItem, StyleError
-from .node import TtkWidgetNode, TtkStyle
-from .node import Root, WidgetNode, EntryNode, CheckbuttonNode, RadiobuttonNode
+from .styles import Style, StyleItem
+from .ttk import TtkWidgetNode, TtkStyle
+from .widgets import Root, WidgetNode
 
 from pyviews.modifiers import import_global, set_global, inject_global, call
-from .rendering import bind, bind_all, set_attr, config, visible

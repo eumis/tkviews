@@ -42,11 +42,6 @@ def bind_all(node: WidgetNode, event_name, command):
     node.bind_all(f'<{event_name}>', command)
 
 
-def set_attr(node: WidgetNode, key, value):
-    """Calls nodes's set_attr method"""
-    node.set_attr(key, value)
-
-
 def config(node: WidgetNode, key, value):
     """Calls widget's config method"""
     node.instance.config(**{key: value})
@@ -58,4 +53,3 @@ def visible(node: WidgetNode, _, value):
         node.geometry.apply(node.instance)
     else:
         node.geometry.forget(node.instance)
-

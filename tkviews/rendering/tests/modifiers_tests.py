@@ -2,7 +2,7 @@ from unittest.mock import Mock, call
 
 from pytest import mark
 
-from tkviews.rendering.modifiers import bind, bind_all, set_attr, config, visible
+from tkviews.rendering.modifiers import bind, bind_all, config, visible
 
 
 def test_bind():
@@ -21,19 +21,6 @@ def test_bind_all():
     bind_all(node, 'event', lambda: None)
 
     assert node.bind_all.called
-
-
-@mark.parametrize('key, value', [
-    ('key', 1),
-    ('other_key', 'value')
-])
-def test_set_attr(key, value):
-    """set_attr() should call set_attr with passed parameters"""
-    node = Mock(set_attr=Mock())
-
-    set_attr(node, key, value)
-
-    assert node.set_attr.call_args == call(key, value)
 
 
 @mark.parametrize('key, value', [

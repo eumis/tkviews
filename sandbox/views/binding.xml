@@ -36,7 +36,7 @@
     <LabelFrame geometry:='{Pack(fill="x", pady=10)}'
                 text='Checkbutton int binding'>
         <Checkbutton geometry:='{Pack(side="left")}'
-                     value='{int_var:{vm.check_int}}'>
+                     variable='{{vm.check_int}}'>
             {'checked' if vm.check_int == 1 else 'unchecked'}
         </Checkbutton>
 

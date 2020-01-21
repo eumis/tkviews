@@ -1,2 +1,0 @@
-"""Tkviews nodes"""
-

@@ -1,7 +1,13 @@
 """Tkinter widgets nodes"""
+from sys import exc_info
+from tkinter import Tk, Widget, Variable, Entry, Checkbutton, Radiobutton, StringVar, BooleanVar, IntVar
+from typing import Type
 
-from tkinter import Tk, Widget
-from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr
+from pyviews.binding import BindingRule, BindingContext, TwoWaysBinding, ExpressionBinding, \
+    get_expression_target, Binder
+from pyviews.compilation import parse_expression, Expression
+from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr, BindingTarget, Binding, ViewsError, \
+    BindingError, Node
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
@@ -179,3 +185,91 @@ def apply_text(node: WidgetNode, _: TkRenderingContext):
         return
     text_attr = XmlAttr('text', node.xml_node.text)
     apply_attribute(node, text_attr)
+
+
+class VariableTarget(BindingTarget):
+    """Target is tkinter Var"""
+
+    def __init__(self, var: Variable):
+        self._var = var
+
+    def on_change(self, value):
+        self._var.set(value)
+
+
+class VariableBinding(Binding):
+    """Binding is subscribed on tkinter Var changes"""
+
+    def __init__(self, target: BindingTarget, var: Variable):
+        super().__init__()
+        self._target = target
+        self._var = var
+        self._trace_id = None
+
+    def bind(self):
+        self.destroy()
+        self._trace_id = self._var.trace_add('write', self._callback)
+
+    def _callback(self, *_):
+        try:
+            value = self._var.get()
+            self._target.on_change(value)
+        except ViewsError as error:
+            self.add_error_info(error)
+            raise
+        except BaseException:
+            info = exc_info()
+            error = BindingError(BindingError.TargetUpdateError)
+            self.add_error_info(error)
+            raise error from info[1]
+
+    def destroy(self):
+        if self._trace_id:
+            self._var.trace_remove('write', self._trace_id)
+        self._trace_id = None
+
+
+class VariableTwowaysRule(BindingRule):
+    """Rule for two ways binding between property and expression using variable"""
+
+    def __init__(self, widget_type: Type, variable_property: str, variable_type: Type):
+        self._widget_type = widget_type
+        self._variable_property = variable_property
+        self._variable_type = variable_type
+
+    def suitable(self, context: BindingContext) -> bool:
+        try:
+            return isinstance(context.node.instance, self._widget_type) \
+                   and context.xml_attr.name == self._variable_property
+        except AttributeError:
+            return False
+
+    def apply(self, context: BindingContext):
+        (variable_type_key, expr_body) = parse_expression(context.expression_body)
+        variable: Variable = self._variable_type()
+        context.modifier(context.node, context.xml_attr.name, variable)
+
+        expression_ = Expression(expr_body)
+        expr_binding = self._bind_variable_to_expression(context.node, expression_, variable)
+        var_binding = self._bind_vm_to_variable(context.node, expression_, variable)
+
+        two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
+        two_ways_binding.bind()
+        return two_ways_binding
+
+    @staticmethod
+    def _bind_variable_to_expression(node: Node, expr: Expression, variable: Variable):
+        target = VariableTarget(variable)
+        return ExpressionBinding(target, expr, node.node_globals)
+
+    @staticmethod
+    def _bind_vm_to_variable(node: Node, expr: Expression, variable: Variable):
+        target = get_expression_target(expr, node.node_globals)
+        return VariableBinding(target, variable)
+
+
+def add_variables_rules(binder: Binder):
+    """Adds tkviews binding rules to passed factory"""
+    binder.add_rule('twoways', VariableTwowaysRule(Entry, 'textvariable', StringVar))
+    binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'variable', BooleanVar))
+    binder.add_rule('twoways', VariableTwowaysRule(Radiobutton, 'variable', IntVar))

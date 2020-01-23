@@ -5,7 +5,7 @@ from typing import Type
 
 from pyviews.binding import BindingRule, BindingContext, TwoWaysBinding, ExpressionBinding, \
     get_expression_target, Binder
-from pyviews.compilation import parse_expression, Expression
+from pyviews.compilation import Expression
 from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr, BindingTarget, Binding, ViewsError, \
     BindingError, Node
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
@@ -165,7 +165,7 @@ def setup_properties(node: WidgetNode, _: TkRenderingContext):
 #     return styles
 
 
-def apply_styles(node: WidgetNode, style_keys: str):
+def apply_styles(node: WidgetNode, _: str, style_keys: str):
     """Applies styles to node"""
     keys = [key.strip() for key in style_keys.split(',')] \
         if isinstance(style_keys, str) else style_keys
@@ -245,11 +245,10 @@ class VariableTwowaysRule(BindingRule):
             return False
 
     def apply(self, context: BindingContext):
-        (variable_type_key, expr_body) = parse_expression(context.expression_body)
         variable: Variable = self._variable_type()
         context.modifier(context.node, context.xml_attr.name, variable)
 
-        expression_ = Expression(expr_body)
+        expression_ = Expression(context.expression_body)
         expr_binding = self._bind_variable_to_expression(context.node, expression_, variable)
         var_binding = self._bind_vm_to_variable(context.node, expression_, variable)
 

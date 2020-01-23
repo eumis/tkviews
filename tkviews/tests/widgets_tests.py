@@ -125,7 +125,7 @@ def apply_fixture(request):
     context.node = node
     context.xml_attr = XmlAttr('variable')
     context.modifier = call_set_attr
-    context.expression_body = "{vm.value}"
+    context.expression_body = "vm.value"
 
     request.cls.rule = VariableTwowaysRule(Entry, 'variable', TestVariable)
     request.cls.context = context

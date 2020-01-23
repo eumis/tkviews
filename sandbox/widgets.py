@@ -22,8 +22,10 @@ class Scroll(Node, TkNode):
         self._canvas.bind_all('<MouseWheel>', self._on_mouse_scroll)
         self._canvas.bind('<Enter>', lambda event: self._set_canvas_active())
         self._canvas.bind('<Leave>', lambda event: self._set_canvas_inactive())
-        self._geometry = None
         self._node_styles = node_styles
+
+    def pack(self, *args, **kwargs):
+        self._frame.pack(*args, **kwargs)
 
     @staticmethod
     def _create_scroll_frame(master):
@@ -76,16 +78,6 @@ class Scroll(Node, TkNode):
     def _set_canvas_inactive(self):
         if Scroll.active_canvas == self._canvas:
             Scroll.active_canvas = None
-
-    @property
-    def geometry(self):
-        return self._geometry
-
-    @geometry.setter
-    def geometry(self, value):
-        self._geometry = value
-        if value is not None:
-            value.apply(self._frame)
 
     @property
     def node_styles(self) -> InheritedDict:

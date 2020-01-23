@@ -83,8 +83,9 @@ def render_view_content(node: View, _: TkRenderingContext):
     """Finds view by name attribute and renders it as view node child"""
     if node.name:
         child_context = _get_child_context(None, node)
-        res = render_view(node.name, child_context)
-        res.subscribe(node.set_content)
+        content = render_view(node.name, child_context)
+        node.set_content(content)
+        # res.subscribe(node.set_content)
 
 
 def rerender_on_view_change(node: View, context: TkRenderingContext):
@@ -186,8 +187,8 @@ def _render_for_children(node: For, items: list, index_shift=0):
     for index, item in enumerate(items):
         for xml_node in item_xml_nodes:
             item_context = _get_for_child_args(xml_node, node, index + index_shift, item)
-            render(item_context) \
-                .subscribe(node.add_child)
+            node.add_child(render(item_context))
+                # .subscribe(node.add_child)
 
 
 def _get_for_child_args(xml_node: XmlNode, node: For, index, item) -> TkRenderingContext:

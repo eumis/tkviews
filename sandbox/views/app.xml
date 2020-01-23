@@ -1,35 +1,34 @@
 <?xml version="1.0"?>
-<tkw:Root xmlns='tkinter'
-          xmlns:tkw="tkviews"
+<tkv:Root xmlns='tkinter'
+          xmlns:tkv="tkviews"
           xmlns:import='tkviews.import_global'
           xmlns:global='tkviews.set_global'
           xmlns:bind='tkviews.bind'
-          xmlns:geometry="tkviews.rendering.modifiers.set_geometry"
+          xmlns:call='tkviews.call'
 
           import:AppViewModel='view_model.AppViewModel'
-          import:Grid='tkviews.GridGeometry'
-          import:Pack='tkviews.PackGeometry'
           import:show_message='commands.show_message'
           import:show_view='commands.show_view'
+          import:args="tkviews.Args"
 
           background="white"
           global:vm='{AppViewModel()}'>
-    <Frame geometry:='{Pack(fill="x")}'>
-        <Button geometry:='{Grid(row=0, column=0, sticky="e")}'
+    <Frame call:pack='{args(fill="x")}'>
+        <Button call:grid='{args(row=0, column=0, sticky="e")}'
                 bind:Button-1="once:{lambda e: show_view(vm, 'messagebox')}"
                 text='Message box'/>
 
-        <Button geometry:='{Grid(row=0, column=1, sticky="e")}'
+        <Button call:grid='{args(row=0, column=1, sticky="e")}'
                 bind:Button-1="once:{lambda e: show_view(vm, 'counter')}"
                 text='Counter'/>
 
-        <Button geometry:='{Grid(row=0, column=2, sticky="e")}'
+        <Button call:grid='{args(row=0, column=2, sticky="e")}'
                 bind:Button-1="once:{lambda e: show_view(vm, 'scroll')}"
                 text='Scroll'/>
 
-        <Button geometry:='{Grid(row=0, column=3, sticky="e")}'
+        <Button call:grid='{args(row=0, column=3, sticky="e")}'
                 bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
                 text='Binding'/>
     </Frame>
-    <tkw:View name='{vm.view}'/>
-</tkw:Root>
+    <tkv:View name='{vm.view}'/>
+</tkv:Root>

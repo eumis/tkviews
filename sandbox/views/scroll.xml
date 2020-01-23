@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
-<sb:Scroll xmlns:tkw="tkviews"
+<sb:Scroll xmlns:tkv="tkviews"
            xmlns:sb='sandbox.widgets'
            xmlns:import="tkviews.import_global"
            xmlns:bind="tkviews.bind"
            xmlns:global='tkviews.set_global'
-           xmlns:geometry="tkviews.rendering.modifiers.set_geometry"
+           xmlns:call='tkviews.call'
 
-           import:Pack='tkviews.PackGeometry'
            import:ScrollVm="scroll.ScrollVm"
+           import:args="tkviews.Args"
 
-           geometry='{Pack(fill="both", expand=True)}'
+           call:pack='{args(fill="both", expand=True)}'
            global:vm='{ScrollVm()}'>
-    <tkw:For items='{vm.items}'>
-        <Label geometry:='{Pack(fill="x")}'
+    <tkv:For items='{vm.items}'>
+        <Label call:pack='{args(fill="x")}'
                bind:Button-1='once:{lambda e: item.add()}'>
             {item.text}
         </Label>
-    </tkw:For>
+    </tkv:For>
 </sb:Scroll>

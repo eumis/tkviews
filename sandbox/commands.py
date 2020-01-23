@@ -1,4 +1,5 @@
 from tkinter import messagebox
+from injectool import resolve
 
 
 def show_message(title, message):
@@ -10,4 +11,7 @@ def get_color(index):
 
 
 def show_view(app_view_model, view):
+    profile = resolve('Profile')
+    profile.enable()
     app_view_model.view = view
+    profile.disable()

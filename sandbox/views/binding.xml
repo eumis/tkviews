@@ -2,74 +2,73 @@
 <tkw:Container xmlns:tkw="tkviews"
                xmlns:import="tkviews.import_global"
                xmlns:global='tkviews.set_global'
+               xmlns:call='tkviews.call'
 
                import:BindingViewModel="view_model.BindingViewModel"
-               import:Grid='tkviews.GridGeometry'
-               import:Pack='tkviews.PackGeometry'
+               import:args="tkviews.Args"
                import:int_var='tkinter.IntVar'
                import:str_var='tkinter.StringVar'
 
                global:vm="{BindingViewModel()}">
-    <LabelFrame geometry:='{Pack(fill="x")}'
+    <LabelFrame call:pack='{args(fill="x")}'
                 text='Entry string binding'>
-        <Entry geometry:='{Pack(side="left")}'
-               textvariable='StringVar:{vm.entry}'>
+        <Entry call:pack='{args(side="left")}'
+               textvariable='{{vm.entry}}'>
         </Entry>
 
-        <Label geometry:='{Pack(side="left")}'>
+        <Label call:pack='{args(side="left")}'>
             {vm.entry}
         </Label>
     </LabelFrame>
 
-    <LabelFrame geometry:='{Pack(fill="x", pady=10)}'
+    <LabelFrame call:pack='{args(fill="x", pady=10)}'
                 text='Checkbutton bool binding'>
-        <Checkbutton geometry:='{Pack(side="left")}'
-                     value='{{vm.check_b}}'>
+        <Checkbutton call:pack='{args(side="left")}'
+                     variable='{{vm.check_b}}'>
             {'checked' if vm.check_b else 'unchecked'}
         </Checkbutton>
 
-        <Label geometry:='{Pack(side="left")}'>
+        <Label call:pack='{args(side="left")}'>
             {str(vm.check_b)}
         </Label>
     </LabelFrame>
 
-    <LabelFrame geometry:='{Pack(fill="x", pady=10)}'
+    <LabelFrame call:pack='{args(fill="x", pady=10)}'
                 text='Checkbutton int binding'>
-        <Checkbutton geometry:='{Pack(side="left")}'
-                     variable='{{vm.check_int}}'>
+        <Checkbutton call:pack='{args(side="left")}'>
+<!--                     variable='{{vm.check_int}}'>-->
             {'checked' if vm.check_int == 1 else 'unchecked'}
         </Checkbutton>
 
-        <Label geometry:='{Pack(side="left")}'>
+        <Label call:pack='{args(side="left")}'>
             {str(vm.check_int)}
         </Label>
     </LabelFrame>
 
-    <LabelFrame geometry:='{Pack(fill="x", pady=10)}'
+    <LabelFrame call:pack='{args(fill="x", pady=10)}'
                 text='Checkbutton str binding with onvalue and offvalue'>
-        <Checkbutton geometry:='{Pack(side="left")}'
-                     value='{str_var:{vm.check_str}}'
+        <Checkbutton call:pack='{args(side="left")}'
                      onvalue='on'
                      offvalue='off'>
+<!--            value='{str_var:{vm.check_str}}'-->
             {'checked' if vm.check_str == 'on' else 'unchecked'}
         </Checkbutton>
 
-        <Label geometry:='{Pack(side="left")}'>
+        <Label call:pack='{args(side="left")}'>
             {str(vm.check_str)}
         </Label>
     </LabelFrame>
 
-    <LabelFrame geometry:='{Pack(fill="x", pady=10)}'
-                global:var='{int_var()}'
+    <LabelFrame call:pack='{args(fill="x", pady=10)}'
                 text='Radiobuttons binding'>
         <tkw:For items='{list(range(3))}'>
-            <Radiobutton geometry:='{Pack(side="left")}'
+            <Radiobutton call:pack='{args(side="left")}'
                          value='{item}'
-                         selected_value='{var:{vm.radio}}'>
+                         variable='{{vm.radio}}'>
                 {'{0} {1}'.format(item, 'checked' if vm.radio == item else 'unchecked')}
             </Radiobutton>
         </tkw:For>
-        <Label geometry:='{Pack(side="left")}'>
+        <Label call:pack='{args(side="left")}'>
             {str(vm.radio)}
         </Label>
     </LabelFrame>

@@ -7,7 +7,7 @@ from pyviews.core import ViewsError, XmlNode, Node, InheritedDict, Modifier, Xml
 from pyviews.pipes import render_children, get_setter
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class StyleError(ViewsError):

@@ -12,7 +12,7 @@ from pyviews.pipes import apply_attributes, render_children, apply_attribute
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
 from tkviews.core import TkNode
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import StyleError
 
 

@@ -5,7 +5,7 @@ from pyviews.core import XmlAttr
 from pyviews.pipes import call_set_attr
 
 from tkviews import ttk
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 from tkviews.ttk import TtkStyle, theme_use, setup_value_setter, configure, apply_style_attributes
 
 

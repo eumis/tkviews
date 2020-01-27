@@ -10,7 +10,7 @@ from pyviews.rendering import RenderingPipeline, render
 from pyviews.rendering.views import render_view
 
 from tkviews.core import TkNode
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class Container(Node, TkNode):

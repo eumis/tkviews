@@ -4,7 +4,7 @@ from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict
 from pyviews.pipes import call_set_attr
 
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import Style, StyleError
 from tkviews.styles import apply_style_items, apply_parent_items, store_to_node_styles
 

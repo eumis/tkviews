@@ -4,7 +4,7 @@ from pytest import fixture, mark
 
 from tkviews.canvas import CanvasItemNode, setup_temp_setter, setup_temp_binding, create_item, setup_config_setter, \
     setup_event_binding, apply_temp_events, clear_temp
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class TestCanvasItem(CanvasItemNode):

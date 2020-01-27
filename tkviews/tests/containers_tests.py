@@ -11,7 +11,7 @@ from rx import of
 from tkviews import containers
 from tkviews.containers import View, For, If, Container, render_container_children, render_view_content, \
     rerender_on_view_change, render_for_items, rerender_on_items_change, render_if, subscribe_to_condition_change
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class TestNode(Node):

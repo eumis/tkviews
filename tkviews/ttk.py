@@ -9,7 +9,7 @@ from pyviews.pipes import get_setter
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
 from tkviews.core import TkNode
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class TtkWidgetNode(InstanceNode, TkNode):

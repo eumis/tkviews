@@ -9,7 +9,7 @@ from pyviews.code import run_code
 from pyviews.rendering.views import render_view
 
 from tkviews.containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import get_style_setup
 from tkviews.ttk import get_ttk_style_setup
 from tkviews.widgets import add_variables_rules, get_root_setup, get_widget_setup

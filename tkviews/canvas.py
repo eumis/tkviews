@@ -9,7 +9,7 @@ from pyviews.pipes import apply_attributes
 from pyviews.rendering import RenderingPipeline, RenderingError
 
 from tkviews.core import TkNode
-from tkviews.core.common import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext
 
 
 class CanvasItemNode(Node, TkNode, ABC):

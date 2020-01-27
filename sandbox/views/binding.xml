@@ -35,8 +35,8 @@
 
     <LabelFrame call:pack='{args(fill="x", pady=10)}'
                 text='Checkbutton int binding'>
-        <Checkbutton call:pack='{args(side="left")}'>
-<!--                     variable='{{vm.check_int}}'>-->
+        <Checkbutton call:pack='{args(side="left")}'
+                     variable='var:{int_var()}:{vm.check_int}'>
             {'checked' if vm.check_int == 1 else 'unchecked'}
         </Checkbutton>
 
@@ -49,8 +49,8 @@
                 text='Checkbutton str binding with onvalue and offvalue'>
         <Checkbutton call:pack='{args(side="left")}'
                      onvalue='on'
-                     offvalue='off'>
-<!--            value='{str_var:{vm.check_str}}'-->
+                     offvalue='off'
+                     variable='var:{str_var()}:{vm.check_str}'>
             {'checked' if vm.check_str == 'on' else 'unchecked'}
         </Checkbutton>
 

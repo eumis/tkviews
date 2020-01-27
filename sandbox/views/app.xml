@@ -30,5 +30,37 @@
                 bind:Button-1="once:{lambda e: show_view(vm, 'binding')}"
                 text='Binding'/>
     </Frame>
-    <tkv:View name='{vm.view}'/>
+    <tkv:Container>
+        <tkv:Container>
+            <tkv:Container>
+                <tkv:Container>
+                    <tkv:Container>
+                        <tkv:Container>
+                            <tkv:Container>
+                                <tkv:Container>
+                                    <tkv:Container>
+                                        <tkv:Container>
+                                            <tkv:Container>
+                                                <tkv:Container>
+                                                    <tkv:Container>
+                                                        <tkv:Container>
+                                                            <tkv:Container>
+                                                                <tkv:Container>
+                                                                    <tkv:View name='{vm.view}'/>
+                                                                </tkv:Container>
+                                                            </tkv:Container>
+                                                        </tkv:Container>
+                                                    </tkv:Container>
+                                                </tkv:Container>
+                                            </tkv:Container>
+                                        </tkv:Container>
+                                    </tkv:Container>
+                                </tkv:Container>
+                            </tkv:Container>
+                        </tkv:Container>
+                    </tkv:Container>
+                </tkv:Container>
+            </tkv:Container>
+        </tkv:Container>
+    </tkv:Container>
 </tkv:Root>

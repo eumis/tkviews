@@ -2,9 +2,6 @@
 
 __version__ = '2.2.1'
 
-from .geometry import PackGeometry, GridGeometry, PlaceGeometry
-from .geometry import LayoutSetup, Row, Column
-
 from .containers import Container, View, For, If
 from .rendering.modifiers import bind
 from .styles import Style, StyleItem

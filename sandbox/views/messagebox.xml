@@ -5,7 +5,6 @@
                xmlns:bind='tkviews.bind'
                xmlns:call='tkviews.call'
 
-               import:Pack='tkviews.PackGeometry'
                import:show_message='commands.show_message'>
     <Button call:pack='{args(fill="x")}'
             text='show message'

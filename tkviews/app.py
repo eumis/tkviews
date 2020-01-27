@@ -56,5 +56,5 @@ def get_pipeline_resolver() -> SingletonResolver:
 def launch(root_view=None):
     """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
-    root = render_view(root_view, TkRenderingContext())
+    root = render_view(root_view, TkRenderingContext()).run()
     root.instance.mainloop()

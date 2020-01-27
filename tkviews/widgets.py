@@ -248,23 +248,41 @@ class VariableTwowaysRule(BindingRule):
         variable: Variable = self._variable_type()
         context.modifier(context.node, context.xml_attr.name, variable)
 
-        expression_ = Expression(context.expression_body)
-        expr_binding = self._bind_variable_to_expression(context.node, expression_, variable)
-        var_binding = self._bind_vm_to_variable(context.node, expression_, variable)
+        property_expression = Expression(context.expression_body)
+        return _create_variable_two_ways(context, property_expression, variable)
 
-        two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
-        two_ways_binding.bind()
-        return two_ways_binding
 
-    @staticmethod
-    def _bind_variable_to_expression(node: Node, expr: Expression, variable: Variable):
-        target = VariableTarget(variable)
-        return ExpressionBinding(target, expr, node.node_globals)
+class CustomVariableTwowaysRule(BindingRule):
+    """Rule for two ways binding between property and expression using variable"""
 
-    @staticmethod
-    def _bind_vm_to_variable(node: Node, expr: Expression, variable: Variable):
-        target = get_expression_target(expr, node.node_globals)
-        return VariableBinding(target, variable)
+    def suitable(self, context: BindingContext) -> bool:
+        return True
+
+    def apply(self, context: BindingContext):
+        (var_body, value_body) = context.expression_body.split('}:{')
+        variable: Variable = Expression(var_body).execute(context.node.node_globals.to_dictionary())
+        context.modifier(context.node, context.xml_attr.name, variable)
+
+        property_expression = Expression(value_body)
+        return _create_variable_two_ways(context, property_expression, variable)
+
+
+def _create_variable_two_ways(context, expression_, variable):
+    expr_binding = _bind_variable_to_expression(context.node, expression_, variable)
+    var_binding = _bind_vm_to_variable(context.node, expression_, variable)
+    two_ways_binding = TwoWaysBinding(expr_binding, var_binding)
+    two_ways_binding.bind()
+    return two_ways_binding
+
+
+def _bind_variable_to_expression(node: Node, expr: Expression, variable: Variable):
+    target = VariableTarget(variable)
+    return ExpressionBinding(target, expr, node.node_globals)
+
+
+def _bind_vm_to_variable(node: Node, expr: Expression, variable: Variable):
+    target = get_expression_target(expr, node.node_globals)
+    return VariableBinding(target, variable)
 
 
 def add_variables_rules(binder: Binder):
@@ -272,3 +290,4 @@ def add_variables_rules(binder: Binder):
     binder.add_rule('twoways', VariableTwowaysRule(Entry, 'textvariable', StringVar))
     binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'variable', BooleanVar))
     binder.add_rule('twoways', VariableTwowaysRule(Radiobutton, 'variable', IntVar))
+    binder.add_rule('var', CustomVariableTwowaysRule())

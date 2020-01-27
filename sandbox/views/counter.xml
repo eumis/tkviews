@@ -8,7 +8,7 @@
                xmlns:styles='tkviews.apply_styles'
 
                import:Counter="counter.Counter"
-               import:int_var='variables.IntVar'
+               import:IntVar='variables.IntVar'
                import:args='tkviews.Args'
 
                global:vm="{Counter()}">
@@ -22,7 +22,7 @@
                 text='+1'/>
 
         <Entry call:pack='{args(side="left")}'
-               textvariable='int_var:{vm.count}'>
+               textvariable='var:{IntVar()}:{vm.count}'>
         </Entry>
 
         <Label call:pack='{args(side="left")}'

@@ -1,5 +1,5 @@
 """
-Nodes used as abstract containers, that used to incapsulate some logic.
+Nodes used as abstract containers, that used to encapsulate some logic.
 Containers don't represent any widget.
 """
 

@@ -1,6 +1,7 @@
 """tkinter application entry point"""
 
 from os.path import abspath
+from typing import cast
 
 from injectool import add_singleton, SingletonResolver, add_resolver
 from pyviews.binding import Binder, OnceRule, OnewayRule
@@ -12,7 +13,7 @@ from tkviews.containers import get_container_setup, get_view_setup, get_for_setu
 from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import get_style_setup
 from tkviews.ttk import get_ttk_style_setup
-from tkviews.widgets import add_variables_rules, get_root_setup, get_widget_setup
+from tkviews.widgets import add_variables_rules, get_root_setup, get_widget_setup, Root
 
 
 def register_dependencies():
@@ -56,5 +57,5 @@ def get_pipeline_resolver() -> SingletonResolver:
 def launch(root_view=None):
     """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
-    root = render_view(root_view, TkRenderingContext()).run()
+    root: Root = cast(Root, render_view(root_view, TkRenderingContext()))
     root.instance.mainloop()

@@ -1,4 +1,3 @@
-from math import floor
 from unittest.mock import Mock, call, patch
 
 from injectool import add_singleton
@@ -6,7 +5,6 @@ from pytest import mark, fixture
 from pyviews.core import XmlNode, Node, InheritedDict
 from pyviews.rendering import render
 from pyviews.rendering.views import render_view
-from rx import of
 
 from tkviews import containers
 from tkviews.containers import View, For, If, Container, render_container_children, render_view_content, \
@@ -104,7 +102,7 @@ class ViewRenderingTests:
     def test_renders_view(self):
         """should render view by node name and set result as view child"""
         child = Mock()
-        self.render_view.side_effect = lambda name, ctx: of(child) if name == self.view.name else None
+        self.render_view.side_effect = lambda name, ctx: child if name == self.view.name else None
 
         render_view_content(self.view, TkRenderingContext())
 
@@ -113,7 +111,7 @@ class ViewRenderingTests:
     def test_renders_view_with_context(self):
         """should render view by node name and set result as view child"""
         actual = TkRenderingContext()
-        self.render_view.side_effect = lambda name, ctx: of(actual.update(**ctx))
+        self.render_view.side_effect = lambda name, ctx: actual.update(**ctx)
 
         render_view_content(self.view, TkRenderingContext())
 
@@ -134,7 +132,7 @@ class ViewRenderingTests:
     def test_handles_new_view(self):
         """render_view_children should be called on view change"""
         self.view.add_child(Mock())
-        self.render_view.side_effect = lambda name, ctx: of({'name': name})
+        self.render_view.side_effect = lambda name, ctx: {'name': name}
         new_view = 'new view'
 
         rerender_on_view_change(self.view, TkRenderingContext())
@@ -182,8 +180,8 @@ class IfTests:
 @fixture
 def if_fixture(request):
     render_mock = Mock()
-    render_mock.side_effect = lambda ctx: of(
-        TestNode(ctx.xml_node, node_globals=ctx.node_globals, node_styles=ctx.node_styles))
+    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals,
+                                                   node_styles=ctx.node_styles)
     add_singleton(render, render_mock)
 
     if_node = If(Mock(), XmlNode('tkviews', 'If'), node_globals=InheritedDict({'key': 'value'}),
@@ -262,8 +260,8 @@ class ForTests:
 @fixture
 def for_fixture(request):
     render_mock = Mock()
-    render_mock.side_effect = lambda ctx: of(TestNode(ctx.xml_node, node_globals=ctx.node_globals,
-                                                      node_styles=ctx.node_styles))
+    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals,
+                                                   node_styles=ctx.node_styles)
     add_singleton(render, render_mock)
 
     for_node = For(Mock(), XmlNode('tkviews', 'For'), node_globals=InheritedDict({'key': 'value'}),

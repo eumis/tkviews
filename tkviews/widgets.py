@@ -92,7 +92,6 @@ class WidgetNode(InstanceNode, TkNode):
 def get_widget_setup():
     """Returns setup for widget"""
     return RenderingPipeline([
-        setup_properties,
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
@@ -144,25 +143,6 @@ def _create_widget_node(context: TkRenderingContext):
     inst_type = get_type(context.xml_node)
     inst = create_instance(inst_type, context)
     return create_instance(WidgetNode, {'widget': inst, **context})
-
-
-def setup_properties(node: WidgetNode, _: TkRenderingContext):
-    """Sets up widget node properties"""
-    # node.properties['geometry'] = Property('geometry', _geometry_setter, node=node)
-    # node.properties['style'] = Property('style', _style_setter, node=node)
-
-
-# def _geometry_setter(node: WidgetNode, geometry: Geometry, previous: Geometry):
-#     if previous:
-#         previous.forget(node.instance)
-#     if geometry is not None:
-#         geometry.apply(node.instance)
-#     return geometry
-#
-#
-# def _style_setter(node: WidgetNode, styles: str):
-#     apply_styles(node, styles)
-#     return styles
 
 
 def apply_styles(node: WidgetNode, _: str, style_keys: str):
@@ -291,3 +271,44 @@ def add_variables_rules(binder: Binder):
     binder.add_rule('twoways', VariableTwowaysRule(Checkbutton, 'variable', BooleanVar))
     binder.add_rule('twoways', VariableTwowaysRule(Radiobutton, 'variable', IntVar))
     binder.add_rule('var', CustomVariableTwowaysRule())
+
+
+class CallbackError(ViewsError):
+    """Error from callback"""
+
+    def __init__(self, message, event, view_info=None):
+        super().__init__(message, view_info)
+        self.add_info('Event', event)
+
+
+def bind(node: WidgetNode, event_name, command):
+    """Calls widget node bind method"""
+    command = _get_handled_command(command, node.xml_node.view_info, event_name)
+    node.bind('<{0}>'.format(event_name), command)
+
+
+def _get_handled_command(command, view_info, event):
+    return lambda *args, **kwargs: _call_command(command, view_info, event, args, kwargs)
+
+
+def _call_command(command, view_info, event, args, kwargs):
+    try:
+        command(*args, **kwargs)
+    except ViewsError as error:
+        error.add_view_info(view_info)
+        raise
+    except:
+        info = exc_info()
+        raise CallbackError('Error occurred in callback', event, view_info) \
+            from info[1]
+
+
+def bind_all(node: WidgetNode, event_name, command):
+    """Calls widget's bind_all method"""
+    command = _get_handled_command(command, node.xml_node.view_info, event_name)
+    node.bind_all(f'<{event_name}>', command)
+
+
+def config(node: WidgetNode, key, value):
+    """Calls widget's config method"""
+    node.instance.config(**{key: value})

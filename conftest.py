@@ -1,5 +1,9 @@
-from injectool import use_container
+from injectool import use_container, set_container, Container
 from pytest import fixture
+
+
+def pytest_configure(config):
+    set_container(Container())
 
 
 @fixture

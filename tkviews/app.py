@@ -4,7 +4,7 @@ from os.path import abspath
 from typing import cast
 
 from injectool import add_singleton, SingletonResolver, add_resolver
-from pyviews.binding import Binder, OnceRule, OnewayRule
+from pyviews.binding import Binder, run_once, bind_setter_to_expression
 from pyviews.rendering import RenderingPipeline
 from pyviews.code import run_code
 from pyviews.rendering.views import render_view
@@ -12,8 +12,8 @@ from pyviews.rendering.views import render_view
 from tkviews.containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
 from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import get_style_setup
-from tkviews.ttk import get_ttk_style_setup
 from tkviews.widgets import add_variables_rules, get_root_setup, get_widget_setup, Root
+from tkviews.widgets.ttk import get_ttk_style_setup
 
 
 def register_dependencies():
@@ -28,8 +28,8 @@ def register_dependencies():
 def setup_binder() -> Binder:
     """Adds all needed rules to binder"""
     binder = Binder()
-    binder.add_rule('once', OnceRule())
-    binder.add_rule('oneway', OnewayRule())
+    binder.add_rule('once', run_once)
+    binder.add_rule('oneway', bind_setter_to_expression)
     add_variables_rules(binder)
     return binder
 

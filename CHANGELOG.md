@@ -4,7 +4,7 @@
 
 - updated pyviews to 3.0.0
 - CanvasNode is renamed to CanvasItem
-- added geometry modifier instead of property
+- added geometry setter instead of property
 
 ## 2.2.1
 
@@ -16,7 +16,7 @@
 
 ## 2.1.1
 
-- added call modifier to package core
+- added call setter to package core
 
 ## 2.1.0
 

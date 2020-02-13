@@ -4,6 +4,8 @@ Containers don't represent any widget.
 """
 
 from tkinter import Widget
+from unittest.mock import Mock
+
 from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering import RenderingPipeline, render
@@ -82,7 +84,7 @@ def get_view_setup() -> RenderingPipeline:
 def render_view_content(node: View, _: TkRenderingContext):
     """Finds view by name attribute and renders it as view node child"""
     if node.name:
-        child_context = _get_child_context(None, node)
+        child_context = _get_child_context(Mock(), node)
         content = render_view(node.name, child_context)
         node.set_content(content)
 

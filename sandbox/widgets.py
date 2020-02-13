@@ -3,7 +3,7 @@ from pyviews.core.observable import InheritedDict
 from pyviews.core.xml import XmlNode
 from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering.pipeline import RenderingPipeline
-from pyviews.core.node import Node
+from pyviews.core import Node
 
 from tkviews.core import TkNode
 from tkviews.core.rendering import TkRenderingContext

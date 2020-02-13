@@ -1,6 +1,7 @@
 """Wrappers for canvas elements"""
 
 from abc import ABC, abstractmethod
+from functools import partial
 from tkinter import Canvas
 from typing import Type, cast
 
@@ -134,13 +135,14 @@ def get_canvas_pipeline(item_type: Type[CanvasItemNode]) -> RenderingPipeline:
 def create_canvas_node(context: TkRenderingContext, node_type) -> Node:
     if not isinstance(context.master, Canvas):
         raise RenderingError(f'{node_type.__name__} parent should be Canvas')
-    return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals, context.node_styles)
+    return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals,
+                     context.node_styles)
 
 
 def setup_temp_setter(node: CanvasItemNode, _: TkRenderingContext):
     """Stores attributes values to temp dictionary"""
     node.attr_values = {}
-    node.attr_setter = _set_option_value
+    node.set_attr = partial(_set_option_value, node)
 
 
 def _set_option_value(node: CanvasItemNode, key, value):
@@ -168,7 +170,7 @@ def create_item(node: CanvasItemNode, _: TkRenderingContext):
 
 def setup_config_setter(node: CanvasItemNode, _: TkRenderingContext):
     """Attribute values are passed to itemconfigure method"""
-    node.attr_setter = _set_config_value
+    node.set_attr = partial(_set_config_value, node)
 
 
 def _set_config_value(node: CanvasItemNode, key, value):

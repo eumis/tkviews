@@ -2,30 +2,31 @@
 
 from typing import Any
 
-from pyviews.compilation import is_expression, Expression, parse_expression
-from pyviews.core import ViewsError, XmlNode, Node, InheritedDict, Modifier, XmlAttr
+from pyviews.expression import is_expression, Expression, parse_expression, execute
+from pyviews.core import PyViewsError, XmlNode, Node, InheritedDict, Setter, XmlAttr
 from pyviews.pipes import render_children, get_setter
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.core.rendering import TkRenderingContext
+from tkviews.core import TkRenderingContext
+from tkviews.widgets import WidgetNode
 
 
-class StyleError(ViewsError):
+class StyleError(PyViewsError):
     """Error for style"""
 
 
 class StyleItem:
     """Wrapper under option"""
 
-    def __init__(self, modifier: Modifier, name: str, value: Any):
-        self._modifier = modifier
+    def __init__(self, setter: Setter, name: str, value: Any):
+        self._setter = setter
         self._name = name
         self._value = value
 
     @property
     def setter(self):
         """Returns setter"""
-        return self._modifier
+        return self._setter
 
     @property
     def name(self):
@@ -39,10 +40,10 @@ class StyleItem:
 
     def apply(self, node: Node):
         """Applies option to passed node"""
-        self._modifier(node, self._name, self._value)
+        self._setter(node, self._name, self._value)
 
     def __hash__(self):
-        return hash((self._name, self._modifier))
+        return hash((self._name, self._setter))
 
     def __eq__(self, other):
         return hash(self) == hash(other)
@@ -83,7 +84,7 @@ def _get_style_item(node: Style, attr: XmlAttr):
     value = attr.value if attr.value else ''
     if is_expression(value):
         expression_ = Expression(parse_expression(value)[1])
-        value = expression_.execute(node.node_globals.to_dictionary())
+        value = execute(expression_, node.node_globals.to_dictionary())
     return StyleItem(setter, attr.name, value)
 
 
@@ -100,7 +101,8 @@ def store_to_node_styles(node: Style, context: TkRenderingContext):
     context.node_styles[node.name] = node.items.values()
 
 
-def _get_style_child_context(xml_node: XmlNode, node: Style, context: TkRenderingContext) -> TkRenderingContext:
+def _get_style_child_context(xml_node: XmlNode, node: Style,
+                             context: TkRenderingContext) -> TkRenderingContext:
     """Renders child styles"""
     child_context = TkRenderingContext()
     child_context.xml_node = xml_node
@@ -114,3 +116,17 @@ def _get_style_child_context(xml_node: XmlNode, node: Style, context: TkRenderin
 def remove_style_on_destroy(node: Style, context: TkRenderingContext):
     """Removes style from styles on destroying"""
     context.node_styles.remove_key(node.name)
+
+
+def apply_styles(node: WidgetNode, _: str, style_keys: str):
+    """Setter. Applies styles to node"""
+    keys = [key.strip() for key in style_keys.split(',')] \
+        if isinstance(style_keys, str) else style_keys
+    try:
+        for key in [key for key in keys if key]:
+            for item in node.node_styles[key]:
+                item.apply(node)
+    except KeyError as key_error:
+        error = StyleError('Style is not found')
+        error.add_info('Style name', key_error.args[0])
+        raise error from key_error

@@ -1,7 +1,7 @@
 from tkinter import Widget
 
 from pyviews.core import InheritedDict
-from pyviews.rendering.common import RenderingContext
+from pyviews.rendering import RenderingContext
 
 
 class TkRenderingContext(RenderingContext):

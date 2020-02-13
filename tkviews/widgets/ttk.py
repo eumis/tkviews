@@ -1,9 +1,9 @@
 """ttk specific implementation"""
-
+from functools import partial
 from tkinter.ttk import Style, Widget
 from typing import Any
 
-from pyviews.compilation import is_expression, Expression, parse_expression
+from pyviews.expression import is_expression, Expression, parse_expression, execute
 from pyviews.core import XmlNode, Node, InstanceNode, InheritedDict
 from pyviews.pipes import get_setter
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
@@ -74,7 +74,7 @@ def _create_ttk_widget_node(context: TkRenderingContext):
 
 def setup_value_setter(node: TtkStyle, _: TkRenderingContext):
     """Sets TtkStyle attribute setter"""
-    node.attr_setter = _value_setter
+    node.set_attr = partial(_value_setter, node)
 
 
 def _value_setter(node: TtkStyle, key: str, value):
@@ -91,7 +91,7 @@ def apply_style_attributes(node: TtkStyle, _: TkRenderingContext):
         value = attr.value if attr.value else ''
         if is_expression(value):
             expression_ = Expression(parse_expression(value)[1])
-            value = expression_.execute(node.node_globals.to_dictionary())
+            value = execute(expression_, node.node_globals.to_dictionary())
         setter(node, attr.name, value)
 
 

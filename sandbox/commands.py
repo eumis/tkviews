@@ -1,5 +1,4 @@
 from tkinter import messagebox
-from injectool import resolve
 
 
 def show_message(title, message):

@@ -34,7 +34,7 @@
     </LabelFrame>
 
     <LabelFrame call:pack='{args(fill="x", pady=10)}'
-                text='Checkbutton int binding'>
+                text='Checkbutton custom int variable binding'>
         <Checkbutton call:pack='{args(side="left")}'
                      variable='var:{int_var()}:{vm.check_int}'>
             {'checked' if vm.check_int == 1 else 'unchecked'}

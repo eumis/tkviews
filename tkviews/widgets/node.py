@@ -1,5 +1,5 @@
 """Tkinter widgets nodes"""
-
+from functools import partial
 from tkinter import Tk, Widget
 
 from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr
@@ -95,7 +95,7 @@ def get_widget_setup():
 
 def setup_widget_setter(node: WidgetNode, _: TkRenderingContext):
     """Sets up setter"""
-    node.attr_setter = _widget_node_setter
+    node.set_attr = partial(_widget_node_setter, node)
 
 
 def _widget_node_setter(node: WidgetNode, key: str, value):

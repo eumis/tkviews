@@ -5,7 +5,7 @@ from typing import Type, Union
 from pyviews.binding import BindingContext, TwoWaysBinding, ExpressionBinding, Binder, \
     get_expression_callback
 from pyviews.core import BindingCallback, Binding, \
-    BindingError
+    BindingError, PyViewsError
 from pyviews.core import error_handling
 from pyviews.expression import Expression, execute
 
@@ -24,9 +24,14 @@ class VariableBinding(Binding):
         self._trace_id = self._var.trace_add('write', self._var_callback)
 
     def _var_callback(self, *_):
-        with error_handling(BindingError, self.add_error_info):
+        with error_handling(BindingError, self._add_error_info):
             value = self._var.get()
             self._callback(value)
+
+    def _add_error_info(self, error: PyViewsError):
+        error.add_info('Binding', self)
+        error.add_info('Variable', self._var)
+        error.add_info('Callback', self._callback)
 
     def destroy(self):
         if self._trace_id:

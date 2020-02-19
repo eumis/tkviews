@@ -35,6 +35,7 @@ def setup_binder() -> Binder:
 
 
 def get_pipeline_resolver() -> SingletonResolver:
+    """Return resolver for rendering pipelines"""
     pipeline_resolver = SingletonResolver()
 
     pipeline_resolver.set_value(get_root_setup(), 'tkviews.Root')

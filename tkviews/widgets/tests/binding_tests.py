@@ -1,4 +1,4 @@
-from tkinter import Variable, Widget
+from tkinter import Widget
 from typing import Type
 from unittest.mock import Mock, call
 
@@ -12,7 +12,7 @@ from tkviews.widgets.binding import VariableBinding, check_widget_and_property, 
 from tkviews.widgets.node import WidgetNode
 
 
-class TestVariable(Variable):
+class TestVariable:
     # noinspection PyMissingConstructor
     def __init__(self):
         self._val = None

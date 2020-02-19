@@ -5,7 +5,7 @@
                xmlns:call='tkviews.call'
 
                import:BindingViewModel="view_model.BindingViewModel"
-               import:args="tkviews.Args"
+               import:args="tkviews.call_args"
                import:int_var='tkinter.IntVar'
                import:str_var='tkinter.StringVar'
 

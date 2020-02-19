@@ -3,13 +3,11 @@ from functools import partial
 from tkinter.ttk import Style, Widget
 from typing import Any
 
-from pyviews.expression import is_expression, Expression, parse_expression, execute
 from pyviews.core import XmlNode, Node, InstanceNode, InheritedDict
-from pyviews.pipes import get_setter
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
 from tkviews.core import TkNode
-from tkviews.core.rendering import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext, render_attribute
 
 
 class TtkWidgetNode(InstanceNode, TkNode):
@@ -86,13 +84,9 @@ def _value_setter(node: TtkStyle, key: str, value):
 
 def apply_style_attributes(node: TtkStyle, _: TkRenderingContext):
     """Applies attributes"""
-    for attr in node.xml_node.attrs:
-        setter = get_setter(attr)
-        value = attr.value if attr.value else ''
-        if is_expression(value):
-            expression_ = Expression(parse_expression(value)[1])
-            value = execute(expression_, node.node_globals.to_dictionary())
-        setter(node, attr.name, value)
+    for xml_attr in node.xml_node.attrs:
+        setter, value = render_attribute(node, xml_attr)
+        setter(node, xml_attr.name, value)
 
 
 def configure(node: TtkStyle, _: TkRenderingContext):

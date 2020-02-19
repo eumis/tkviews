@@ -2,12 +2,11 @@
 
 from typing import Any
 
-from pyviews.expression import is_expression, Expression, parse_expression, execute
 from pyviews.core import PyViewsError, XmlNode, Node, InheritedDict, Setter, XmlAttr
-from pyviews.pipes import render_children, get_setter
+from pyviews.pipes import render_children
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.core import TkRenderingContext
+from tkviews.core import TkRenderingContext, render_attribute
 from tkviews.widgets import WidgetNode
 
 
@@ -79,13 +78,9 @@ def apply_style_items(node: Style, _: TkRenderingContext):
     node.items = {attr.name: _get_style_item(node, attr) for attr in attrs if attr.name != 'name'}
 
 
-def _get_style_item(node: Style, attr: XmlAttr):
-    setter = get_setter(attr)
-    value = attr.value if attr.value else ''
-    if is_expression(value):
-        expression_ = Expression(parse_expression(value)[1])
-        value = execute(expression_, node.node_globals.to_dictionary())
-    return StyleItem(setter, attr.name, value)
+def _get_style_item(node: Style, xml_attr: XmlAttr):
+    setter, value = render_attribute(node, xml_attr)
+    return StyleItem(setter, xml_attr.name, value)
 
 
 def apply_parent_items(node: Style, context: TkRenderingContext):

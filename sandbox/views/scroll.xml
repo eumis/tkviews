@@ -7,7 +7,7 @@
            xmlns:call='tkviews.call'
 
            import:ScrollVm="scroll.ScrollVm"
-           import:args="tkviews.Args"
+           import:args="tkviews.call_args"
 
            call:pack='{args(fill="both", expand=True)}'
            global:vm='{ScrollVm()}'>

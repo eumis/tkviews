@@ -9,7 +9,7 @@
           import:AppViewModel='view_model.AppViewModel'
           import:show_message='commands.show_message'
           import:show_view='commands.show_view'
-          import:args="tkviews.Args"
+          import:args="tkviews.call_args"
 
           background="white"
           global:vm='{AppViewModel()}'>

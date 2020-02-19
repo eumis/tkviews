@@ -133,6 +133,7 @@ def get_canvas_pipeline(item_type: Type[CanvasItemNode]) -> RenderingPipeline:
 
 
 def create_canvas_node(context: TkRenderingContext, node_type) -> Node:
+    """Creates node_type instance"""
     if not isinstance(context.master, Canvas):
         raise RenderingError(f'{node_type.__name__} parent should be Canvas')
     return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals,

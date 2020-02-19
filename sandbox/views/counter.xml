@@ -9,7 +9,7 @@
 
                import:Counter="counter.Counter"
                import:IntVar='variables.IntVar'
-               import:args='tkviews.Args'
+               import:args='tkviews.call_args'
 
                global:vm="{Counter()}">
 

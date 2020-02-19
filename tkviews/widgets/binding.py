@@ -1,3 +1,5 @@
+"""Widgets binding"""
+
 from tkinter import Widget, Variable, Entry, Checkbutton, Radiobutton, StringVar, BooleanVar, \
     IntVar
 from typing import Type, Union
@@ -68,6 +70,7 @@ def bind_variable_and_expression(variable: Union[Variable, Type[Variable]],
 
 def check_widget_and_property(widget_type: Type[Widget], var_property: str,
                               context: BindingContext) -> bool:
+    """Return true if type and property are matched with values from context"""
     try:
         return isinstance(context.node.instance, widget_type) \
                and context.xml_attr.name == var_property

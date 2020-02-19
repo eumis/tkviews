@@ -7,8 +7,10 @@ from pyviews.rendering import render
 from pyviews.rendering.views import render_view
 
 from tkviews import containers
-from tkviews.containers import View, For, If, Container, render_container_children, render_view_content, \
-    rerender_on_view_change, render_for_items, rerender_on_items_change, render_if, subscribe_to_condition_change
+from tkviews.containers import View, For, If, Container, render_container_children, \
+    render_view_content, \
+    rerender_on_view_change, render_for_items, rerender_on_items_change, render_if, \
+    subscribe_to_condition_change
 from tkviews.core.rendering import TkRenderingContext
 
 
@@ -25,8 +27,8 @@ def test_render_container_children(nodes_count):
     """should render all xml children for every item"""
     render_mock = Mock()
     add_singleton(render, render_mock)
-    with patch(containers.__name__ + '.InheritedDict') as InheritedDict:
-        InheritedDict.side_effect = lambda parent: {'source': parent} if parent else parent
+    with patch(containers.__name__ + '.InheritedDict') as inherited_dict_mock:
+        inherited_dict_mock.side_effect = lambda parent: {'source': parent} if parent else parent
         xml_node = Mock(children=[Mock() for _ in range(nodes_count)])
         node = Container(Mock(), xml_node)
         context = TkRenderingContext({'node': node})
@@ -37,8 +39,8 @@ def test_render_container_children(nodes_count):
             child_context = TkRenderingContext({
                 'parent_node': node,
                 'master': node.master,
-                'node_globals': InheritedDict(node.node_globals),
-                'node_styles': InheritedDict(node.node_styles),
+                'node_globals': inherited_dict_mock(node.node_globals),
+                'node_styles': inherited_dict_mock(node.node_styles),
                 'xml_node': child_xml_node
             })
             assert actual_call == call(child_context)
@@ -200,7 +202,8 @@ class IfRenderingTests:
     ])
     def test_render_if(self, condition, children_count):
         """should render children if condition is True"""
-        self.if_node._xml_node = self.if_node._xml_node._replace(children=[Mock() for _ in range(children_count)])
+        self.if_node._xml_node = self.if_node.xml_node._replace(
+            children=[Mock() for _ in range(children_count)])
         self.if_node.condition = condition
         expected_children = self.if_node.xml_node.children if condition else []
 

@@ -1,3 +1,5 @@
+"""Common setters for widgets nodes"""
+
 from tkinter import Event
 
 from pyviews.core import PyViewsError
@@ -24,11 +26,11 @@ def _get_handled_command(command, view_info, event):
 
 
 def _call_command(command, view_info, event, args, kwargs):
-    with error_handling(CallbackError, lambda e: add_callback_info(event, view_info, e)):
+    with error_handling(CallbackError, lambda e: _add_callback_info(event, view_info, e)):
         command(*args, **kwargs)
 
 
-def add_callback_info(event: Event, view_info: ViewInfo, error: PyViewsError):
+def _add_callback_info(event: Event, view_info: ViewInfo, error: PyViewsError):
     error.add_view_info(view_info)
     error.add_info('Event', event)
 

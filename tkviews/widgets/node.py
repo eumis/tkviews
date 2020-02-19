@@ -118,6 +118,7 @@ def _on_widget_destroy(node: WidgetNode):
 
 
 def render_widget_children(node: WidgetNode, context: TkRenderingContext):
+    """Render step. Renders widget children"""
     render_children(node, context, _get_child_context)
 
 

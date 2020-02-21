@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<tkw:Container xmlns:tkw="tkviews"
+<tkw:Container xmlns="tkinter"
+               xmlns:tkw="tkviews"
                xmlns:import="tkviews.import_global"
                xmlns:global='tkviews.set_global'
                xmlns:call='tkviews.call'

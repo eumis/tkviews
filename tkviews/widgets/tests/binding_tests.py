@@ -198,6 +198,7 @@ class CheckWidgetAndPropertyTests:
 
 
 @fixture
+# pylint: disable=redefined-outer-name,unused-argument
 def custom_var_binding_fixture(var_binding_fixture, request):
     var = TestVariable()
     request.cls.variable = var

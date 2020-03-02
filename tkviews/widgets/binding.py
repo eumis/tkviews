@@ -22,6 +22,7 @@ class VariableBinding(Binding):
         self._trace_id = None
 
     def bind(self):
+        """Applies binding"""
         self.destroy()
         self._trace_id = self._var.trace_add('write', self._var_callback)
 
@@ -36,6 +37,7 @@ class VariableBinding(Binding):
         error.add_info('Callback', self._callback)
 
     def destroy(self):
+        """Destroys binding"""
         if self._trace_id:
             self._var.trace_remove('write', self._trace_id)
         self._trace_id = None

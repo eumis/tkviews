@@ -2,7 +2,7 @@ from injectool import use_container, set_container, Container
 from pytest import fixture
 
 
-def pytest_configure(config):
+def pytest_configure(config):  # pylint: disable=unused-argument
     set_container(Container())
 
 

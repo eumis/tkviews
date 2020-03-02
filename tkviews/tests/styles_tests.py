@@ -27,18 +27,15 @@ class ApplyStyleItemsTests:
         ([('one', '{1}', None)], [('one', 1, call_set_attr)]),
         ([('one', ' value ', None)], [('one', ' value ', call_set_attr)]),
         ([('one', 'value', __name__ + '.some_setter')], [('one', 'value', some_setter)]),
-        (
-                [
-                    ('one', 'value', __name__ + '.some_setter'),
-                    ('two', '{1 + 1}', None),
-                    ('key', '', __name__ + '.another_setter')
-                ],
-                [
-                    ('one', 'value', some_setter),
-                    ('two', 2, call_set_attr),
-                    ('key', '', another_setter)
-                ]
-        )
+        ([('one', 'value', __name__ + '.some_setter'),
+          ('two', '{1 + 1}', None),
+          ('key', '', __name__ + '.another_setter')
+          ],
+         [('one', 'value', some_setter),
+          ('two', 2, call_set_attr),
+          ('key', '', another_setter)
+          ]
+         )
     ])
     def test_creates_style_items_from_attrs(attrs, expected):
         """should create style item for every attribute"""
@@ -79,21 +76,18 @@ class ApplyStyleItemsTests:
 
 
 @mark.parametrize('items, parent_items, expected', [
-    (
-            [('one', 'value'), ('key', '')],
-            [('one', 'parent value'), ('two', 2)],
-            [('one', 'value'), ('key', ''), ('two', 2)]
-    ),
-    (
-            [],
-            [('one', 'value'), ('two', 2)],
-            [('one', 'value'), ('two', 2)]
-    ),
-    (
-            [('one', 'value'), ('two', 2)],
-            [],
-            [('one', 'value'), ('two', 2)]
-    )
+    ([('one', 'value'), ('key', '')],
+     [('one', 'parent value'), ('two', 2)],
+     [('one', 'value'), ('key', ''), ('two', 2)]
+     ),
+    ([],
+     [('one', 'value'), ('two', 2)],
+     [('one', 'value'), ('two', 2)]
+     ),
+    ([('one', 'value'), ('two', 2)],
+     [],
+     [('one', 'value'), ('two', 2)]
+     )
 ])
 def test_apply_parent_items_(items, parent_items, expected):
     """should add parent style items"""

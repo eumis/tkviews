@@ -1,3 +1,5 @@
+"""pypi package setup"""
+
 import codecs
 import re
 from os.path import join as join_path, dirname

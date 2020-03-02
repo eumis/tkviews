@@ -82,18 +82,16 @@ class SetupValueSetterTests:
     ([('one', '1', None)], {'one': '1'}),
     ([('one', '{1}', None)], {'one': 1}),
     ([('one', '{5}', __name__ + '.increment')], {'one': 6}),
-    (
-            [
-                ('one', '{1 + 1}', None),
-                ('two', '{1 + 1}', __name__ + '.increment'),
-                ('key', ' string value ', None)
-            ],
-            {
-                'one': 2,
-                'two': 3,
-                'key': ' string value '
-            }
-    )
+    ([('one', '{1 + 1}', None),
+      ('two', '{1 + 1}', __name__ + '.increment'),
+      ('key', ' string value ', None)
+      ],
+     {
+         'one': 2,
+         'two': 3,
+         'key': ' string value '
+     }
+     )
 ])
 def test_apply_style_attributes(attrs: list, expected: dict):
     """should set attribute values"""

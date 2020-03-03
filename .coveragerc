@@ -1,0 +1,7 @@
+[run]
+omit =
+    */tests/*
+    tkviews/app.py
+[paths]
+source =
+    tkviews/*

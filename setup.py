@@ -1,3 +1,5 @@
+"""pypi package setup"""
+
 import codecs
 import re
 from os.path import join as join_path, dirname
@@ -28,7 +30,7 @@ def setup_package():
             'Programming Language :: Python :: 3.6'
         ],
         python_requires='>=3.6',
-        install_requires=['pyviews>=2.3.*'],
+        install_requires=['pyviews>=3.*.*,<4.*.*'],
         keywords='binding tkinter tk tkviews pyviews python mvvm views',
         packages=find_packages(exclude=['sandbox', '*.tests']))
 

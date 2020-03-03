@@ -4,13 +4,14 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
 
 [packages]
+pylint = "*"
 setuptools = "*"
 pyviews = "*"
-tkviews = {editable = true, path = "."}
+tkviews = {editable = true,path = "."}
 pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3"

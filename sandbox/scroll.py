@@ -7,7 +7,7 @@ class ScrollVm(ObservableEntity):
         self.items = [ScrollItem(i) for i in range(100)]
 
     @staticmethod
-    def get_node_id(self, index):
+    def get_node_id(index):
         return 'item' + str(index)
 
     def scroll_to(self, index):

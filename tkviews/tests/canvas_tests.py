@@ -2,8 +2,10 @@ from unittest.mock import Mock, call
 
 from pytest import fixture, mark
 
-from tkviews.canvas import CanvasItemNode, setup_temp_setter, setup_temp_binding, create_item, setup_config_setter, \
-    setup_event_binding, apply_temp_events, clear_temp
+from tkviews.canvas import CanvasItemNode, setup_temp_setter, setup_temp_binding, create_item, \
+    setup_config_setter, \
+    setup_event_binding, apply_temp_events, clear_temp, Rectangle, Text, Image, Arc, Bitmap, Line, \
+    Oval, Polygon, Window
 from tkviews.core.rendering import TkRenderingContext
 
 
@@ -21,10 +23,8 @@ class TestCanvasItem(CanvasItemNode):
 @fixture
 def canvas_fixture(request):
     canvas = Mock()
-    canvas.create_item = Mock()
-    canvas.itemconfig = Mock()
-    canvas.tag_bind = Mock()
     request.cls.canvas = canvas
+    request.cls.item = TestCanvasItem(canvas, 1)
 
 
 @mark.usefixtures('canvas_fixture')
@@ -36,12 +36,11 @@ class CanvasNodeTests:
     ])
     def test_bind(self, event, command):
         """bind() should call tag_bind of canvas"""
-        item = TestCanvasItem(self.canvas, 1)
-        item.create()
+        self.item.create()
 
-        item.bind(event, command)
+        self.item.bind(event, command)
 
-        call_args = call(item.item_id, '<' + event + '>', command)
+        call_args = call(self.item.item_id, '<' + event + '>', command)
         assert self.canvas.tag_bind.call_args == call_args
 
     @mark.parametrize('options', [
@@ -50,13 +49,112 @@ class CanvasNodeTests:
     ])
     def test_config(self, options: dict):
         """config() should call itemconfig of canvas"""
-        item = TestCanvasItem(self.canvas, 1)
-        item.create()
+        self.item.create()
 
-        item.config(**options)
+        self.item.config(**options)
 
-        call_args = call(item.item_id, **options)
+        call_args = call(self.item.item_id, **options)
         assert self.canvas.itemconfig.call_args == call_args
+
+    def test_destroy(self):
+        """should call canvas.delete()"""
+        self.item.create()
+
+        self.item.destroy()
+
+        assert self.canvas.delete.call_args == call(self.item.item_id)
+
+
+@fixture
+def canvas_items_fixture(request):
+    request.cls.canvas = Mock()
+    request.cls.options = {'one': 1, 'two': 'two'}
+
+
+@mark.usefixtures('canvas_items_fixture')
+class CanvasItemsTests:
+    """Canvas items tests"""
+
+    def test_rectangle_create(self):
+        """Rectangle tests"""
+        rectangle = Rectangle(self.canvas, Mock())
+        rectangle.place = [1, 2]
+
+        rectangle.create(**self.options)
+
+        assert self.canvas.create_rectangle.call_args == call(*rectangle.place, **self.options)
+
+    def test_text_create(self):
+        """Text tests"""
+        text = Text(self.canvas, Mock())
+        text.place = [1, 2]
+
+        text.create(**self.options)
+
+        assert self.canvas.create_text.call_args == call(*text.place, **self.options)
+
+    def test_image_create(self):
+        """Image tests"""
+        image = Image(self.canvas, Mock())
+        image.place = [1, 2]
+
+        image.create(**self.options)
+
+        assert self.canvas.create_image.call_args == call(*image.place, **self.options)
+
+    def test_arc_create(self):
+        """Arc tests"""
+        arc = Arc(self.canvas, Mock())
+        arc.place = [1, 2]
+
+        arc.create(**self.options)
+
+        assert self.canvas.create_arc.call_args == call(*arc.place, **self.options)
+
+    def test_bitmap_create(self):
+        """Bitmap tests"""
+        bitmap = Bitmap(self.canvas, Mock())
+        bitmap.place = [1, 2]
+
+        bitmap.create(**self.options)
+
+        assert self.canvas.create_bitmap.call_args == call(*bitmap.place, **self.options)
+
+    def test_line_create(self):
+        """Line tests"""
+        line = Line(self.canvas, Mock())
+        line.place = [1, 2]
+
+        line.create(**self.options)
+
+        assert self.canvas.create_line.call_args == call(*line.place, **self.options)
+
+    def test_oval_create(self):
+        """Oval tests"""
+        oval = Oval(self.canvas, Mock())
+        oval.place = [1, 2]
+
+        oval.create(**self.options)
+
+        assert self.canvas.create_oval.call_args == call(*oval.place, **self.options)
+
+    def test_polygon_create(self):
+        """Polygon tests"""
+        polygon = Polygon(self.canvas, Mock())
+        polygon.place = [1, 2]
+
+        polygon.create(**self.options)
+
+        assert self.canvas.create_polygon.call_args == call(*polygon.place, **self.options)
+
+    def test_window_create(self):
+        """Window tests"""
+        window = Window(self.canvas, Mock())
+        window.place = [1, 2]
+
+        window.create(**self.options)
+
+        assert self.canvas.create_window.call_args == call(*window.place, **self.options)
 
 
 class TestCanvasNode(CanvasItemNode):

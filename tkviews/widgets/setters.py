@@ -11,9 +11,6 @@ from tkviews.widgets.node import WidgetNode
 class CallbackError(PyViewsError):
     """Error from callback"""
 
-    def __init__(self, message: str = None):
-        super().__init__(message if message else 'Error occurred in event callback')
-
 
 def bind(node: WidgetNode, event_name, command):
     """Calls widget node bind method"""

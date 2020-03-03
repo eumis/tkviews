@@ -1,11 +1,14 @@
-from unittest.mock import Mock
+import operator
+from itertools import accumulate
+from unittest.mock import Mock, call
 
-from pytest import mark, raises
-from pyviews.core import XmlAttr, InheritedDict
+from pytest import mark, raises, fixture
+from pyviews.core import XmlAttr, InheritedDict, Node
 from pyviews.pipes import call_set_attr
 
+from tkviews import WidgetNode
 from tkviews.core.rendering import TkRenderingContext
-from tkviews.styles import Style, StyleError
+from tkviews.styles import Style, StyleError, StyleItem, apply_styles
 from tkviews.styles import apply_style_items, apply_parent_items, store_to_node_styles
 
 
@@ -15,6 +18,33 @@ def some_setter():
 
 def another_setter():
     """Another test setter"""
+
+
+class StyleItemTests:
+    @staticmethod
+    def test_apply():
+        """should call passed setter with parameters"""
+        setter, name, value = Mock(), 'name', 'value'
+        item, node = StyleItem(setter, name, value), Node(Mock())
+
+        item.apply(node)
+
+        assert setter.call_args == call(node, name, value)
+
+    @staticmethod
+    @mark.parametrize('one, two, equal', [
+        (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'name', 1), True),
+        (
+                StyleItem(some_setter, 'name', 'value'),
+                StyleItem(some_setter, 'name', 'other value'), True),
+        (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'other name', 1), False),
+        (StyleItem(some_setter, 'name', 1), StyleItem(another_setter, 'name', 1), False)
+    ])
+    def test_eq(one, two, equal):
+        """should compare by name and setter"""
+        actual = one == two
+
+        assert actual == equal
 
 
 @mark.usefixtures('container_fixture')
@@ -113,3 +143,43 @@ def test_store_to_node_styles():
     store_to_node_styles(node, TkRenderingContext({'node_styles': node_styles}))
 
     assert node_styles[node.name] == node.items.values()
+
+
+@fixture
+def apply_styles_fixture(request):
+    request.cls.node = WidgetNode(Mock(), Mock(), node_styles=InheritedDict({
+        'one': [Mock(), Mock()],
+        'two': [Mock(), Mock(), Mock()],
+        'three': [Mock()]
+    }))
+
+
+@mark.usefixtures('apply_styles_fixture')
+class ApplyStylesTests:
+    """apply_styles() setter tests"""
+
+    @mark.parametrize('styles, keys', [
+        ('', []),
+        (None, []),
+        ('one', ['one']),
+        ('one', ['one']),
+        ('one,two', ['one', 'two']),
+        ('one,two,three', ['one', 'two', 'three']),
+        ([], []),
+        (['one'], ['one']),
+        (['one', 'two'], ['one', 'two'])
+    ])
+    def test_applies_styles(self, styles, keys):
+        """Parses input and applies styles"""
+        apply_styles(self.node, '', styles)
+        node_styles = self.node.node_styles.to_dictionary()
+        actual = {key for key, items in node_styles.items() if
+                  all([i.apply.called for i in items])}
+
+        assert actual == set(keys)
+
+    @mark.parametrize('styles', ['four', 'one, four'])
+    def test_raises_for_unknown_key(self, styles):
+        """should raise StyleError for unknown style"""
+        with raises(StyleError):
+            apply_styles(self.node, '', styles)

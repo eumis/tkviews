@@ -1,6 +1,6 @@
 """Nodes for storing config options for widgets"""
 
-from typing import Any
+from typing import Any, Union, List
 
 from pyviews.core import PyViewsError, XmlNode, Node, InheritedDict, Setter, XmlAttr
 from pyviews.pipes import render_children
@@ -63,8 +63,7 @@ def get_style_setup() -> RenderingPipeline:
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        lambda style, ctx: render_children(style, ctx, _get_style_child_context),
-        # remove_style_on_destroy
+        lambda style, ctx: render_children(style, ctx, _get_style_child_context)
     ])
 
 
@@ -108,20 +107,21 @@ def _get_style_child_context(xml_node: XmlNode, node: Style,
     return child_context
 
 
-def remove_style_on_destroy(node: Style, context: TkRenderingContext):
-    """Removes style from styles on destroying"""
-    context.node_styles.remove_key(node.name)
-
-
-def apply_styles(node: WidgetNode, _: str, style_keys: str):
+def apply_styles(node: WidgetNode, _: str, style_keys: Union[str, List[str]]):
     """Setter. Applies styles to node"""
-    keys = [key.strip() for key in style_keys.split(',')] \
-        if isinstance(style_keys, str) else style_keys
+    if not style_keys:
+        return
     try:
-        for key in [key for key in keys if key]:
-            for item in node.node_styles[key]:
-                item.apply(node)
+        _apply_styles(node, style_keys)
     except KeyError as key_error:
         error = StyleError('Style is not found')
         error.add_info('Style name', key_error.args[0])
         raise error from key_error
+
+
+def _apply_styles(node, style_keys: Union[str, List[str]]):
+    keys = [key.strip() for key in style_keys.split(',')] \
+        if isinstance(style_keys, str) else style_keys
+    for key in [key for key in keys if key]:
+        for item in node.node_styles[key]:
+            item.apply(node)

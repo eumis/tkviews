@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.com/eumis/tkviews.svg?branch=dev)](https://travis-ci.com/eumis/tkviews)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/813287b5cd4148789651669225beefd6)](https://www.codacy.com/app/eumis/tkviews?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eumis/tkviews&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/813287b5cd4148789651669225beefd6)](https://www.codacy.com/manual/eumis/tkviews?utm_source=github.com&utm_medium=referral&utm_content=eumis/tkviews&utm_campaign=Badge_Coverage)
 [![image](https://img.shields.io/pypi/v/tkviews.svg)](https://python.org/pypi/tkviews)
 [![image](https://img.shields.io/pypi/pyversions/tkviews.svg)](https://python.org/pypi/tkviews)
 [![image](https://img.shields.io/pypi/l/tkviews.svg)](https://python.org/pypi/tkviews)

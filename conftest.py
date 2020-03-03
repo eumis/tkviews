@@ -1,5 +1,8 @@
-from injectool import use_container, set_container, Container
+from injectool import use_container, set_container, Container, add_singleton
 from pytest import fixture
+from pyviews.binding import Binder
+
+from tkviews.app import setup_binder
 
 
 def pytest_configure(config):  # pylint: disable=unused-argument
@@ -13,3 +16,8 @@ def container_fixture(request):
         if request.cls:
             request.cls.container = container
         yield container
+
+
+@fixture
+def binder_fixture(container_fixture):
+    add_singleton(Binder, setup_binder())

@@ -135,8 +135,9 @@ class ConfigureTests:
 
         assert self.configure.call_args == call(node.full_name, **node.values)
 
+    @staticmethod
     @mark.parametrize('name', [None, ''])
-    def test_raises_if_name_is_not_set(self, name):
+    def test_raises_if_name_is_not_set(name):
         """should raise if name is not set"""
         with raises(KeyError):
             node = TtkStyle(Mock())

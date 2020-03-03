@@ -1,5 +1,3 @@
-import operator
-from itertools import accumulate
 from unittest.mock import Mock, call
 
 from pytest import mark, raises, fixture
@@ -34,9 +32,8 @@ class StyleItemTests:
     @staticmethod
     @mark.parametrize('one, two, equal', [
         (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'name', 1), True),
-        (
-                StyleItem(some_setter, 'name', 'value'),
-                StyleItem(some_setter, 'name', 'other value'), True),
+        (StyleItem(some_setter, 'name', 'value'),
+         StyleItem(some_setter, 'name', 'other value'), True),
         (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'other name', 1), False),
         (StyleItem(some_setter, 'name', 1), StyleItem(another_setter, 'name', 1), False)
     ])

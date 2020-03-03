@@ -19,5 +19,5 @@ def container_fixture(request):
 
 
 @fixture
-def binder_fixture(container_fixture):
+def binder_fixture(container_fixture):  # pylint: disable=redefined-outer-name
     add_singleton(Binder, setup_binder())

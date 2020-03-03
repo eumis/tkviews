@@ -190,7 +190,7 @@ class ApplyTextTests:
         assert not self.node.set_attr.called
 
     @mark.parametrize('text, value', [('some value', 'some value'), ('{1 + 1}', 2)])
-    def test_empty(self, text, value):
+    def test_calls_set_attr(self, text, value):
         """should set value as "text" attribute"""
         self.node.xml_node.text = text
 

@@ -3,10 +3,11 @@ from typing import cast
 from unittest.mock import Mock, call, patch
 
 from pytest import fixture, mark
+from pyviews.rendering import RenderingPipeline
 
 from tkviews.core import TkRenderingContext
 from tkviews.widgets import node
-from tkviews.widgets.node import WidgetNode, Root
+from tkviews.widgets.node import WidgetNode, Root, get_widget_setup
 from tkviews.widgets.node import setup_widget_setter, setup_widget_destroy, apply_text
 
 
@@ -45,6 +46,32 @@ class RootTests:
         self.root.bind_all(event, command)
 
         assert self.root.instance.bind_all.call_args == call(event, command)
+
+    def test_state_getter(self):
+        """should return Tk.state() method result"""
+        state = Mock()
+        self.root.instance.state.side_effect = lambda: state
+
+        actual = self.root.state
+
+        assert actual == state
+
+    def test_state_setter(self):
+        """should call Tk.state() method"""
+        state = Mock()
+
+        self.root.state = state
+
+        assert self.root.instance.state.call_args == call(state)
+
+    def test_icon(self):
+        """should set icon"""
+        icon = Mock()
+
+        self.root.icon = icon
+
+        assert self.root.icon == icon
+        assert self.root.instance.iconbitmap.call_args == call(default=icon)
 
 
 class TestWidget:
@@ -85,6 +112,14 @@ class WidgetNodeTests:
         self.node.bind_all(event, command)
 
         assert self.node.instance.bind_all.call_args == call(event, command)
+
+
+def test_get_widget_setup():
+    """should return rendering pipeline"""
+    actual = get_widget_setup()
+
+    assert actual is not None
+    assert isinstance(actual, RenderingPipeline)
 
 
 @fixture

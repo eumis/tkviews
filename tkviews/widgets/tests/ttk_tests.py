@@ -1,6 +1,6 @@
 from unittest.mock import call, Mock, patch
 
-from pytest import mark
+from pytest import mark, fixture, raises
 from pyviews.core import XmlAttr
 from pyviews.pipes import call_set_attr
 
@@ -20,7 +20,7 @@ class TtkStyleTests:
     ])
     def test_full_name(name, parent_name, expected):
         """full name should be in format "parent_name.name"""
-        style = TtkStyle(None, parent_name=parent_name)
+        style = TtkStyle(Mock(), parent_name=parent_name)
 
         style.name = name
 
@@ -105,20 +105,41 @@ def test_apply_style_attributes(attrs: list, expected: dict):
     assert node.values == expected
 
 
-@mark.parametrize('name, values', [
-    ('name', {}),
-    ('Button.Some', {'one': 1}),
-    ('Label', {'one': 1, 'two': 'two'})
-])
-def test_configure_pass_values(name: str, values: dict):
-    """configure should call configure on ttk style and pass values"""
+@fixture
+def configure_fixture(request):
     with patch(ttk.__name__ + '.Style') as ttk_style:
         configure_mock = Mock()
         ttk_style.return_value = Mock(configure=configure_mock)
+
+        request.cls.configure = configure_mock
+
+        yield ttk_style
+
+
+@mark.usefixtures('configure_fixture')
+class ConfigureTests:
+    """configure() step tests"""
+
+    @mark.parametrize('name, values', [
+        ('name', {}),
+        ('Button.Some', {'one': 1}),
+        ('Label', {'one': 1, 'two': 'two'})
+    ])
+    def test_configures(self, name: str, values: dict):
+        """configure should call configure on ttk style and pass values"""
         node = TtkStyle(Mock())
         node.values = values
         node.name = name
 
         configure(node, TkRenderingContext())
 
-        assert configure_mock.call_args == call(node.full_name, **node.values)
+        assert self.configure.call_args == call(node.full_name, **node.values)
+
+    @mark.parametrize('name', [None, ''])
+    def test_raises_if_name_is_not_set(self, name):
+        """should raise if name is not set"""
+        with raises(KeyError):
+            node = TtkStyle(Mock())
+            node.name = name
+
+            configure(node, TkRenderingContext())

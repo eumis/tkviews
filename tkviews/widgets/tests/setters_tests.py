@@ -1,17 +1,32 @@
 from unittest.mock import Mock, call
 
-from pytest import mark
+from pytest import mark, raises
 
-from tkviews.widgets.setters import bind, bind_all, config
+from tkviews.widgets.setters import bind, bind_all, config, CallbackError
 
 
-def test_bind():
-    """bind() should call bind for instance"""
-    node = Mock()
+class BindTests:
+    @staticmethod
+    def test_binds():
+        """bind() should call bind for instance"""
+        node = Mock()
 
-    bind(node, 'event', lambda: None)
+        bind(node, 'event', lambda: None)
 
-    assert node.bind.called
+        assert node.bind.called
+
+    @staticmethod
+    def test_handles_error():
+        """should raise CallbackError with event info"""
+
+        def callback():
+            raise ValueError()
+
+        with raises(CallbackError):
+            node_bind = Mock()
+            node_bind.side_effect = lambda e, cb: cb()
+
+            bind(Mock(bind=node_bind), 'event', callback)
 
 
 def test_bind_all():

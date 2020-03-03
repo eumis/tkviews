@@ -13,4 +13,4 @@ pyvenv.cfg
 .vscode
 .idea
 Pipfile.lock
-/tkviews/.coverage
+.coverage

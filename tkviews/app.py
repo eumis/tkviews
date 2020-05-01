@@ -2,7 +2,6 @@
 
 from typing import cast
 
-from injectool import SingletonResolver
 from pyviews.binding import use_binding
 from pyviews.code import run_code
 from pyviews.rendering import RenderingPipeline, use_rendering
@@ -25,7 +24,7 @@ def register_dependencies():
     use_tkviews_pipelines()
 
 
-def use_tkviews_pipelines() -> SingletonResolver:
+def use_tkviews_pipelines():
     """Adds rendering pipelines for tkviews"""
     use_pipeline(get_root_setup(), 'tkviews.Root')
     use_pipeline(get_widget_setup(), 'tkinter')

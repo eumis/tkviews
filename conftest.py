@@ -1,14 +1,10 @@
 # pylint: disable=unused-argument,redefined-outer-name
 
-from injectool import use_container, set_container, Container, add_singleton
+from injectool import use_container
 from pytest import fixture
-from pyviews.binding import Binder
+from pyviews.binding import use_binding
 
-from tkviews.app import setup_binder
-
-
-def pytest_configure(config):
-    set_container(Container())
+from tkviews.widgets import use_variables_binding
 
 
 @fixture
@@ -22,4 +18,5 @@ def container_fixture(request):
 
 @fixture
 def binder_fixture(container_fixture):
-    add_singleton(Binder, setup_binder())
+    use_binding()
+    use_variables_binding()

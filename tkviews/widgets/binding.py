@@ -4,6 +4,7 @@ from tkinter import Widget, Variable, Entry, Checkbutton, Radiobutton, StringVar
     IntVar
 from typing import Type, Union
 
+from injectool import inject
 from pyviews.binding import BindingContext, TwoWaysBinding, ExpressionBinding, Binder, \
     get_expression_callback
 from pyviews.core import BindingCallback, Binding, \
@@ -43,8 +44,9 @@ class VariableBinding(Binding):
         self._trace_id = None
 
 
-def add_variables_rules(binder: Binder):
-    """Adds tkviews binding rules to passed factory"""
+@inject(binder=Binder)
+def use_variables_binding(binder: Binder = None):
+    """Adds tkinter variables bindings"""
     binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(StringVar, ctx),
                     lambda ctx: check_widget_and_property(Entry, 'textvariable', ctx))
     binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(BooleanVar, ctx),

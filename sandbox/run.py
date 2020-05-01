@@ -1,19 +1,15 @@
 """Runs sandbox application"""
 
-from injectool import set_container, Container, add_resolver
-from pyviews.rendering import RenderingPipeline
+from pyviews.rendering.pipeline import use_pipeline
 
 from sandbox.widgets import get_scroll_pipeline
-from tkviews.app import register_dependencies, launch, get_pipeline_resolver
+from tkviews.app import register_dependencies, launch
 
 
 def run_sandbox():
     """Entry point"""
-    set_container(Container())
     register_dependencies()
-    resolver = get_pipeline_resolver()
-    resolver.set_value(get_scroll_pipeline(), 'sandbox.widgets')
-    add_resolver(RenderingPipeline, resolver)
+    use_pipeline(get_scroll_pipeline(), 'sandbox.widgets')
     launch('app')
 
 

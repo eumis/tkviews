@@ -1,5 +1,8 @@
 # Changelog
 
+## Dev
+- setup refactoring
+
 ## 3.0.0
 
 - updated pyviews to 3.0.0

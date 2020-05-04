@@ -11,6 +11,7 @@ Lib/
 pip-selfcheck.json
 pyvenv.cfg
 .vscode
-.idea
+.idea/
 Pipfile.lock
 .coverage
+venv/

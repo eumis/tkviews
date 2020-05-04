@@ -1,0 +1,5 @@
+-e .
+pylint
+setuptools
+pytest
+coverage

@@ -1,36 +1,12 @@
 """ttk specific implementation"""
 from functools import partial
-from tkinter.ttk import Style, Widget
+from tkinter.ttk import Style
 from typing import Any
 
-from pyviews.core import XmlNode, Node, InstanceNode, InheritedDict
+from pyviews.core import XmlNode, Node, InheritedDict
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
-from tkviews.core import TkNode
 from tkviews.core.rendering import TkRenderingContext, render_attribute
-
-
-class TtkWidgetNode(InstanceNode, TkNode):
-    """Wrapper under ttk widget"""
-
-    def __init__(self, widget: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
-        super().__init__(widget, xml_node, node_globals=node_globals)
-        self._node_styles = node_styles
-
-    @property
-    def node_styles(self) -> InheritedDict:
-        """Returns node styles set"""
-        return self._node_styles
-
-    @property
-    def ttkstyle(self):
-        """Returns ttk style"""
-        return self.instance.cget('style')
-
-    @ttkstyle.setter
-    def ttkstyle(self, value):
-        self.instance.config(style=value)
 
 
 class TtkStyle(Node):
@@ -61,13 +37,13 @@ def get_ttk_style_setup() -> RenderingPipeline:
         setup_value_setter,
         apply_style_attributes,
         configure
-    ], create_node=_create_ttk_widget_node)
+    ])
 
 
-def _create_ttk_widget_node(context: TkRenderingContext):
+def _create_ttk_style_node(context: TkRenderingContext):
     inst_type = get_type(context.xml_node)
     inst = create_instance(inst_type, context)
-    return create_instance(TtkWidgetNode, {'widget': inst, **context})
+    return create_instance(TtkStyle, {'widget': inst, **context})
 
 
 def setup_value_setter(node: TtkStyle, _: TkRenderingContext):
@@ -91,7 +67,6 @@ def apply_style_attributes(node: TtkStyle, _: TkRenderingContext):
 
 def configure(node: TtkStyle, _: TkRenderingContext):
     """Sets style to widget"""
-    ttk_style = Style()
     if not node.name:
         raise KeyError("style doesn't have name")
-    ttk_style.configure(node.full_name, **node.values)
+    Style().configure(node.full_name, **node.values)

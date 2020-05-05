@@ -82,7 +82,7 @@ class WidgetNode(InstanceNode, TkNode):
         self.instance.bind_all(event, command)
 
 
-def get_widget_setup():
+def get_widget_setup() -> RenderingPipeline:
     """Returns setup for widget"""
     return RenderingPipeline([
         setup_widget_setter,
@@ -100,6 +100,8 @@ def setup_widget_setter(node: WidgetNode, _: TkRenderingContext):
 
 def _widget_node_setter(node: WidgetNode, key: str, value):
     """Applies passed attribute"""
+    if key == 'ttkstyle':
+        pass
     if hasattr(node, key):
         setattr(node, key, value)
     elif hasattr(node.instance, key):

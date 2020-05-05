@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<tkv:Root xmlns='tkinter'
+          xmlns:ttk='tkinter.ttk'
+          xmlns:tkv="tkviews"
+          xmlns:import='tkviews.import_global'
+          xmlns:global='tkviews.set_global'
+          xmlns:call='tkviews.call'
+
+          import:args="tkviews.call_args"
+          import:AppPresenter="app.presenter.AppPresenter"
+
+          background="black"
+          global:presenter="{AppPresenter()}">
+    <tkv:TtkStyle name="demo.Treeview"
+                  background="grey"/>
+    <Frame call:pack="{args(fill='both')}" background="red">
+        <ttk:Treeview call:pack="{args(side='left')}"
+                      global:demo_tree="{node.instance}"
+                      style="demo.Treeview">
+            <tkv:Code>
+                presenter.set_demo_tree(demo_tree)
+            </tkv:Code>
+        </ttk:Treeview>
+        <Frame call:pack="{args(side='right', expand=1, fill='both')}"
+               background="yellow">
+            <tkv:View name="{presenter.demo_view if presenter.demo_view else ''}"/>
+        </Frame>
+    </Frame>
+</tkv:Root>

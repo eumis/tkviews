@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import='tkviews.import_global'
+               xmlns:bind='tkviews.bind'
+               xmlns:call='tkviews.call'
+
+               import:messagebox="tkinter.messagebox">
+    <Button call:pack='{args(fill="x")}'
+            text='Dialog button'
+            bind:Button-1="once:{lambda e: messagebox.showinfo('message title', 'hohohoho')}">
+    </Button>
+</tkv:Container>

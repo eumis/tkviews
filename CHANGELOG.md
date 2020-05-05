@@ -2,6 +2,7 @@
 
 ## Dev
 - setup refactoring
+- fixed ttk rendering
 
 ## 3.0.0
 

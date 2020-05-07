@@ -13,15 +13,22 @@
           global:presenter="{AppPresenter()}">
     <tkv:TtkStyle name="demo.Treeview"
                   background="grey"/>
-    <Frame call:pack="{args(fill='both')}" background="red">
-        <ttk:Treeview call:pack="{args(side='left')}"
-                      global:demo_tree="{node.instance}"
+    <Frame call:pack="{args(fill='both', expand=1)}"
+           background="red"
+           global:frame="once:{node.instance}"
+           call:grid_rowconfigure="{args(index=0, weight=1)}">
+        <tkv:Code>
+            frame.grid_columnconfigure(index=0, minsize=1)
+            frame.grid_columnconfigure(index=1, weight=1)
+        </tkv:Code>
+        <ttk:Treeview global:demo_tree="{node.instance}"
+                      call:grid='{args(row=0, column=0, sticky="nwes")}'
                       style="demo.Treeview">
             <tkv:Code>
                 presenter.set_demo_tree(demo_tree)
             </tkv:Code>
         </ttk:Treeview>
-        <Frame call:pack="{args(side='right', expand=1, fill='both')}"
+        <Frame call:grid='{args(row=0, column=1, sticky="nwes")}'
                background="yellow">
             <tkv:View name="{presenter.demo_view if presenter.demo_view else ''}"/>
         </Frame>

@@ -1,13 +1,24 @@
 <?xml version="1.0"?>
 <tkv:Container xmlns="tkinter"
                xmlns:tkv="tkviews"
-               xmlns:import='tkviews.import_global'
-               xmlns:bind='tkviews.bind'
-               xmlns:call='tkviews.call'
-
-               import:messagebox="tkinter.messagebox">
-    <Button call:pack='{args(fill="x")}'
-            text='Dialog button'
-            bind:Button-1="once:{lambda e: messagebox.showinfo('message title', 'hohohoho')}">
-    </Button>
+               xmlns:import="tkviews.import_global"
+               xmlns:bind="tkviews.bind"
+               xmlns:call="tkviews.call"
+               xmlns:styles="tkviews.apply_styles"
+               xmlns:global='tkviews.set_global'
+               import:messagebox="tkinter.messagebox"
+               import:CounterViewModel="button.viewmodel.CounterViewModel"
+               global:vm="once:{CounterViewModel()}">
+    <tkv:Style name="packed"
+               call:pack="{args(anchor='w', pady=5)}"/>
+    <Button styles:="packed"
+            text=" Dialog button"
+            bind:Button-1="once:{lambda e: messagebox.showinfo('title', 'dialog button message')}"/>
+    <Button styles:="packed"
+            text="Disabled button"
+            state="disabled"/>
+    <Button styles:="packed"
+            text="{f'Flat counter - {vm.count}'}"
+            relief="flat"
+            bind:Button-1="once:{lambda e: vm.add_count()}"/>
 </tkv:Container>

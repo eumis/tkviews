@@ -16,9 +16,8 @@ from tkviews.core.rendering import TkRenderingContext
 
 class TestNode(Node):
     def __init__(self, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+                 node_globals: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
-        self.node_styles = InheritedDict(node_styles)
 
 
 @mark.usefixtures('container_fixture')
@@ -40,7 +39,6 @@ def test_render_container_children(nodes_count):
                 'parent_node': node,
                 'master': node.master,
                 'node_globals': inherited_dict_mock(node.node_globals),
-                'node_styles': inherited_dict_mock(node.node_styles),
                 'xml_node': child_xml_node
             })
             assert actual_call == call(child_context)
@@ -89,8 +87,7 @@ def view_fixture(request):
     render_view_mock = Mock()
     add_singleton(render_view, render_view_mock)
 
-    view = View(Mock(), Mock(), node_globals=InheritedDict({'key': 'value'}),
-                node_styles=InheritedDict({'style': 'style'}))
+    view = View(Mock(), Mock(), node_globals=InheritedDict({'key': 'value'}))
     view.name = 'view'
 
     request.cls.render_view = render_view_mock
@@ -120,7 +117,6 @@ class ViewRenderingTests:
         assert actual.master == self.view.master
         assert actual.parent_node == self.view
         assert actual.node_globals.to_dictionary() == self.view.node_globals.to_dictionary()
-        assert actual.node_styles.to_dictionary() == self.view.node_styles.to_dictionary()
 
     @mark.parametrize('view_name', ['', None])
     def test_not_render_empty_view_name(self, view_name):
@@ -182,12 +178,10 @@ class IfTests:
 @fixture
 def if_fixture(request):
     render_mock = Mock()
-    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals,
-                                                   node_styles=ctx.node_styles)
+    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals)
     add_singleton(render, render_mock)
 
-    if_node = If(Mock(), XmlNode('tkviews', 'If'), node_globals=InheritedDict({'key': 'value'}),
-                 node_styles=InheritedDict({'style': 'style'}))
+    if_node = If(Mock(), XmlNode('tkviews', 'If'), node_globals=InheritedDict({'key': 'value'}))
 
     request.cls.render = render_mock
     request.cls.if_node = if_node
@@ -263,12 +257,10 @@ class ForTests:
 @fixture
 def for_fixture(request):
     render_mock = Mock()
-    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals,
-                                                   node_styles=ctx.node_styles)
+    render_mock.side_effect = lambda ctx: TestNode(ctx.xml_node, node_globals=ctx.node_globals)
     add_singleton(render, render_mock)
 
-    for_node = For(Mock(), XmlNode('tkviews', 'For'), node_globals=InheritedDict({'key': 'value'}),
-                   node_styles=InheritedDict({'style': 'style'}))
+    for_node = For(Mock(), XmlNode('tkviews', 'For'), node_globals=InheritedDict({'key': 'value'}))
 
     request.cls.render = render_mock
     request.cls.for_node = for_node
@@ -301,7 +293,6 @@ class RenderForItemsTests:
                 assert child.node_globals.to_dictionary() == {'index': index, 'item': item,
                                                               **self.for_node.node_globals.to_dictionary(),
                                                               'node': child}
-                assert child.node_styles.to_dictionary() == self.for_node.node_styles.to_dictionary()
 
     @mark.parametrize('items, xml_children, new_items', [
         (['item1'], ['node1'], ['item2']),
@@ -332,4 +323,3 @@ class RenderForItemsTests:
                 assert child.node_globals.to_dictionary() == {'index': index, 'item': item,
                                                               **self.for_node.node_globals.to_dictionary(),
                                                               'node': child}
-                assert child.node_styles.to_dictionary() == self.for_node.node_styles.to_dictionary()

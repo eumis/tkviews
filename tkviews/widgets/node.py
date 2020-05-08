@@ -6,21 +6,15 @@ from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
 from pyviews.rendering import RenderingPipeline, get_type, create_instance
 
-from tkviews.core import TkNode, TkRenderingContext
+from tkviews.core import TkRenderingContext
 
 
-class Root(InstanceNode, TkNode):
+class Root(InstanceNode):
     """Wrapper under tkinter Root"""
 
     def __init__(self, xml_node: XmlNode):
         super().__init__(Tk(), xml_node)
         self._icon = None
-        self._node_styles = InheritedDict()
-
-    @property
-    def node_styles(self) -> InheritedDict:
-        """Returns node styles set"""
-        return self._node_styles
 
     @property
     def state(self):
@@ -60,18 +54,12 @@ def get_root_setup() -> RenderingPipeline:
     ])
 
 
-class WidgetNode(InstanceNode, TkNode):
+class WidgetNode(InstanceNode):
     """Wrapper under tkinter widget"""
 
     def __init__(self, widget: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+                 node_globals: InheritedDict = None):
         super().__init__(widget, xml_node, node_globals=node_globals)
-        self._node_styles = InheritedDict(node_styles)
-
-    @property
-    def node_styles(self) -> InheritedDict:
-        """Returns node styles set"""
-        return self._node_styles
 
     def bind(self, event, command):
         """Calls widget bind"""
@@ -131,7 +119,6 @@ def _get_child_context(xml_node: XmlNode, node: WidgetNode, _: TkRenderingContex
     child_context.parent_node = node
     child_context.master = node.instance
     child_context.node_globals = InheritedDict(node.node_globals)
-    child_context.node_styles = InheritedDict(node.node_styles)
     return child_context
 
 

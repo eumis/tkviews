@@ -3,6 +3,8 @@
 ## Dev
 - setup refactoring
 - fixed ttk rendering
+- styles refactoring
+- removed TtkNode
 
 ## 3.0.0
 

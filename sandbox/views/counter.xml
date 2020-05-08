@@ -13,7 +13,7 @@
 
                global:vm="{Counter()}">
 
-    <tkv:View name='styles'/>
+    <tkv:StylesView name='styles'/>
 
     <Frame call:pack='{args(fill="x")}'>
         <Button call:pack='{args(side="left")}'

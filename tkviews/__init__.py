@@ -6,7 +6,7 @@ from pyviews.setters import import_global, inject_global, call, set_global, Args
 from pyviews.code import Code
 
 from .containers import Container, View, For, If
-from .styles import Style, StyleItem, apply_styles
+from .styles import Style, StylesView, StyleItem, apply_styles
 from .widgets import WidgetNode, Root
 from .widgets import TtkStyle
 from .widgets import bind, bind_all, config

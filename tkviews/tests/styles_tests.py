@@ -1,13 +1,14 @@
-from unittest.mock import Mock, call
+from itertools import chain
+from unittest.mock import Mock
 
-from pytest import mark, raises, fixture
+from pytest import mark, raises
 from pyviews.core import XmlAttr, InheritedDict, Node
 from pyviews.pipes import call_set_attr
 
-from tkviews import WidgetNode
-from tkviews.core.rendering import TkRenderingContext
-from tkviews.styles import Style, StyleError, StyleItem, apply_styles
-from tkviews.styles import apply_style_items, apply_parent_items, store_to_node_styles
+from tkviews.core import TkRenderingContext
+from tkviews.styles import Style, StyleError, StylesView, apply_styles, STYLES_KEY
+from tkviews.styles import setup_node_styles, apply_style_items, apply_parent_items, store_to_globals
+from tkviews.styles import store_to_node_styles
 
 
 def some_setter():
@@ -18,67 +19,64 @@ def another_setter():
     """Another test setter"""
 
 
-class StyleItemTests:
-    @staticmethod
-    def test_apply():
-        """should call passed setter with parameters"""
-        setter, name, value = Mock(), 'name', 'value'
-        item, node = StyleItem(setter, name, value), Node(Mock())
-
-        item.apply(node)
-
-        assert setter.call_args == call(node, name, value)
+class SetupNodeStylesTest:
+    """setup_node_styles tests"""
 
     @staticmethod
-    @mark.parametrize('one, two, equal', [
-        (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'name', 1), True),
-        (StyleItem(some_setter, 'name', 'value'),
-         StyleItem(some_setter, 'name', 'other value'), True),
-        (StyleItem(some_setter, 'name', 1), StyleItem(some_setter, 'other name', 1), False),
-        (StyleItem(some_setter, 'name', 1), StyleItem(another_setter, 'name', 1), False)
-    ])
-    def test_eq(one, two, equal):
-        """should compare by name and setter"""
-        actual = one == two
+    def test_creates_node_styles():
+        """should add node_styles to parent globals"""
+        parent_node: Node = Mock(node_globals=InheritedDict())
 
-        assert actual == equal
+        setup_node_styles(Mock(), TkRenderingContext({'parent_node': parent_node}))
+        actual = parent_node.node_globals.get(STYLES_KEY)
+
+        assert isinstance(actual, InheritedDict)
+
+    @staticmethod
+    def test_does_not_create_if_exist():
+        """should not change parent node_globals if node_styles exist"""
+        node_styles = InheritedDict()
+        parent_node: Node = Mock(node_globals=InheritedDict({STYLES_KEY: node_styles}))
+
+        setup_node_styles(Mock(), TkRenderingContext({'parent_node': parent_node}))
+        actual = parent_node.node_globals[STYLES_KEY]
+
+        assert node_styles == actual
 
 
-@mark.usefixtures('container_fixture')
 class ApplyStyleItemsTests:
-    """apply_style_items() tests"""
+    """apply_style_items tests"""
 
     @staticmethod
     @mark.parametrize('attrs, expected', [
-        ([('one', '1', None)], [('one', '1', call_set_attr)]),
         ([('one', '{1}', None)], [('one', 1, call_set_attr)]),
         ([('one', ' value ', None)], [('one', ' value ', call_set_attr)]),
         ([('one', 'value', __name__ + '.some_setter')], [('one', 'value', some_setter)]),
         ([('one', 'value', __name__ + '.some_setter'),
           ('two', '{1 + 1}', None),
-          ('key', '', __name__ + '.another_setter')
-          ],
+          ('key', '', __name__ + '.another_setter')],
          [('one', 'value', some_setter),
           ('two', 2, call_set_attr),
-          ('key', '', another_setter)
-          ]
-         )
+          ('key', '', another_setter)]),
+        ([('one', 'value', __name__ + '.some_setter'),
+          ('one', '', __name__ + '.another_setter')],
+         [('one', 'value', some_setter),
+          ('one', '', another_setter)])
     ])
     def test_creates_style_items_from_attrs(attrs, expected):
-        """should create style item for every attribute"""
+        """apply_style_items should create style item for every attribute"""
         attrs = [XmlAttr('name', 'hoho')] + [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
         xml_node = Mock(attrs=attrs)
         node = Style(xml_node)
 
         apply_style_items(node, TkRenderingContext())
-        actual = {name: (item.name, item.value, item.setter) for name, item in node.items.items()}
-        expected = {item[0]: item for item in expected}
+        actual = [(item.name, item.value, item.setter) for name, item in node.items.items()]
 
         assert actual == expected
 
     @staticmethod
     def test_requires_name_attribute():
-        """should raise StyleError if name attribute is missing"""
+        """apply_style_items should raise StyleError if name attribute is missing"""
         xml_node = Mock(attrs=[])
         node = Style(xml_node)
 
@@ -87,13 +85,13 @@ class ApplyStyleItemsTests:
 
     @staticmethod
     @mark.parametrize('name', [
-        ''
-        'name'
-        'some name'
-        ' some name    '
+        '',
+        'name',
+        'some name',
+        ' some name    ',
     ])
     def test_sets_style_name(name):
-        """should set style name from attributes"""
+        """apply_style_items should set style name from attributes"""
         xml_node = Mock(attrs=[XmlAttr('name', name)])
         node = Style(xml_node)
 
@@ -102,81 +100,126 @@ class ApplyStyleItemsTests:
         assert node.name == name
 
 
-@mark.parametrize('items, parent_items, expected', [
-    ([('one', 'value'), ('key', '')],
-     [('one', 'parent value'), ('two', 2)],
-     [('one', 'value'), ('key', ''), ('two', 2)]
-     ),
-    ([],
-     [('one', 'value'), ('two', 2)],
-     [('one', 'value'), ('two', 2)]
-     ),
-    ([('one', 'value'), ('two', 2)],
-     [],
-     [('one', 'value'), ('two', 2)]
-     )
-])
-def test_apply_parent_items_(items, parent_items, expected):
-    """should add parent style items"""
-    node = Style(Mock())
-    node.items = {item[0]: item for item in items}
-    node_styles = InheritedDict({'parent': {item[0]: item for item in parent_items}})
-    expected = {item[0]: item for item in expected}
+class ApplyParentItemsTests:
+    """apply_parent_items tests"""
 
-    apply_parent_items(node, TkRenderingContext({
-        'parent_name': 'parent',
-        'node_styles': node_styles
-    }))
+    @mark.parametrize('items, parent_items, expected', [
+        ([('one', '{1}', None)], [], [('one', 1, call_set_attr)]),
+        ([('one', ' value ', None)], [], [('one', ' value ', call_set_attr)]),
+        ([('one', 'value', __name__ + '.some_setter')], [], [('one', 'value', some_setter)]),
+        ([('one', 'value', __name__ + '.some_setter'),
+          ('two', '{1 + 1}', None),
+          ('key', '', __name__ + '.another_setter')],
+         [],
+         [('one', 'value', some_setter),
+          ('two', 2, call_set_attr),
+          ('key', '', another_setter)]),
+        ([('one', 'value', __name__ + '.some_setter'),
+          ('one', '', __name__ + '.another_setter')],
+         [],
+         [('one', 'value', some_setter),
+          ('one', '', another_setter)])
+    ])
+    def test_uses_parent_style_items(self, items, parent_items, expected):
+        """apply_parent_items should add parent style items"""
+        node = self._get_style_node(items)
+        parent_node = self._get_style_node(parent_items)
 
-    assert node.items == expected
+        apply_parent_items(node, TkRenderingContext({'parent_node': parent_node}))
+        actual = [(item.name, item.value, item.setter) for name, item in node.items.items()]
+
+        assert actual == expected
+
+    @staticmethod
+    def _get_style_node(attrs):
+        attrs = [XmlAttr('name', 'hoho')] + [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
+        xml_node = Mock(attrs=attrs)
+        node = Style(xml_node)
+        apply_style_items(node, TkRenderingContext())
+        return node
+
+    @staticmethod
+    @mark.parametrize('parent_node', [None, Node(Mock())])
+    def test_skips_not_style_parent(parent_node):
+        """apply_parent_items do nothing if parent is not Style"""
+        items = {'item': ('item', 'value')}
+        node = Style(Mock())
+        node.items = items.copy()
+
+        apply_parent_items(node, TkRenderingContext({'parent_node': parent_node}))
+
+        assert items == node.items
 
 
 def test_store_to_node_styles():
-    """should store style items to node_styles"""
+    """store_to_node_styles should store style items to node_styles"""
     node_styles = InheritedDict()
     node = Style(Mock())
     node.items = Mock()
+    parent_node = Mock(node_globals=InheritedDict({STYLES_KEY: node_styles}))
 
-    store_to_node_styles(node, TkRenderingContext({'node_styles': node_styles}))
+    store_to_node_styles(node, TkRenderingContext({'parent_node': parent_node}))
 
     assert node_styles[node.name] == node.items.values()
 
 
-@fixture
-def apply_styles_fixture(request):
-    request.cls.node = WidgetNode(Mock(), Mock(), node_styles=InheritedDict({
-        'one': [Mock(), Mock()],
-        'two': [Mock(), Mock(), Mock()],
-        'three': [Mock()]
-    }))
+@mark.parametrize('parent_styles, view_styles, expected', [
+    (None, {}, {}),
+    ({}, {}, {}),
+    (None, {'key': 'style'}, {'key': 'style'}),
+    ({}, {'key': 'style'}, {'key': 'style'}),
+    ({'key': 'style'}, {'style': 'style'}, {'key': 'style', 'style': 'style'}),
+    ({'key': 'parent style'}, {'key': 'view style'}, {'key': 'view style'})
+])
+def test_store_to_globals(parent_styles, view_styles, expected):
+    """should copy node styles from view root to parent globals"""
+    parent_node = Mock(node_globals=InheritedDict())
+    if parent_styles:
+        parent_node.node_globals[STYLES_KEY] = InheritedDict(parent_styles)
+    node = StylesView(Mock(), Mock())
+    child = Mock(node_globals=InheritedDict())
+    child.node_globals[STYLES_KEY] = InheritedDict(view_styles)
+    node.add_child(child)
+
+    store_to_globals(node, TkRenderingContext({'parent_node': parent_node}))
+    actual = parent_node.node_globals[STYLES_KEY].to_dictionary()
+
+    assert expected == actual
 
 
-@mark.usefixtures('apply_styles_fixture')
-class ApplyStylesTests:
-    """apply_styles() setter tests"""
+class StyleTests:
+    """style tests"""
 
-    @mark.parametrize('styles, keys', [
+    @staticmethod
+    @mark.parametrize('style_keys, expected_keys', [
+        ('one, two', ['one', 'two']),
+        ('two, one', ['one', 'two']),
+        ('one', ['one']),
         ('', []),
-        (None, []),
-        ('one', ['one']),
-        ('one', ['one']),
-        ('one,two', ['one', 'two']),
-        ('one,two,three', ['one', 'two', 'three']),
-        ([], []),
+        (['one', 'two'], ['one', 'two']),
+        (['two', 'one'], ['one', 'two']),
         (['one'], ['one']),
-        (['one', 'two'], ['one', 'two'])
+        ([''], ['']),
+        ([], []),
     ])
-    def test_applies_styles(self, styles, keys):
-        """Parses input and applies styles"""
-        apply_styles(self.node, '', styles)
-        node_styles = self.node.node_styles.to_dictionary()
-        actual = {key for key, items in node_styles.items() if
-                  all([i.apply.called for i in items])}
+    def test_applies_style_items(style_keys, expected_keys):
+        """should apply style items"""
+        node = Mock(node_globals=InheritedDict())
+        node_styles = {key: [Mock(apply=Mock())] for key in expected_keys}
+        node.node_globals[STYLES_KEY] = InheritedDict(source=node_styles)
 
-        assert actual == set(keys)
+        apply_styles(node, '', style_keys)
+        called = True
+        for item in chain(*node_styles.values()):
+            called = item.apply.called and called
 
-    @mark.parametrize('styles', ['four', 'one, four'])
-    def test_raises_for_unknown_key(self, styles):
-        """should raise StyleError for unknown style"""
+        assert called
+
+    @staticmethod
+    def test_raises_style_error():
+        """should raise StyleError if style is not found"""
+        node = Mock(node_globals=InheritedDict())
+        node.node_globals[STYLES_KEY] = InheritedDict()
+
         with raises(StyleError):
-            apply_styles(self.node, '', styles)
+            apply_styles(node, '', ['key'])

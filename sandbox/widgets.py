@@ -1,17 +1,17 @@
 from tkinter import Frame, Canvas, Scrollbar
+
+from pyviews.core import Node
 from pyviews.core.observable import InheritedDict
 from pyviews.core.xml import XmlNode
 from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering.pipeline import RenderingPipeline
-from pyviews.core import Node
 
-from tkviews.core import TkNode
 from tkviews.core.rendering import TkRenderingContext
 
 
-class Scroll(Node, TkNode):
+class Scroll(Node):
     def __init__(self, master, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+                 node_globals: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
         self._frame = self._create_scroll_frame(master)
         self._canvas = self._create_canvas(self._frame)
@@ -22,7 +22,6 @@ class Scroll(Node, TkNode):
         self._canvas.bind_all('<MouseWheel>', self._on_mouse_scroll)
         self._canvas.bind('<Enter>', lambda event: self._set_canvas_active())
         self._canvas.bind('<Leave>', lambda event: self._set_canvas_inactive())
-        self._node_styles = node_styles
 
     def pack(self, *args, **kwargs):
         self._frame.pack(*args, **kwargs)
@@ -80,11 +79,6 @@ class Scroll(Node, TkNode):
             Scroll.active_canvas = None
 
     @property
-    def node_styles(self) -> InheritedDict:
-        """Returns node styles"""
-        return self._node_styles
-
-    @property
     def container(self) -> Frame:
         return self._container
 
@@ -133,7 +127,6 @@ def _get_child_context(xml_node: XmlNode, node: Scroll, _: TkRenderingContext):
     child_context = TkRenderingContext()
     child_context.xml_node = xml_node
     child_context.parent_node = node
-    child_context.node_styles = node.node_styles
     child_context.node_globals = node.node_globals
     child_context.master = node.container
     return child_context

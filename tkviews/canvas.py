@@ -9,30 +9,23 @@ from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes
 from pyviews.rendering import RenderingPipeline, RenderingError
 
-from tkviews.core import TkNode
 from tkviews.core.rendering import TkRenderingContext
 
 
-class CanvasItemNode(Node, TkNode, ABC):
+class CanvasItemNode(Node, ABC):
     """Base class for wrappers"""
 
     def __init__(self, master: Canvas, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+                 node_globals: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
         self._canvas = master
         self._item_id = None
-        self._node_styles = node_styles
         self.place = []
 
     @property
     def item_id(self):
         """id returned from create method of canvas"""
         return self._item_id
-
-    @property
-    def node_styles(self):
-        """Returns node_styles"""
-        return self._node_styles
 
     def create(self, **options):
         """Creates canvas element"""
@@ -136,8 +129,7 @@ def create_canvas_node(context: TkRenderingContext, node_type) -> Node:
     """Creates node_type instance"""
     if not isinstance(context.master, Canvas):
         raise RenderingError(f'{node_type.__name__} parent should be Canvas')
-    return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals,
-                     context.node_styles)
+    return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals)
 
 
 def setup_temp_setter(node: CanvasItemNode, _: TkRenderingContext):

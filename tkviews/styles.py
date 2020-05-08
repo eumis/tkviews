@@ -1,13 +1,16 @@
-"""Nodes for storing config options for widgets"""
+"""Contains rendering steps for style nodes"""
+from tkinter import Widget
+from typing import Any, List
 
-from typing import Any, Union, List
-
-from pyviews.core import PyViewsError, XmlNode, Node, InheritedDict, Setter, XmlAttr
-from pyviews.pipes import render_children
+from pyviews.core import PyViewsError, Setter, Node, XmlNode, InheritedDict, XmlAttr
+from pyviews.expression import parse_expression, is_expression, execute
+from pyviews.pipes import render_children, get_setter, apply_attributes
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.core import TkRenderingContext, render_attribute
-from tkviews.widgets import WidgetNode
+from tkviews.containers import render_view_content
+from tkviews.core import TkRenderingContext
+
+STYLES_KEY = '_node_styles'
 
 
 class StyleError(PyViewsError):
@@ -57,14 +60,21 @@ class Style(Node):
         self.items = {}
 
 
-def get_style_setup() -> RenderingPipeline:
-    """Returns setup for style node"""
+def get_style_pipeline() -> RenderingPipeline:
+    """Returns pipeline for style node"""
     return RenderingPipeline(pipes=[
+        setup_node_styles,
         apply_style_items,
         apply_parent_items,
         store_to_node_styles,
-        lambda style, ctx: render_children(style, ctx, _get_style_child_context)
+        render_child_styles
     ])
+
+
+def setup_node_styles(_: Style, context: TkRenderingContext):
+    """Initializes node styles"""
+    if STYLES_KEY not in context.parent_node.node_globals:
+        context.parent_node.node_globals[STYLES_KEY] = InheritedDict()
 
 
 def apply_style_items(node: Style, _: TkRenderingContext):
@@ -74,54 +84,89 @@ def apply_style_items(node: Style, _: TkRenderingContext):
         node.name = next(attr.value for attr in attrs if attr.name == 'name')
     except StopIteration:
         raise StyleError('Style name is missing', node.xml_node.view_info)
-    node.items = {attr.name: _get_style_item(node, attr) for attr in attrs if attr.name != 'name'}
+    node.items = {
+        f'{attr.namespace}{attr.name}':
+            _get_style_item(node, attr) for attr in attrs if attr.name != 'name'
+    }
 
 
-def _get_style_item(node: Style, xml_attr: XmlAttr):
-    setter, value = render_attribute(node, xml_attr)
-    return StyleItem(setter, xml_attr.name, value)
+def _get_style_item(node: Style, attr: XmlAttr):
+    setter = get_setter(attr)
+    value = attr.value if attr.value else ''
+    if is_expression(value):
+        expression_body = parse_expression(value).body
+        value = execute(expression_body, node.node_globals.to_dictionary())
+    return StyleItem(setter, attr.name, value)
 
 
 def apply_parent_items(node: Style, context: TkRenderingContext):
     """Sets style items from parent style"""
-    parent_name = context.get('parent_name', None)
-    if parent_name:
-        parent_items = context.node_styles[parent_name]
-        node.items = {**parent_items, **node.items}
+    if isinstance(context.parent_node, Style):
+        node.items = {**context.parent_node.items, **node.items}
 
 
 def store_to_node_styles(node: Style, context: TkRenderingContext):
     """Store styles to node styles"""
-    context.node_styles[node.name] = node.items.values()
+    _get_styles(context)[node.name] = node.items.values()
 
 
-def _get_style_child_context(xml_node: XmlNode, node: Style,
-                             context: TkRenderingContext) -> TkRenderingContext:
+def _get_styles(context: TkRenderingContext) -> InheritedDict:
+    return context.parent_node.node_globals[STYLES_KEY]
+
+
+def render_child_styles(node: Style, context: TkRenderingContext):
     """Renders child styles"""
-    child_context = TkRenderingContext()
-    child_context.xml_node = xml_node
-    child_context.parent_node = node
-    child_context['parent_name'] = node.name
-    child_context.node_globals = InheritedDict(node.node_globals)
-    child_context.node_styles = context.node_styles
-    return child_context
+    render_children(node, context, lambda x, n, ctx: TkRenderingContext({
+        'parent_node': n,
+        'node_globals': InheritedDict(node.node_globals),
+        'node_styles': _get_styles(context),
+        'xml_node': x
+    }))
 
 
-def apply_styles(node: WidgetNode, _: str, style_keys: Union[str, List[str]]):
-    """Setter. Applies styles to node"""
-    if not style_keys:
-        return
+class StylesView(Node):
+    """Loads styles from separate file"""
+
+    def __init__(self, master: Widget, xml_node: XmlNode, node_globals: InheritedDict = None):
+        super().__init__(xml_node, node_globals=node_globals)
+        self.name = None
+        self.master = master
+
+    def set_content(self, content: Node):
+        """Destroys current """
+        self._children = [content]
+
+
+def get_styles_view_pipeline() -> RenderingPipeline:
+    """Returns setup for container"""
+    return RenderingPipeline(pipes=[
+        apply_attributes,
+        render_view_content,
+        store_to_globals
+    ])
+
+
+def store_to_globals(view: StylesView, context: TkRenderingContext):
+    """Stores styles to parent node globals"""
+    child: Node = view.children[0]
+    styles: InheritedDict = child.node_globals[STYLES_KEY]
+    if STYLES_KEY in context.parent_node.node_globals:
+        parent_styles = context.parent_node.node_globals[STYLES_KEY]
+        merged_styles = {**parent_styles.to_dictionary(), **styles.to_dictionary()}
+        styles = InheritedDict(merged_styles)
+    context.parent_node.node_globals[STYLES_KEY] = styles
+
+
+def apply_styles(node: Node, _: str, keys: List[str]):
+    """Applies styles to node"""
+    if isinstance(keys, str):
+        keys = [key.strip() for key in keys.split(',') if key]
     try:
-        _apply_styles(node, style_keys)
+        node_styles = node.node_globals[STYLES_KEY]
+        for key in keys:
+            for item in node_styles[key]:
+                item.apply(node)
     except KeyError as key_error:
         error = StyleError('Style is not found')
         error.add_info('Style name', key_error.args[0])
         raise error from key_error
-
-
-def _apply_styles(node, style_keys: Union[str, List[str]]):
-    keys = [key.strip() for key in style_keys.split(',')] \
-        if isinstance(style_keys, str) else style_keys
-    for key in [key for key in keys if key]:
-        for item in node.node_styles[key]:
-            item.apply(node)

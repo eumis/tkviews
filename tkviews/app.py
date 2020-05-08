@@ -10,7 +10,7 @@ from pyviews.rendering.views import render_view
 
 from tkviews.containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
 from tkviews.core.rendering import TkRenderingContext
-from tkviews.styles import get_style_setup
+from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
 from tkviews.widgets import get_root_setup, get_widget_setup, Root
 from tkviews.widgets import use_variables_binding
 from tkviews.widgets.ttk import get_ttk_style_setup
@@ -35,7 +35,8 @@ def use_tkviews_pipelines():
     use_pipeline(get_for_setup(), 'tkviews.For')
     use_pipeline(get_if_setup(), 'tkviews.If')
 
-    use_pipeline(get_style_setup(), 'tkviews.Style')
+    use_pipeline(get_style_pipeline(), 'tkviews.Style')
+    use_pipeline(get_styles_view_pipeline(), 'tkviews.StylesView')
     use_pipeline(get_ttk_style_setup(), 'tkviews.TtkStyle')
 
     use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')

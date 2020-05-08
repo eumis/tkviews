@@ -11,27 +11,21 @@ from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering import RenderingPipeline, render
 from pyviews.rendering.views import render_view
 
-from tkviews.core import TkNode
 from tkviews.core.rendering import TkRenderingContext
 
 
-class Container(Node, TkNode):
+class Container(Node):
     """Used to combine some xml elements"""
 
     def __init__(self, master: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
+                 node_globals: InheritedDict = None):
         super().__init__(xml_node, node_globals=node_globals)
         self._master = master
-        self._node_styles = node_styles
 
     @property
     def master(self):
         """Master widget"""
         return self._master
-
-    @property
-    def node_styles(self):
-        return self._node_styles
 
 
 def get_container_setup() -> RenderingPipeline:
@@ -51,8 +45,8 @@ class View(Container):
     """Loads xml from another file"""
 
     def __init__(self, master: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
-        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+                 node_globals: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals)
         self._name = None
         self.name_changed = lambda view, name, previous_name: None
 
@@ -104,8 +98,8 @@ class If(Container):
     """Renders children if condition is True"""
 
     def __init__(self, master: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
-        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+                 node_globals: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals)
         self._condition = False
         self.condition_changed = lambda node, cond, old_cond: None
 
@@ -152,8 +146,8 @@ class For(Container):
     """Renders children for every item in items collection"""
 
     def __init__(self, master: Widget, xml_node: XmlNode,
-                 node_globals: InheritedDict = None, node_styles: InheritedDict = None):
-        super().__init__(master, xml_node, node_globals=node_globals, node_styles=node_styles)
+                 node_globals: InheritedDict = None):
+        super().__init__(master, xml_node, node_globals=node_globals)
         self._items = []
         self.items_changed = lambda node, items, old_items: None
 
@@ -252,6 +246,5 @@ def _get_child_context(child_xml_node: XmlNode, node: Container, _=None) -> TkRe
         'parent_node': node,
         'master': node.master,
         'node_globals': InheritedDict(node.node_globals),
-        'node_styles': node.node_styles,
         'xml_node': child_xml_node
     })

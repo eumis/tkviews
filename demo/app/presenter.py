@@ -12,7 +12,8 @@ class AppPresenter(ObservableEntity):
         super().__init__()
         self._demo_tree: Treeview = cast(Treeview, None)
         self._demos = [
-            Demo("Widgets", "Button")
+            Demo("Widgets", "Button", "button/button"),
+            Demo("Widgets", "Checkbutton", "checkbutton/checkbutton")
         ]
         self.demo_view = None
 

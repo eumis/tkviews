@@ -5,14 +5,17 @@
           xmlns:import='tkviews.import_global'
           xmlns:global='tkviews.set_global'
           xmlns:call='tkviews.call'
+          xmlns:styles='tkviews.apply_styles'
 
           import:args="tkviews.call_args"
           import:AppPresenter="app.presenter.AppPresenter"
 
           background="black"
           global:presenter="{AppPresenter()}">
-    <tkv:TtkStyle name="demo.Treeview"
-                  background="grey"/>
+
+    <tkv:TtkStyle name="demo.Treeview"/>
+    <tkv:View name="styles"/>
+
     <Frame call:pack="{args(fill='both', expand=1)}"
            background="red"
            global:frame="once:{node.instance}"
@@ -21,15 +24,15 @@
             frame.grid_columnconfigure(index=0, minsize=1)
             frame.grid_columnconfigure(index=1, weight=1)
         </tkv:Code>
+
         <ttk:Treeview global:demo_tree="{node.instance}"
-                      call:grid='{args(row=0, column=0, sticky="nwes")}'
-                      style="demo.Treeview">
+                      call:grid='{args(row=0, column=0, sticky="nwes")}'>
             <tkv:Code>
                 presenter.set_demo_tree(demo_tree)
             </tkv:Code>
         </ttk:Treeview>
-        <Frame call:grid='{args(row=0, column=1, sticky="nwes")}'
-               background="yellow">
+
+        <Frame call:grid='{args(row=0, column=1, sticky="nwes")}'>
             <tkv:View name="{presenter.demo_view if presenter.demo_view else ''}"/>
         </Frame>
     </Frame>

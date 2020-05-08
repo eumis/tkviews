@@ -1,5 +1,5 @@
 class Demo:
-    def __init__(self, section: str, name: str):
+    def __init__(self, section: str, name: str, view: str = None):
         self.section: str = section
         self.name: str = name
-        self.view = f'{name.lower()}/view'
+        self.view = view if view else f'{name.lower()}/view'

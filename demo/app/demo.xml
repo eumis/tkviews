@@ -5,7 +5,6 @@
           xmlns:import='tkviews.import_global'
           xmlns:global='tkviews.set_global'
           xmlns:call='tkviews.call'
-          xmlns:styles='tkviews.apply_styles'
 
           import:args="tkviews.call_args"
           import:AppPresenter="app.presenter.AppPresenter"
@@ -14,7 +13,7 @@
           global:presenter="{AppPresenter()}">
 
     <tkv:TtkStyle name="demo.Treeview"/>
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <Frame call:pack="{args(fill='both', expand=1)}"
            background="red"

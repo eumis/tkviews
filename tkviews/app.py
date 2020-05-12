@@ -8,6 +8,7 @@ from pyviews.rendering import RenderingPipeline, use_rendering
 from pyviews.rendering.pipeline import use_pipeline
 from pyviews.rendering.views import render_view
 
+from tkviews.canvas import get_canvas_pipeline
 from tkviews.containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
 from tkviews.core.rendering import TkRenderingContext
 from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
@@ -38,6 +39,7 @@ def use_tkviews_pipelines():
     use_pipeline(get_style_pipeline(), 'tkviews.Style')
     use_pipeline(get_styles_view_pipeline(), 'tkviews.StylesView')
     use_pipeline(get_ttk_style_setup(), 'tkviews.TtkStyle')
+    use_pipeline(get_canvas_pipeline(), 'tkviews.canvas')
 
     use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')
 

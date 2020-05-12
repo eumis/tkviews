@@ -10,7 +10,12 @@
           import:AppPresenter="app.presenter.AppPresenter"
 
           background="black"
-          global:presenter="{AppPresenter()}">
+          global:presenter="{AppPresenter()}"
+          global:root="{node.instance}">
+
+    <tkv:Code>
+        root.attributes('-zoomed', True)
+    </tkv:Code>
 
     <tkv:TtkStyle name="demo.Treeview"/>
     <tkv:StylesView name="styles"/>

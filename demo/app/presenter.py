@@ -13,9 +13,11 @@ class AppPresenter(ObservableEntity):
         self._demo_tree: Treeview = cast(Treeview, None)
         self._demos = [
             Demo("Widgets", "Button", "button/button"),
+            Demo("Widgets", "Canvas", "canvas/canvas"),
             Demo("Widgets", "Checkbutton", "checkbutton/checkbutton")
         ]
         self.demo_view = None
+        self._default_view = "Canvas"
 
     def set_demo_tree(self, demo_tree: Treeview):
         self._demo_tree = demo_tree
@@ -23,6 +25,8 @@ class AppPresenter(ObservableEntity):
             section_item = self._demo_tree.insert("", i, section, text=section)
             for demo_i, demo in enumerate(demos):
                 self._demo_tree.insert(section_item, demo_i, text=demo.name, values=[demo.view])
+                if demo.name == self._default_view:
+                    self.demo_view = demo.view
         demo_tree.bind('<<TreeviewSelect>>', lambda e: self._open_selected())
 
     def _open_selected(self):

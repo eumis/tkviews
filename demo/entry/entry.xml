@@ -1,0 +1,39 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:call="tkviews.call"
+               xmlns:global='tkviews.set_global'
+               xmlns:styles="tkviews.apply_styles"
+               import:EntryViewModel="entry.viewmodel.EntryViewModel"
+               global:vm="once:{EntryViewModel()}">
+    <tkv:View name="styles"/>
+
+    <LabelFrame styles:='packed'
+                text='Entry string binding'>
+        <Entry styles:='packed'
+               textvariable='{{vm.value}}'>
+        </Entry>
+
+        <Label styles:='packed'>
+            {vm.value}
+        </Label>
+
+        <Entry styles:='packed'
+               textvariable='{{vm.value}}'>
+        </Entry>
+    </LabelFrame>
+
+    <LabelFrame styles:='packed'
+                text='password field'>
+        <Entry styles:='packed'
+               show="*"/>
+    </LabelFrame>
+
+    <LabelFrame styles:='packed'
+                text='readonly'>
+        <Entry styles:='packed'
+               state="readonly"
+               import:StringVar="tkinter.StringVar"
+               textvariable="{StringVar(value='readonly field')}"/>
+    </LabelFrame>
+</tkv:Container>

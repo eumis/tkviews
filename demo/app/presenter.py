@@ -14,10 +14,11 @@ class AppPresenter(ObservableEntity):
         self._demos = [
             Demo("Widgets", "Button", "button/button"),
             Demo("Widgets", "Canvas", "canvas/canvas"),
-            Demo("Widgets", "Checkbutton", "checkbutton/checkbutton")
+            Demo("Widgets", "Checkbutton", "checkbutton/checkbutton"),
+            Demo("Widgets", "Entry", "entry/entry")
         ]
         self.demo_view = None
-        self._default_view = "Canvas"
+        self._default_view = "Entry"
 
     def set_demo_tree(self, demo_tree: Treeview):
         self._demo_tree = demo_tree

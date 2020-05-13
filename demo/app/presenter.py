@@ -16,7 +16,8 @@ class AppPresenter(ObservableEntity):
             Demo("Widgets", "Canvas", "canvas/canvas"),
             Demo("Widgets", "Checkbutton", "checkbutton/checkbutton"),
             Demo("Widgets", "Entry", "entry/entry"),
-            Demo("Widgets", "Frame", "frame/frame")
+            Demo("Widgets", "Frame", "frame/frame"),
+            Demo("Widgets", "Label", "label/label")
         ]
         self.demo_view = None
         self._default_demo = self._demos[-1]

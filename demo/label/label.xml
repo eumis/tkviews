@@ -1,0 +1,28 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:canvas="tkviews.canvas"
+               xmlns:styles="tkviews.apply_styles">
+    <tkv:View name="styles"/>
+    <tkv:Style name="label_size"
+               width="{50}"
+               height="{5}"/>
+
+
+    <Label styles:="packed,label_size"
+           text="left text"
+           foreground="blue"
+           background="gray"
+           anchor="nw"/>
+
+    <Label styles:="packed,label_size"
+           text="hover me"
+           background="gray"
+           activeforeground="blue"/>
+
+    <Label styles:="packed,label_size"
+           background="gray"
+           text="Helvetica 24 bold"
+           font="Helvetica 24 bold"
+           anchor="n"/>
+
+</tkv:Container>

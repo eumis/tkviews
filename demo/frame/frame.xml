@@ -1,11 +1,6 @@
 <tkv:Container xmlns="tkinter"
                xmlns:tkv="tkviews"
-               xmlns:import="tkviews.import_global"
-               xmlns:call="tkviews.call"
-               xmlns:global='tkviews.set_global'
-               xmlns:styles="tkviews.apply_styles"
-               import:EntryViewModel="entry.viewmodel.EntryViewModel"
-               global:vm="once:{EntryViewModel()}">
+               xmlns:styles="tkviews.apply_styles">
     <tkv:View name="styles"/>
 
     <Frame styles:="packed"

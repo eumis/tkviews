@@ -1,0 +1,15 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:styles="tkviews.apply_styles">
+    <tkv:View name="styles"/>
+
+    <LabelFrame styles:="packed"
+                text="Label text frame"
+                background="yellow"
+                height="{300}"
+                width="{500}"
+                borderwidth="{5}"
+                relief="groove"
+    />
+
+</tkv:Container>

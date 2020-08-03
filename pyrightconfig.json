@@ -1,0 +1,10 @@
+{
+    "venvPath": "/home/three/projects/tkviews",
+    "ignore": ["**/**"],
+    "executionEnvironments": [
+        {
+            "root": "/home/three/projects/tkviews",
+            "venv": "venv"
+        }
+    ]
+}

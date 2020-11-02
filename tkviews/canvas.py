@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from functools import partial
 from tkinter import Canvas
-from typing import Type, cast
+from typing import cast
 
 from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes

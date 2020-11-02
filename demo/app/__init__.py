@@ -1,1 +1,0 @@
-from .presenter import AppPresenter

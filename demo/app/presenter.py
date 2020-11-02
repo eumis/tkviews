@@ -1,3 +1,4 @@
+"""Demo application presenter"""
 from itertools import groupby
 from tkinter.ttk import Treeview
 from typing import cast
@@ -8,6 +9,8 @@ from demo.model import Demo
 
 
 class AppPresenter(ObservableEntity):
+    """Demo presenter"""
+
     def __init__(self):
         super().__init__()
         self._demo_tree: Treeview = cast(Treeview, None)
@@ -24,6 +27,7 @@ class AppPresenter(ObservableEntity):
         self._default_demo = self._demos[-1]
 
     def set_demo_tree(self, demo_tree: Treeview):
+        """Add demo items to tree"""
         self._demo_tree = demo_tree
         for i, (section, demos) in enumerate(groupby(self._demos, lambda d: d.section)):
             section_item = self._demo_tree.insert("", i, section, text=section)

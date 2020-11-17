@@ -2,19 +2,21 @@
 
 from typing import cast
 
+from injectool import add_singleton
 from pyviews.binding import use_binding
 from pyviews.code import run_code
-from pyviews.rendering import RenderingPipeline, use_rendering
+from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, \
+    get_if_pipeline
+from pyviews.rendering import RenderingPipeline, use_rendering, get_child_context
 from pyviews.rendering.pipeline import use_pipeline
 from pyviews.rendering.views import render_view
 
 from tkviews.canvas import get_canvas_pipeline
-from tkviews.containers import get_container_setup, get_view_setup, get_for_setup, get_if_setup
-from tkviews.core.rendering import TkRenderingContext
+from tkviews.core.rendering import TkRenderingContext, get_tk_child_context
 from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
-from tkviews.widgets import get_root_setup, get_widget_setup, Root
+from tkviews.widgets import get_root_pipeline, get_widget_pipeline, Root
 from tkviews.widgets import use_variables_binding
-from tkviews.widgets.ttk import get_ttk_style_setup
+from tkviews.widgets.ttk import get_ttk_style_pipeline
 
 
 def register_dependencies():
@@ -27,18 +29,19 @@ def register_dependencies():
 
 def use_tkviews_pipelines():
     """Adds rendering pipelines for tkviews"""
-    use_pipeline(get_root_setup(), 'tkviews.Root')
-    use_pipeline(get_widget_setup(), 'tkinter')
-    use_pipeline(get_widget_setup(), 'tkinter.ttk')
+    add_singleton(get_child_context, get_tk_child_context)
+    use_pipeline(get_root_pipeline(), 'tkviews.Root')
+    use_pipeline(get_widget_pipeline(), 'tkinter')
+    use_pipeline(get_widget_pipeline(), 'tkinter.ttk')
 
-    use_pipeline(get_container_setup(), 'tkviews.Container')
-    use_pipeline(get_view_setup(), 'tkviews.View')
-    use_pipeline(get_for_setup(), 'tkviews.For')
-    use_pipeline(get_if_setup(), 'tkviews.If')
+    use_pipeline(get_container_pipeline(), 'tkviews.Container')
+    use_pipeline(get_view_pipeline(), 'tkviews.View')
+    use_pipeline(get_for_pipeline(), 'tkviews.For')
+    use_pipeline(get_if_pipeline(), 'tkviews.If')
 
     use_pipeline(get_style_pipeline(), 'tkviews.Style')
     use_pipeline(get_styles_view_pipeline(), 'tkviews.StylesView')
-    use_pipeline(get_ttk_style_setup(), 'tkviews.TtkStyle')
+    use_pipeline(get_ttk_style_pipeline(), 'tkviews.TtkStyle')
     use_pipeline(get_canvas_pipeline(), 'tkviews.canvas')
 
     use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')

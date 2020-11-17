@@ -31,13 +31,13 @@ def theme_use(_node: Node, key: str, _value: Any):
     ttk_style.theme_use(key)
 
 
-def get_ttk_style_setup() -> RenderingPipeline:
+def get_ttk_style_pipeline() -> RenderingPipeline:
     """Returns RenderingPipeline for TtkStyle"""
     return RenderingPipeline([
         setup_value_setter,
         apply_style_attributes,
         configure
-    ])
+    ], name='ttk style pipeline')
 
 
 def _create_ttk_style_node(context: TkRenderingContext):

@@ -7,7 +7,8 @@ from pyviews.expression import parse_expression, is_expression, execute
 from pyviews.pipes import render_children, get_setter, apply_attributes
 from pyviews.rendering import RenderingPipeline
 
-from tkviews.containers import render_view_content
+from pyviews.containers import render_view_content
+
 from tkviews.core import TkRenderingContext
 
 STYLES_KEY = '_node_styles'
@@ -68,7 +69,7 @@ def get_style_pipeline() -> RenderingPipeline:
         apply_parent_items,
         store_to_node_styles,
         render_child_styles
-    ])
+    ], name='styles pipeline')
 
 
 def setup_node_styles(_: Style, context: TkRenderingContext):
@@ -143,7 +144,7 @@ def get_styles_view_pipeline() -> RenderingPipeline:
         apply_attributes,
         render_view_content,
         store_to_globals
-    ])
+    ], name='styles view pipeline')
 
 
 def store_to_globals(view: StylesView, context: TkRenderingContext):

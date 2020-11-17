@@ -1,10 +1,14 @@
 # Changelog
 
 ## Dev
+
 - setup refactoring
 - fixed ttk rendering
 - styles refactoring
 - removed TtkNode
+- added presenter
+- added pipeline name to display in error info
+- added getting current rendering context
 
 ## 3.0.0
 

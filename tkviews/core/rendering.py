@@ -3,7 +3,7 @@
 from tkinter import Widget
 from typing import Tuple, Any
 
-from pyviews.core import Node, XmlAttr, Setter
+from pyviews.core import Node, XmlAttr, Setter, XmlNode, InheritedDict
 from pyviews.expression import is_expression, parse_expression, Expression, execute
 from pyviews.pipes import get_setter
 from pyviews.rendering import RenderingContext
@@ -30,3 +30,14 @@ def render_attribute(node: Node, xml_attr: XmlAttr) -> Tuple[Setter, Any]:
         expression_ = Expression(parse_expression(value)[1])
         value = execute(expression_, node.node_globals.to_dictionary())
     return setter, value
+
+
+def get_tk_child_context(child_xml_node: XmlNode, node: Node,
+                         context: TkRenderingContext) -> TkRenderingContext:
+    """Return rendering context for child node"""
+    return TkRenderingContext({
+        'parent_node': node,
+        'master': context.master,
+        'node_globals': InheritedDict(node.node_globals),
+        'xml_node': child_xml_node
+    })

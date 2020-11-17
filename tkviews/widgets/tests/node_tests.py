@@ -7,7 +7,7 @@ from pyviews.rendering import RenderingPipeline
 
 from tkviews.core import TkRenderingContext
 from tkviews.widgets import node
-from tkviews.widgets.node import WidgetNode, Root, get_widget_setup
+from tkviews.widgets.node import WidgetNode, Root, get_widget_pipeline
 from tkviews.widgets.node import setup_widget_setter, setup_widget_destroy, apply_text
 
 
@@ -116,7 +116,7 @@ class WidgetNodeTests:
 
 def test_get_widget_setup():
     """should return rendering pipeline"""
-    actual = get_widget_setup()
+    actual = get_widget_pipeline()
 
     assert actual is not None
     assert isinstance(actual, RenderingPipeline)

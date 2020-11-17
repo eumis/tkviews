@@ -122,7 +122,7 @@ def get_canvas_pipeline(item_type: Type[CanvasItemNode]) -> RenderingPipeline:
         setup_event_binding,
         apply_temp_events,
         clear_temp
-    ], create_node=lambda ctx: create_canvas_node(ctx, item_type))
+    ], create_node=lambda ctx: create_canvas_node(ctx, item_type), name=f'{item_type} pipeline')
 
 
 def create_canvas_node(context: TkRenderingContext, node_type) -> Node:

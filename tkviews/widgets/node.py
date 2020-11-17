@@ -44,14 +44,14 @@ class Root(InstanceNode):
         self.instance.bind_all(event, command)
 
 
-def get_root_setup() -> RenderingPipeline:
+def get_root_pipeline() -> RenderingPipeline:
     """Returns setup for root"""
     return RenderingPipeline(pipes=[
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         render_widget_children
-    ])
+    ], name='root pipeline')
 
 
 class WidgetNode(InstanceNode):
@@ -70,15 +70,15 @@ class WidgetNode(InstanceNode):
         self.instance.bind_all(event, command)
 
 
-def get_widget_setup() -> RenderingPipeline:
+def get_widget_pipeline() -> RenderingPipeline:
     """Returns setup for widget"""
-    return RenderingPipeline([
+    return RenderingPipeline(pipes=[
         setup_widget_setter,
         setup_widget_destroy,
         apply_attributes,
         apply_text,
         render_widget_children
-    ], create_node=_create_widget_node)
+    ], create_node=_create_widget_node, name='widget pipeline')
 
 
 def setup_widget_setter(node: WidgetNode, _: TkRenderingContext):

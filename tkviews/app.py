@@ -7,6 +7,7 @@ from pyviews.binding import use_binding
 from pyviews.code import run_code
 from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, \
     get_if_pipeline
+from pyviews.presenter import get_presenter_pipeline
 from pyviews.rendering import RenderingPipeline, use_rendering, get_child_context
 from pyviews.rendering.pipeline import use_pipeline
 from pyviews.rendering.views import render_view
@@ -33,6 +34,7 @@ def use_tkviews_pipelines():
     use_pipeline(get_root_pipeline(), 'tkviews.Root')
     use_pipeline(get_widget_pipeline(), 'tkinter')
     use_pipeline(get_widget_pipeline(), 'tkinter.ttk')
+    use_pipeline(get_presenter_pipeline(), 'tkviews.PresenterNode')
 
     use_pipeline(get_container_pipeline(), 'tkviews.Container')
     use_pipeline(get_view_pipeline(), 'tkviews.View')

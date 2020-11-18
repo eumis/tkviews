@@ -17,8 +17,7 @@
         root.attributes('-zoomed', True)
     </tkv:Code>
 
-    <tkv:TtkStyle name="demo.Treeview"/>
-    <tkv:StylesView name="styles"/>
+    <tkv:TtkStyle name="demo.Treeview"/> <tkv:StylesView name="styles"/>
 
     <Frame call:pack="{args(fill='both', expand=1)}"
            background="red"

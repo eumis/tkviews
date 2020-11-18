@@ -1,4 +1,5 @@
 <tkv:Container xmlns="tkinter"
+               xmlns:ttk="tkinter.ttk"
                xmlns:tkv="tkviews"
                xmlns:import="tkviews.import_global"
                xmlns:bind="tkviews.bind"
@@ -11,7 +12,7 @@
 
     <Button styles:="packed"
             text=" Dialog button"
-            bind:Button-1="once:{lambda e: messagebox.showinfo('title', 'dialog button message')}"/>
+            command="once:{lambda: messagebox.showinfo('title', 'dialog button message')}"/>
     <Button styles:="packed"
             text="Disabled button"
             state="disabled"/>
@@ -19,4 +20,11 @@
             text="{f'Flat counter - {vm.count}'}"
             relief="flat"
             bind:Button-1="once:{lambda e: vm.add_count()}"/>
+    <tkv:TtkStyle name='TButton'
+               font="once:{('calibri', 10, 'bold', 'underline')}"
+               foreground="red"/>
+    <ttk:Button styles:="packed"
+                text="oneway:{f'ttk button counter - {vm.count}'}"
+                style="TButton"
+                bind:Button-1="once:{lambda e: vm.add_count()}"/>
 </tkv:Container>

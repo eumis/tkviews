@@ -21,7 +21,8 @@ class AppPresenter(ObservableEntity):
             Demo("Widgets", "Entry", "entry/entry"),
             Demo("Widgets", "Frame", "frame/frame"),
             Demo("Widgets", "Label", "label/label"),
-            Demo("Widgets", "Labelframe", "labelframe/labelframe")
+            Demo("Widgets", "Labelframe", "labelframe/labelframe"),
+            Demo("Containers", "For", "for/for"),
         ]
         self.demo_view = None
         self._default_demo = self._demos[-1]

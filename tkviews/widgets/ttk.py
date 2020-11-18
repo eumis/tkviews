@@ -4,7 +4,7 @@ from tkinter.ttk import Style
 from typing import Any
 
 from pyviews.core import XmlNode, Node, InheritedDict
-from pyviews.rendering import RenderingPipeline, get_type, create_instance
+from pyviews.rendering import RenderingPipeline
 
 from tkviews.core.rendering import TkRenderingContext, render_attribute
 
@@ -38,12 +38,6 @@ def get_ttk_style_pipeline() -> RenderingPipeline:
         apply_style_attributes,
         configure
     ], name='ttk style pipeline')
-
-
-def _create_ttk_style_node(context: TkRenderingContext):
-    inst_type = get_type(context.xml_node)
-    inst = create_instance(inst_type, context)
-    return create_instance(TtkStyle, {'widget': inst, **context})
 
 
 def setup_value_setter(node: TtkStyle, _: TkRenderingContext):

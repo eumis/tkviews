@@ -1,0 +1,14 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:styles="tkviews.apply_styles">
+    <tkv:View name="styles"/>
+
+    <Frame styles:="packed"
+           background="yellow"
+           height="{300}"
+           width="{500}"
+           borderwidth="{5}"
+           relief="groove"
+    />
+
+</tkv:Container>

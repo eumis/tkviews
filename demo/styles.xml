@@ -1,0 +1,11 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:call="tkviews.call">
+
+    <tkv:Style name="packed"
+               call:pack="{args(anchor='w', pady=5, padx=5)}"/>
+
+    <tkv:Style name="frame"/>
+
+</tkv:Container>
+

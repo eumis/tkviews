@@ -1,0 +1,50 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:call="tkviews.call"
+               xmlns:global='tkviews.set_global'
+               xmlns:styles="tkviews.apply_styles"
+               import:CheckViewModel="checkbutton.viewmodel.CheckViewModel"
+               import:int_var='tkinter.IntVar'
+               import:str_var='tkinter.StringVar'
+               global:vm="once:{CheckViewModel()}">
+    <tkv:View name="styles"/>
+
+    <LabelFrame styles:="packed,frame"
+                text='Checkbutton bool binding'>
+        <Checkbutton call:pack='{args(side="left")}'
+                     variable='{{vm.check_b}}'>
+            {'checked' if vm.check_b else 'unchecked'}
+        </Checkbutton>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.check_b)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame styles:="packed,frame"
+                text='Checkbutton custom int variable binding'>
+        <Checkbutton call:pack='{args(side="left")}'
+                     variable='var:{int_var()}:{vm.check_int}'>
+            {'checked' if vm.check_int == 1 else 'unchecked'}
+        </Checkbutton>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.check_int)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame styles:="packed,frame"
+                text='Checkbutton str binding with onvalue and offvalue'>
+        <Checkbutton call:pack='{args(side="left")}'
+                     onvalue='on'
+                     offvalue='off'
+                     variable='var:{str_var()}:{vm.check_str}'>
+            {'checked' if vm.check_str == 'on' else 'unchecked'}
+        </Checkbutton>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.check_str)}
+        </Label>
+    </LabelFrame>
+</tkv:Container>

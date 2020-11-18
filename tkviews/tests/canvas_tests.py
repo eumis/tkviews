@@ -197,6 +197,7 @@ def test_create_item_calls_create():
     """create_item( should call create method of CanvasNode"""
     canvas = Mock()
     canvas.create = Mock()
+    canvas.attr_values = {}
 
     create_item(canvas, TkRenderingContext())
 

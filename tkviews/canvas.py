@@ -3,11 +3,11 @@
 from abc import ABC, abstractmethod
 from functools import partial
 from tkinter import Canvas
-from typing import Type, cast
+from typing import cast
 
 from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes
-from pyviews.rendering import RenderingPipeline, RenderingError
+from pyviews.rendering import RenderingPipeline, RenderingError, get_type
 
 from tkviews.core.rendering import TkRenderingContext
 
@@ -111,7 +111,7 @@ class Window(CanvasItemNode):
         return self._canvas.create_window(*self.place, **options)
 
 
-def get_canvas_pipeline(item_type: Type[CanvasItemNode]) -> RenderingPipeline:
+def get_canvas_pipeline() -> RenderingPipeline:
     """Returns setup for canvas"""
     return RenderingPipeline(pipes=[
         setup_temp_setter,
@@ -122,11 +122,12 @@ def get_canvas_pipeline(item_type: Type[CanvasItemNode]) -> RenderingPipeline:
         setup_event_binding,
         apply_temp_events,
         clear_temp
-    ], create_node=lambda ctx: create_canvas_node(ctx, item_type), name=f'{item_type} pipeline')
+    ], create_node=create_canvas_node)
 
 
-def create_canvas_node(context: TkRenderingContext, node_type) -> Node:
+def create_canvas_node(context: TkRenderingContext) -> Node:
     """Creates node_type instance"""
+    node_type = get_type(context.xml_node)
     if not isinstance(context.master, Canvas):
         raise RenderingError(f'{node_type.__name__} parent should be Canvas')
     return node_type(cast(Canvas, context.master), context.xml_node, context.node_globals)
@@ -158,7 +159,7 @@ def _bind(node: CanvasItemNode, event, command):
 
 def create_item(node: CanvasItemNode, _: TkRenderingContext):
     """Calls canvas create_* method using temp attribute values"""
-    node.create(node.attr_values)
+    node.create(**node.attr_values)
 
 
 def setup_config_setter(node: CanvasItemNode, _: TkRenderingContext):

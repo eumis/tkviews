@@ -9,6 +9,7 @@
 - added presenter
 - added pipeline name to display in error info
 - added getting current rendering context
+- fixed canvas rendering pipeline
 
 ## 3.0.0
 

@@ -1,0 +1,38 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:canvas="tkviews.canvas"
+               xmlns:styles="tkviews.apply_styles">
+    <tkv:View name="styles"/>
+
+    <Canvas styles:="packed">
+        <canvas:Rectangle place="{[10, 10, 100, 100]}"
+                          fill="black"/>
+        <canvas:Rectangle place="{[110, 10, 210, 100]}"
+                          activefill="blue"/>
+        <canvas:Rectangle place="{[220, 10, 320, 100]}"
+                          dash="{10}"
+                          activeoutline="yellow"
+                          width="{5}"/>
+
+        <canvas:Text place="{[10, 140]}"
+                     text="nw text"
+                     fill="blue"
+                     anchor="nw"/>
+        <canvas:Text place="{[110, 140]}"
+                     text="hover me"
+                     activefill="blue"/>
+        <canvas:Text place="{[320, 140]}"
+                     text="Helvetica 24 bold"
+                     font="Helvetica 24 bold"
+                     anchor="n"/>
+
+        <canvas:Arc place="{[10, 210, 100, 300]}"
+                    fill="black"/>
+        <canvas:Arc place="{[110, 210, 210, 300]}"
+                    activefill="blue"/>
+        <canvas:Arc place="{[220, 210, 320, 300]}"
+                    dash="{10}"
+                    activeoutline="yellow"
+                    width="{5}"/>
+    </Canvas>
+</tkv:Container>

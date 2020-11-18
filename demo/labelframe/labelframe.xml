@@ -1,0 +1,24 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:ref="tkviews.add_reference"
+               xmlns:call="tkviews.call"
+
+               import:args="tkviews.call_args"
+               import:BOTH="tkinter.BOTH"
+               import:LabelFramePresenter="labelframe.presenter.LabelFramePresenter">
+    <tkv:View name="styles"/>
+
+    <tkv:PresenterNode instance="once:{LabelFramePresenter()}">
+        <LabelFrame call:pack="once:{args(fill=BOTH, expand=True)}"
+                    text="Label text frame"
+                    background="yellow"
+                    height="{300}"
+                    width="{500}"
+                    borderwidth="{5}"
+                    relief="groove"
+                    ref:="label_frame"
+        />
+    </tkv:PresenterNode>
+
+</tkv:Container>

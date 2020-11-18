@@ -18,21 +18,20 @@ To install dev version:
 
 `pip install git+https://github.com/eumis/tkviews.git@dev`
 
-## Sandbox application
+## Demo application
 
-To get started using tkviews see sandbox app.
+To get started using tkviews see demo app.
 
 Clone repository to folder(\[root_folder\])
 
 Run following command to install tkviews package
 
-`pip install pyviews`
 `pip install [root_folder] -e`
 
-To run sandbox app execute following commands
+To run demo app execute following commands
 
-```cmd
-cd [root_folder]\sandbox
+```
+cd [root_folder]\demo
 python run.py
 ```
 

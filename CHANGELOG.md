@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 3.1.0
 
 - setup refactoring
 - fixed ttk rendering

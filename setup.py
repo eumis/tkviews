@@ -16,7 +16,7 @@ def setup_package():
         long_description_content_type='text/markdown',
         url='https://github.com/eumis/tkviews',
         author='eumis(Eugen Misievich)',
-        author_email='misievich@gmail.com',
+        author_email='eug.mis@protonmail.com',
         license='MIT',
         classifiers=[
             #   2 - Pre-Alpha
@@ -32,7 +32,7 @@ def setup_package():
         python_requires='>=3.6',
         install_requires=['pyviews>=3.*.*,<4.*.*'],
         keywords='binding tkinter tk tkviews pyviews python mvvm views',
-        packages=find_packages(exclude=['sandbox', '*.tests']))
+        packages=find_packages(exclude=['demo', 'sandbox', '*.tests']))
 
 
 _HERE = dirname(__file__)

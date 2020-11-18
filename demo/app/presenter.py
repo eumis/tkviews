@@ -4,16 +4,17 @@ from tkinter.ttk import Treeview
 from typing import cast
 
 from pyviews.core import ObservableEntity
+from pyviews.presenter import Presenter
 
 from demo.model import Demo
 
 
-class AppPresenter(ObservableEntity):
+class AppPresenter(ObservableEntity, Presenter):
     """Demo presenter"""
 
     def __init__(self):
-        super().__init__()
-        self._demo_tree: Treeview = cast(Treeview, None)
+        ObservableEntity.__init__(self)
+        Presenter.__init__(self)
         self._demos = [
             Demo("Widgets", "Button", "button/button"),
             Demo("Widgets", "Canvas", "canvas/canvas"),
@@ -22,26 +23,36 @@ class AppPresenter(ObservableEntity):
             Demo("Widgets", "Frame", "frame/frame"),
             Demo("Widgets", "Label", "label/label"),
             Demo("Widgets", "Labelframe", "labelframe/labelframe"),
+
             Demo("Containers", "For", "for/for"),
+            Demo("Containers", "If", "if/if"),
         ]
         self.demo_view = None
-        self._default_demo = self._demos[-1]
+        self.demo_name = None
+        self._default_demo = self._demos[0]
 
-    def set_demo_tree(self, demo_tree: Treeview):
+    @property
+    def demo_tree(self) -> Treeview:
+        return self._references['demo_tree'].instance
+
+    def on_rendered(self):
         """Add demo items to tree"""
-        self._demo_tree = demo_tree
         for i, (section, demos) in enumerate(groupby(self._demos, lambda d: d.section)):
-            section_item = self._demo_tree.insert("", i, section, text=section)
+            section_item = self.demo_tree.insert("", i, section, text=section)
             for demo_i, demo in enumerate(demos):
-                self._demo_tree.insert(section_item, demo_i, text=demo.name, values=[demo.view])
+                self.demo_tree.insert(section_item, demo_i, iid=demo.name, text=demo.name,
+                                      values=[demo.view, demo.name])
                 if demo == self._default_demo:
                     self.demo_view = demo.view
-        demo_tree.bind('<<TreeviewSelect>>', lambda e: self._open_selected())
+                    self.demo_name = demo.name
+        self.demo_tree.bind('<<TreeviewSelect>>', lambda e: self._open_selected())
+        self.demo_tree.see(self._default_demo.name)
+        self.demo_tree.selection_add(self._default_demo.name)
 
     def _open_selected(self):
-        selected_items = self._demo_tree.selection()
+        selected_items = self.demo_tree.selection()
         if selected_items:
-            item = self._demo_tree.item(selected_items[0])
+            item = self.demo_tree.item(selected_items[0])
             values = item['values']
             if values:
-                self.demo_view = values[0]
+                self.demo_view, self.demo_name = values

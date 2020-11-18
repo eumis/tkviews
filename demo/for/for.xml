@@ -2,7 +2,6 @@
 <tkv:Container xmlns="tkinter"
                xmlns:tkv="tkviews"
                xmlns:import="tkviews.import_global"
-               xmlns:bind="tkviews.bind"
                xmlns:global='tkviews.set_global'
                xmlns:call='tkviews.call'
                xmlns:styles='tkviews.apply_styles'

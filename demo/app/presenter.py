@@ -1,7 +1,6 @@
 """Demo application presenter"""
 from itertools import groupby
 from tkinter.ttk import Treeview
-from typing import cast
 
 from pyviews.core import ObservableEntity
 from pyviews.presenter import Presenter
@@ -23,6 +22,7 @@ class AppPresenter(ObservableEntity, Presenter):
             Demo("Widgets", "Frame", "frame/frame"),
             Demo("Widgets", "Label", "label/label"),
             Demo("Widgets", "Labelframe", "labelframe/labelframe"),
+            Demo("Widgets", "Listbox", "listbox/listbox"),
 
             Demo("Containers", "For", "for/for"),
             Demo("Containers", "If", "if/if"),

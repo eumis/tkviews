@@ -11,3 +11,4 @@ from .styles import Style, StylesView, StyleItem, apply_styles
 from .widgets import WidgetNode, Root
 from .widgets import TtkStyle
 from .widgets import bind, bind_all, config
+from .listbox import ListboxItem

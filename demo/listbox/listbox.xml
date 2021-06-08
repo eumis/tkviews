@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:global='tkviews.set_global'
+               xmlns:bind="tkviews.bind"
+               xmlns:styles='tkviews.apply_styles'
+
+               import:args='tkviews.call_args'
+               import:ListboxItemsViewModel="listbox.viewmodel.ListboxItemsViewModel"
+               global:view_model="{ListboxItemsViewModel()}"
+>
+
+    <tkv:StylesView name='styles'/>
+
+    <Listbox styles:="packed"
+             bind:Delete="{lambda e: view_model.delete(e.widget.curselection())}">
+        <tkv:For items="{view_model.items}">
+            <tkv:ListboxItem index="{index}" value="{item}"/>
+        </tkv:For>
+    </Listbox>
+
+</tkv:Container>

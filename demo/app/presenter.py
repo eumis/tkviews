@@ -23,6 +23,7 @@ class AppPresenter(ObservableEntity, Presenter):
             Demo("Widgets", "Label", "label/label"),
             Demo("Widgets", "Labelframe", "labelframe/labelframe"),
             Demo("Widgets", "Listbox", "listbox/listbox"),
+            Demo("Widgets", "Radiobutton", "radiobutton/radiobutton"),
 
             Demo("Containers", "For", "for/for"),
             Demo("Containers", "If", "if/if"),

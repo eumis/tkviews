@@ -11,7 +11,7 @@
     <tkv:View name="styles"/>
 
     <LabelFrame styles:="packed,frame"
-                text='Checkbutton bool binding'>
+                text='Checkbutton bool(default) binding'>
         <Checkbutton call:pack='{args(side="left")}'
                      variable='{{vm.check_b}}'>
             {'checked' if vm.check_b else 'unchecked'}

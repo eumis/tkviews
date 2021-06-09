@@ -2,7 +2,7 @@
                xmlns:tkv="tkviews"
                xmlns:canvas="tkviews.canvas"
                xmlns:styles="tkviews.apply_styles">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
     <tkv:Style name="label_size"
                width="{50}"
                height="{5}"/>

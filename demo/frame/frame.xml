@@ -1,7 +1,7 @@
 <tkv:Container xmlns="tkinter"
                xmlns:tkv="tkviews"
                xmlns:styles="tkviews.apply_styles">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <Frame styles:="packed"
            background="yellow"

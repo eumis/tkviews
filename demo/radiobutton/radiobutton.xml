@@ -8,7 +8,7 @@
                import:bool_var='tkinter.BooleanVar'
                import:str_var='tkinter.StringVar'
                global:vm="once:{RadioViewModel()}">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <LabelFrame styles:="packed,frame"
                 text='Radiobutton int(default) binding'>

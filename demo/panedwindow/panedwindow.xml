@@ -1,0 +1,41 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:styles="tkviews.apply_styles"
+               xmlns:import="tkviews.import_global"
+               import:tk="tkinter">
+    <tkv:StylesView name="styles"/>
+
+    <tkv:Style name="frame_size"
+               width="{100}"
+               height="{100}"
+               borderwidth="{5}"
+               relief="groove">
+        <tkv:Style name="yellow_frame"
+                   background="yellow"/>
+        <tkv:Style name="red_frame"
+                   background="red"/>
+        <tkv:Style name="blue_frame"
+                   background="blue"/>
+    </tkv:Style>
+
+    <LabelFrame text="Horizontal"
+                styles:="packed">
+        <PanedWindow styles:="packed"
+                     orient="once:{tk.HORIZONTAL}">
+            <Frame styles:="yellow_frame"/>
+            <Frame styles:="red_frame"/>
+            <Frame styles:="blue_frame"/>
+        </PanedWindow>
+    </LabelFrame>
+
+    <LabelFrame text="Vertical"
+                styles:="packed">
+        <PanedWindow styles:="packed"
+                     orient="once:{tk.VERTICAL}">
+            <Frame styles:="yellow_frame"/>
+            <Frame styles:="red_frame"/>
+            <Frame styles:="blue_frame"/>
+        </PanedWindow>
+    </LabelFrame>
+
+</tkv:Container>

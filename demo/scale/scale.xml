@@ -1,0 +1,22 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:call="tkviews.call"
+               xmlns:global='tkviews.set_global'
+               xmlns:styles="tkviews.apply_styles"
+               import:ScaleViewModel="scale.viewmodel.ScaleViewModel"
+               import:tk="tkinter"
+               global:vm="once:{ScaleViewModel()}">
+    <tkv:StylesView name="styles"/>
+
+    <Scale styles:="packed"
+           resolution="once:{0.5}"
+           orient="once:{tk.HORIZONTAL}"
+           from="once:{-10.0}"
+           to="once:{10.0}"
+           variable="{{vm.value}}"/>
+
+    <Label styles:="packed">
+        {str(vm.value)}
+    </Label>
+</tkv:Container>

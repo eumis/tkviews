@@ -12,7 +12,6 @@
     <tkv:StylesView name='styles'/>
 
     <tkv:PresenterNode instance="once:{ScrollboxPresenter()}">
-
         <PanedWindow styles:="packed"
                      orient="once:{tk.HORIZONTAL}">
             <Listbox ref:="listbox">

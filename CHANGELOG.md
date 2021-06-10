@@ -1,5 +1,13 @@
 # Changelog
 
+## Dev
+
+- added Radiobutton two ways binding
+- added Lisbox pipeline
+- added PanedWindow pipeline
+- added Scale two ways binding
+- added Spinbox two ways binding
+
 ## 3.1.0
 
 - setup refactoring

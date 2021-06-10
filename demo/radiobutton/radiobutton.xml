@@ -1,0 +1,58 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:call="tkviews.call"
+               xmlns:global='tkviews.set_global'
+               xmlns:styles="tkviews.apply_styles"
+               import:RadioViewModel="radiobutton.viewmodel.RadioViewModel"
+               import:bool_var='tkinter.BooleanVar'
+               import:str_var='tkinter.StringVar'
+               global:vm="once:{RadioViewModel()}">
+    <tkv:StylesView name="styles"/>
+
+    <LabelFrame styles:="packed,frame"
+                text='Radiobutton int(default) binding'>
+        <tkv:For items='{list(range(3))}'>
+            <Radiobutton call:pack='{args(side="left")}'
+                         value='{item}'
+                         variable='{{vm.int_value}}'>
+                {item}
+            </Radiobutton>
+        </tkv:For>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.int_value)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame styles:="packed,frame"
+                text='Radiobutton string binding'>
+        <Radiobutton call:pack='{args(side="left")}'
+                     value='one'
+                     variable='var:{str_var()}:{vm.str_value}'> one </Radiobutton>
+        <Radiobutton call:pack='{args(side="left")}'
+                     value='two'
+                     variable='var:{str_var()}:{vm.str_value}'> two </Radiobutton>
+        <Radiobutton call:pack='{args(side="left")}'
+                     value='three'
+                     variable='var:{str_var()}:{vm.str_value}'> three </Radiobutton>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.str_value)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame styles:="packed,frame"
+                text='Radiobutton bool binding'>
+        <Radiobutton call:pack='{args(side="left")}'
+                     value='once:{True}'
+                     variable='var:{bool_var()}:{vm.bool_value}'> True </Radiobutton>
+        <Radiobutton call:pack='{args(side="left")}'
+                     value='once:{False}'
+                     variable='var:{bool_var()}:{vm.bool_value}'> False </Radiobutton>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.bool_value)}
+        </Label>
+    </LabelFrame>
+</tkv:Container>

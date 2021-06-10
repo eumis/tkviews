@@ -7,7 +7,7 @@
                import:args="tkviews.call_args"
                import:BOTH="tkinter.BOTH"
                import:LabelFramePresenter="labelframe.presenter.LabelFramePresenter">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <tkv:PresenterNode instance="once:{LabelFramePresenter()}">
         <LabelFrame call:pack="once:{args(fill=BOTH, expand=True)}"

@@ -14,6 +14,7 @@ from pyviews.rendering.views import render_view
 
 from tkviews.canvas import get_canvas_pipeline
 from tkviews.core.rendering import TkRenderingContext, get_tk_child_context
+from tkviews.listbox import get_listboxitem_pipeline
 from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
 from tkviews.widgets import get_root_pipeline, get_widget_pipeline, Root
 from tkviews.widgets import use_variables_binding
@@ -45,6 +46,7 @@ def use_tkviews_pipelines():
     use_pipeline(get_styles_view_pipeline(), 'tkviews.StylesView')
     use_pipeline(get_ttk_style_pipeline(), 'tkviews.TtkStyle')
     use_pipeline(get_canvas_pipeline(), 'tkviews.canvas')
+    use_pipeline(get_listboxitem_pipeline(), 'tkviews.ListboxItem')
 
     use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')
 

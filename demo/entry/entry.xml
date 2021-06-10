@@ -6,7 +6,7 @@
                xmlns:styles="tkviews.apply_styles"
                import:EntryViewModel="entry.viewmodel.EntryViewModel"
                global:vm="once:{EntryViewModel()}">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <LabelFrame styles:='packed'
                 text='Entry string binding'>

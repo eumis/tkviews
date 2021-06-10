@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:styles='tkviews.apply_styles'
+               xmlns:ref="tkviews.add_reference"
+
+               import:tk="tkinter"
+               import:args='tkviews.call_args'
+               import:TextPresenter="text.presenter.TextPresenter">
+
+    <tkv:StylesView name='styles'/>
+
+    <tkv:PresenterNode instance="once:{TextPresenter()}">
+        <Text styles:="packed"
+              ref:="text"/>
+    </tkv:PresenterNode>
+
+</tkv:Container>

@@ -1,7 +1,7 @@
 """Widgets binding"""
 
 from tkinter import Widget, Variable, Entry, Checkbutton, Radiobutton, StringVar, BooleanVar, \
-    IntVar
+    IntVar, DoubleVar, Scale, Spinbox
 from typing import Type, Union
 
 from injectool import inject
@@ -53,6 +53,10 @@ def use_variables_binding(binder: Binder = None):
                     lambda ctx: check_widget_and_property(Checkbutton, 'variable', ctx))
     binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(IntVar, ctx),
                     lambda ctx: check_widget_and_property(Radiobutton, 'variable', ctx))
+    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(DoubleVar, ctx),
+                    lambda ctx: check_widget_and_property(Scale, 'variable', ctx))
+    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(StringVar, ctx),
+                    lambda ctx: check_widget_and_property(Spinbox, 'textvariable', ctx))
     binder.add_rule('var', bind_custom_variable_and_expression)
 
 

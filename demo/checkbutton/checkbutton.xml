@@ -8,10 +8,10 @@
                import:int_var='tkinter.IntVar'
                import:str_var='tkinter.StringVar'
                global:vm="once:{CheckViewModel()}">
-    <tkv:View name="styles"/>
+    <tkv:StylesView name="styles"/>
 
     <LabelFrame styles:="packed,frame"
-                text='Checkbutton bool binding'>
+                text='Checkbutton bool(default) binding'>
         <Checkbutton call:pack='{args(side="left")}'
                      variable='{{vm.check_b}}'>
             {'checked' if vm.check_b else 'unchecked'}

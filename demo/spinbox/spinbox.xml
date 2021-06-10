@@ -1,0 +1,35 @@
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:call="tkviews.call"
+               xmlns:global='tkviews.set_global'
+               xmlns:styles="tkviews.apply_styles"
+               import:SpinboxViewModel="spinbox.viewmodel.SpinboxViewModel"
+               import:bool_var='tkinter.BooleanVar'
+               import:str_var='tkinter.StringVar'
+               global:vm="once:{SpinboxViewModel()}">
+    <tkv:StylesView name="styles"/>
+
+    <LabelFrame styles:="packed,frame"
+                text='Spinbox from -10 to 10'>
+        <Spinbox styles:="packed"
+                 textvariable="{{vm.int_value}}"
+                 from_="once:{-10}"
+                 to="once:{10}"/>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.int_value)}
+        </Label>
+    </LabelFrame>
+
+    <LabelFrame styles:="packed,frame"
+                text='Spinbox with defined values'>
+        <Spinbox styles:="packed"
+                 textvariable="{{vm.str_value}}"
+                 values="once:{('one', 'two', 'three')}"/>
+
+        <Label call:pack='{args(side="left")}'>
+            {str(vm.str_value)}
+        </Label>
+    </LabelFrame>
+</tkv:Container>

@@ -1,6 +1,6 @@
 """Tkinter widgets nodes"""
 from functools import partial
-from tkinter import Tk, Widget
+from tkinter import Tk, Widget, PanedWindow
 
 from pyviews.core import XmlNode, InstanceNode, InheritedDict, XmlAttr
 from pyviews.pipes import apply_attributes, render_children, apply_attribute
@@ -77,6 +77,7 @@ def get_widget_pipeline() -> RenderingPipeline:
         setup_widget_destroy,
         apply_attributes,
         apply_text,
+        add_to_panedwindow,
         render_widget_children
     ], create_node=_create_widget_node, name='widget pipeline')
 
@@ -134,3 +135,9 @@ def apply_text(node: WidgetNode, _: TkRenderingContext):
         return
     text_attr = XmlAttr('text', node.xml_node.text)
     apply_attribute(node, text_attr)
+
+
+def add_to_panedwindow(node: WidgetNode, context: TkRenderingContext):
+    """Sets up setter"""
+    if isinstance(context.master, PanedWindow):
+        context.master.add(node.instance)

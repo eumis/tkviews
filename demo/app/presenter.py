@@ -28,6 +28,7 @@ class AppPresenter(ObservableEntity, Presenter):
             Demo("Widgets", "Scale", "scale/scale"),
             Demo("Widgets", "Scrollbar", "scrollbar/scrollbar"),
             Demo("Widgets", "Spinbox", "spinbox/spinbox"),
+            Demo("Widgets", "Text", "text/text"),
 
             Demo("Containers", "For", "for/for"),
             Demo("Containers", "If", "if/if"),

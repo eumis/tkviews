@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<tkv:Container xmlns="tkinter"
+               xmlns:tkv="tkviews"
+               xmlns:import="tkviews.import_global"
+               xmlns:styles='tkviews.apply_styles'
+               xmlns:ref="tkviews.add_reference"
+
+               import:tk="tkinter"
+               import:args='tkviews.call_args'
+               import:ScrollboxPresenter="scrollbar.presenter.ScrollboxPresenter">
+
+    <tkv:StylesView name='styles'/>
+
+    <tkv:PresenterNode instance="once:{ScrollboxPresenter()}">
+
+        <PanedWindow styles:="packed"
+                     orient="once:{tk.HORIZONTAL}">
+            <Listbox ref:="listbox">
+                <tkv:For items="{range(100)}">
+                    <tkv:ListboxItem index="{item}" value="{item}"/>
+                </tkv:For>
+            </Listbox>
+            <Scrollbar ref:="scrollbar"/>
+        </PanedWindow>
+    </tkv:PresenterNode>
+
+</tkv:Container>

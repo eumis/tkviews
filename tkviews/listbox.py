@@ -1,5 +1,5 @@
 from tkinter import Listbox
-from typing import Callable
+from typing import Callable, Optional
 
 from pyviews.core import Node, XmlNode, InheritedDict
 from pyviews.pipes import apply_attributes
@@ -10,10 +10,10 @@ from tkviews.core import TkRenderingContext
 
 class ListboxItem(Node):
     def __init__(self, xml_node: XmlNode,
-                 node_globals: InheritedDict = None):
+                 node_globals: Optional[InheritedDict] = None):
         super().__init__(xml_node, node_globals=node_globals)
         self.on_updated: Callable[[ListboxItem], None] = None
-        self._index = None
+        self._index: int = None
         self._value: str = ''
 
     @property

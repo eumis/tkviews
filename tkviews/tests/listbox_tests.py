@@ -27,6 +27,12 @@ def listbox_fixture(request):
 
 @mark.usefixtures('listbox_fixture')
 class ListboxPipelineTests:
+    """listbox pipeline tests"""
+
+    listbox_item: ListboxItem
+    listbox: TestListbox
+    context: TkRenderingContext
+
     def test_insert_item_checks_parent(self):
         """should raise if master is not Listbox"""
         with raises(RenderingError):

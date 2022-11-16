@@ -27,6 +27,9 @@ def root_fixture(request):
 class RootTests:
     """WidgetNode tests"""
 
+    root: Root
+    tk_instance: Mock
+
     def test_creates_tk_instance(self):
         """should create tkinter.Tk instance"""
         assert self.root.instance == self.tk_instance
@@ -97,6 +100,8 @@ def widget_node_fixture(request):
 class WidgetNodeTests:
     """WidgetNode tests"""
 
+    node: TestNode
+
     def test_bind(self):
         """should call widget.bind"""
         event, command = 'Button-1', Mock()
@@ -134,6 +139,11 @@ def setter_fixture(request):
 
 @mark.usefixtures('setter_fixture')
 class SetupWidgetSetterTests:
+    """setup_widget_setter() tests"""
+
+    inst: TestWidget
+    node: TestNode
+
     @mark.parametrize('value', [1, 'value'])
     def test_sets_node_key(self, value):
         """should set node attribute if it exists"""
@@ -179,6 +189,8 @@ def apply_text_fixture(request):
 @mark.usefixtures('binder_fixture', 'apply_text_fixture', )
 class ApplyTextTests:
     """apply_text() step tests"""
+
+    node: TestNode
 
     @mark.parametrize('text', [None, '', '    '])
     def test_empty(self, text):

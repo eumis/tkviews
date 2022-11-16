@@ -83,8 +83,8 @@ def apply_style_items(node: Style, _: TkRenderingContext):
     attrs = node.xml_node.attrs
     try:
         node.name = next(attr.value for attr in attrs if attr.name == 'name')
-    except StopIteration:
-        raise StyleError('Style name is missing', node.xml_node.view_info)
+    except StopIteration as error:
+        raise StyleError('Style name is missing', node.xml_node.view_info) from error
     node.items = {
         f'{attr.namespace}{attr.name}':
             _get_style_item(node, attr) for attr in attrs if attr.name != 'name'

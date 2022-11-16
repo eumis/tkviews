@@ -31,6 +31,9 @@ def canvas_fixture(request):
 class CanvasNodeTests:
     """CanvasNode class tests"""
 
+    canvas: Mock
+    item: TestCanvasItem
+
     @mark.parametrize('event, command', [
         ('Button-1', lambda: None)
     ])
@@ -74,6 +77,9 @@ def canvas_items_fixture(request):
 @mark.usefixtures('canvas_items_fixture')
 class CanvasItemsTests:
     """Canvas items tests"""
+
+    canvas: Mock
+    options: dict
 
     def test_rectangle_create(self):
         """Rectangle tests"""

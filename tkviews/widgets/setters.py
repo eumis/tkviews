@@ -15,7 +15,7 @@ class CallbackError(PyViewsError):
 def bind(node: WidgetNode, event_name, command):
     """Calls widget node bind method"""
     command = _get_handled_command(command, node.xml_node.view_info, event_name)
-    node.bind('<{0}>'.format(event_name), command)
+    node.bind(f'<{event_name}>', command)
 
 
 def _get_handled_command(command, view_info, event):

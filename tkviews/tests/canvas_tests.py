@@ -62,10 +62,12 @@ class CanvasNodeTests:
     def test_destroy(self):
         """should call canvas.delete()"""
         self.item.create()
+        item_id = self.item.item_id
 
         self.item.destroy()
 
-        assert self.canvas.delete.call_args == call(self.item.item_id)
+        assert self.canvas.delete.call_args == call(item_id)
+        assert self.item.item_id is None
 
 
 @fixture

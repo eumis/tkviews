@@ -32,8 +32,7 @@ def render_attribute(node: Node, xml_attr: XmlAttr) -> Tuple[Setter, Any]:
     return setter, value
 
 
-def get_tk_child_context(child_xml_node: XmlNode, node: Node,
-                         context: TkRenderingContext) -> TkRenderingContext:
+def get_tk_child_context(child_xml_node: XmlNode, node: Node, context: TkRenderingContext) -> TkRenderingContext:
     """Return rendering context for child node"""
     return TkRenderingContext({
         'parent_node': node,

@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from functools import partial
 from tkinter import Canvas
-from typing import cast
+from typing import Optional, cast
 
 from pyviews.core import XmlNode, InheritedDict, Node
 from pyviews.pipes import apply_attributes
@@ -16,14 +16,14 @@ class CanvasItemNode(Node, ABC):
     """Base class for wrappers"""
 
     def __init__(self, master: Canvas, xml_node: XmlNode,
-                 node_globals: InheritedDict = None):
+                 node_globals: Optional[InheritedDict] = None):
         super().__init__(xml_node, node_globals=node_globals)
-        self._canvas = master
-        self._item_id = None
-        self.place = []
+        self._canvas: Canvas = master
+        self._item_id: Optional[int] = None
+        self.place: list = []
 
     @property
-    def item_id(self):
+    def item_id(self) -> Optional[int]:
         """id returned from create method of canvas"""
         return self._item_id
 
@@ -32,20 +32,24 @@ class CanvasItemNode(Node, ABC):
         self._item_id = self._create(**options)
 
     @abstractmethod
-    def _create(self, **options):
+    def _create(self, **options) -> int:
         pass
 
     def bind(self, event: str, command):
         """Binds element to event"""
-        self._canvas.tag_bind(self.item_id, '<' + event + '>', command)
+        if self.item_id is not None:
+            self._canvas.tag_bind(self.item_id, '<' + event + '>', command)
 
     def config(self, **options):
         """Calls itemconfig of canvas"""
-        self._canvas.itemconfig(self.item_id, **options)
+        if self.item_id is not None:
+            self._canvas.itemconfig(self.item_id, **options)
 
     def destroy(self):
         """Removes element from canvas"""
-        self._canvas.delete(self.item_id)
+        if self.item_id is not None:
+            self._canvas.delete(self.item_id)
+            self._item_id = None
 
 
 class Rectangle(CanvasItemNode):
@@ -58,7 +62,7 @@ class Rectangle(CanvasItemNode):
 class Text(CanvasItemNode):
     """create_text wrapper"""
 
-    def _create(self, **options):
+    def _create(self, **options) -> int:
         return self._canvas.create_text(*self.place, **options)
 
 
@@ -111,9 +115,9 @@ class Window(CanvasItemNode):
         return self._canvas.create_window(*self.place, **options)
 
 
-def get_canvas_pipeline() -> RenderingPipeline:
+def get_canvas_pipeline() -> RenderingPipeline[Node, TkRenderingContext]:
     """Returns setup for canvas"""
-    return RenderingPipeline(pipes=[
+    return RenderingPipeline[Node, TkRenderingContext](pipes=[
         setup_temp_setter,
         setup_temp_binding,
         apply_attributes,

@@ -6,7 +6,7 @@ from pyviews.rendering import RenderingError
 
 from tkviews import ListboxItem
 from tkviews.core import TkRenderingContext
-from tkviews.listbox import insert_item, setup_on_updated
+from tkviews.listbox import insert_item, setup_on_destroy, setup_on_updated
 
 
 class TestListbox(Listbox):
@@ -52,6 +52,11 @@ class ListboxPipelineTests:
 
         assert self.listbox.insert.call_args == call(index, value)
 
+    def test_setup_on_updated_checks_parent(self):
+        """should raise if master is not Listbox"""
+        with raises(RenderingError):
+            setup_on_updated(self.listbox_item, TkRenderingContext({'master': Mock()}))
+
     @mark.parametrize('index, value', [
         (0, 'one'),
         (1, 'two'),
@@ -81,3 +86,18 @@ class ListboxPipelineTests:
 
         assert self.listbox.delete.call_args == call(index)
         assert self.listbox.insert.call_args == call(index, value)
+
+    def test_setup_on_destroy_checks_parent(self):
+        """should raise if master is not Listbox"""
+        with raises(RenderingError):
+            setup_on_destroy(self.listbox_item, TkRenderingContext({'master': Mock()}))
+
+    @mark.parametrize('index', [0, 1, 5])
+    def test_setup_on_destroy_setups_item_destroy(self, index):
+        """should raise if master is not Listbox"""
+        self.listbox_item.index = index
+
+        setup_on_destroy(self.listbox_item, self.context)
+
+        self.listbox_item.on_destroy(self.listbox_item)
+        assert self.listbox.delete.call_args == call(index)

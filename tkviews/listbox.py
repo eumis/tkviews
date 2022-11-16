@@ -13,11 +13,11 @@ class ListboxItem(Node):
                  node_globals: Optional[InheritedDict] = None):
         super().__init__(xml_node, node_globals=node_globals)
         self.on_updated: Callable[[ListboxItem], None] = None
-        self._index: int = None
+        self._index: Optional[int] = None
         self._value: str = ''
 
     @property
-    def index(self) -> int:
+    def index(self) -> Optional[int]:
         return self._index
 
     @index.setter
@@ -37,9 +37,9 @@ class ListboxItem(Node):
             self.on_updated(self)
 
 
-def get_listboxitem_pipeline() -> RenderingPipeline:
+def get_listboxitem_pipeline() -> RenderingPipeline[ListboxItem, TkRenderingContext]:
     """Returns setup for canvas"""
-    return RenderingPipeline(pipes=[
+    return RenderingPipeline[ListboxItem, TkRenderingContext](pipes=[
         apply_attributes,
         insert_item,
         setup_on_updated,
@@ -48,14 +48,16 @@ def get_listboxitem_pipeline() -> RenderingPipeline:
 
 
 def insert_item(node: ListboxItem, context: TkRenderingContext):
-    listbox: Listbox = context.master
-    if not isinstance(listbox, Listbox):
+    if not isinstance(context.master, Listbox):
         raise RenderingError(f'{ListboxItem.__name__} parent should be Listbox')
+    listbox: Listbox = context.master
     node.index = node.index if node.index else listbox.size()
     listbox.insert(node.index, node.value)
 
 
 def setup_on_updated(node: ListboxItem, context: TkRenderingContext):
+    if not isinstance(context.master, Listbox):
+        raise RenderingError(f'{ListboxItem.__name__} parent should be Listbox')
     listbox: Listbox = context.master
     node.on_updated = lambda n: _update_item(listbox, n)
 
@@ -66,6 +68,8 @@ def _update_item(listbox: Listbox, item: ListboxItem):
 
 
 def setup_on_destroy(node: ListboxItem, context: TkRenderingContext):
+    if not isinstance(context.master, Listbox):
+        raise RenderingError(f'{ListboxItem.__name__} parent should be Listbox')
     listbox: Listbox = context.master
     node.on_destroy = lambda n: _delete_item(listbox, n)
 

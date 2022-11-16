@@ -1,0 +1,1 @@
+exclude **/tests/* venv/** demo/** sandbox/**

@@ -13,10 +13,6 @@
           background="black"
           global:root="{node.instance}">
 
-    <tkv:Code>
-        root.attributes('-zoomed', True)
-    </tkv:Code>
-
     <tkv:TtkStyle name="demo.Treeview"/>
     <tkv:StylesView name="styles"/>
 

@@ -1,0 +1,4 @@
+pyviews
+pytest
+coverage
+pylint

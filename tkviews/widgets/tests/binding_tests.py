@@ -71,13 +71,11 @@ class VariableBindingTest:
 
 
 class Entry(Widget):
-    # noinspection PyMissingConstructor
     def __init__(self):
         self.variable = None
 
 
 class Radiobutton(Widget):
-    # noinspection PyMissingConstructor
     def __init__(self):
         pass
 
@@ -90,8 +88,8 @@ class TestViewModel(ObservableEntity):
 
 @fixture
 def var_binding_fixture(request):
-    widget, vm = Entry(), TestViewModel()
-    node = WidgetNode(widget, Mock(), InheritedDict({'vm': vm}))
+    widget, view_model = Entry(), TestViewModel()
+    node = WidgetNode(widget, Mock(), InheritedDict({'vm': view_model}))
 
     context = BindingContext()
     context.node = node
@@ -101,12 +99,16 @@ def var_binding_fixture(request):
 
     request.cls.context = context
     request.cls.widget = widget
-    request.cls.vm = vm
+    request.cls.vm = view_model
 
 
 @mark.usefixtures('var_binding_fixture')
 class BindVariableAndExpressionTests:
     """bind_variable_and_expression() tests"""
+
+    context: BindingContext
+    widget: Entry
+    vm: TestViewModel
 
     def test_returns_binding(self):
         """should return binding"""
@@ -209,6 +211,11 @@ def custom_var_binding_fixture(var_binding_fixture, request):
 @mark.usefixtures('custom_var_binding_fixture')
 class BindCustomVariableAndExpressionTests:
     """bind_custom_variable_and_expression() tests"""
+
+    variable: TestVariable
+    context: BindingContext
+    widget: Entry
+    vm: TestViewModel
 
     def test_returns_binding(self):
         """should return binding"""

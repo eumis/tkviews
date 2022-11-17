@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tkviews"
+description = "Package for creating tkinter applications in declarative way."
+keywords = ['binding', 'tkinter', 'tk', 'tkviews', 'pyviews', 'python', 'mvvm', 'views']
+version = "3.2.0"
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10"
+]
+dependencies = [
+    'pyviews>=3.*.*,<4.*.*'
+]
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["tkviews*"]
+exclude = ["*tests*"]
+
+[project.urls]
+Homepage = "https://github.com/eumis/tkviews"
+
+[tool.pylint.main]
+disable = ["too-few-public-methods", "missing-class-docstring", "missing-function-docstring", "missing-module-docstring"]
+max-line-length = 120
+
+[tool.pytest.ini_options]
+python_files = '*_tests.py'
+python_classes = '*Tests'

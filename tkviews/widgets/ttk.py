@@ -21,11 +21,10 @@ class TtkStyle(Node):
     @property
     def full_name(self):
         """Full name"""
-        return '{0}.{1}'.format(self.name, self._parent_name) \
-            if self._parent_name else self.name
+        return f'{self.name}.{self._parent_name}' if self._parent_name else self.name
 
 
-def theme_use(_node: Node, key: str, _value: Any):
+def theme_use(_: Node, key: str, __: Any):
     """Sets ttk style theme"""
     ttk_style = Style()
     ttk_style.theme_use(key)

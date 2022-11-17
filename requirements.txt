@@ -1,6 +1,4 @@
 pyviews
 -e .
 pylint
-setuptools
 pytest
-coverage

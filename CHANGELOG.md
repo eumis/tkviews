@@ -1,6 +1,6 @@
 # Changelog
 
-## Dev
+## 3.2.0
 
 - added Radiobutton two ways binding
 - added Lisbox pipeline

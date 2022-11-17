@@ -31,6 +31,9 @@ def canvas_fixture(request):
 class CanvasNodeTests:
     """CanvasNode class tests"""
 
+    canvas: Mock
+    item: TestCanvasItem
+
     @mark.parametrize('event, command', [
         ('Button-1', lambda: None)
     ])
@@ -59,10 +62,12 @@ class CanvasNodeTests:
     def test_destroy(self):
         """should call canvas.delete()"""
         self.item.create()
+        item_id = self.item.item_id
 
         self.item.destroy()
 
-        assert self.canvas.delete.call_args == call(self.item.item_id)
+        assert self.canvas.delete.call_args == call(item_id)
+        assert self.item.item_id is None
 
 
 @fixture
@@ -74,6 +79,9 @@ def canvas_items_fixture(request):
 @mark.usefixtures('canvas_items_fixture')
 class CanvasItemsTests:
     """Canvas items tests"""
+
+    canvas: Mock
+    options: dict
 
     def test_rectangle_create(self):
         """Rectangle tests"""

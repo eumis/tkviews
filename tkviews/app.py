@@ -1,12 +1,11 @@
 """tkinter application entry point"""
 
-from typing import cast
+from typing import Optional, cast
 
 from injectool import add_singleton
 from pyviews.binding import use_binding
 from pyviews.code import run_code
-from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, \
-    get_if_pipeline
+from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, get_if_pipeline
 from pyviews.presenter import get_presenter_pipeline
 from pyviews.rendering import RenderingPipeline, use_rendering, get_child_context
 from pyviews.rendering.pipeline import use_pipeline
@@ -51,7 +50,7 @@ def use_tkviews_pipelines():
     use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')
 
 
-def launch(root_view=None):
+def launch(root_view: Optional[str] = None):
     """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
     root: Root = cast(Root, render_view(root_view, TkRenderingContext()))

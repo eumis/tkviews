@@ -120,6 +120,8 @@ def configure_fixture(request):
 class ConfigureTests:
     """configure() step tests"""
 
+    configure: Mock
+
     @mark.parametrize('name, values', [
         ('name', {}),
         ('Button.Some', {'one': 1}),

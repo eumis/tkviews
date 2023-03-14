@@ -2,17 +2,17 @@
 from itertools import groupby
 from tkinter.ttk import Treeview
 
-from pyviews.core import ObservableEntity
+from pyviews.core.bindable import BindableEntity
 from pyviews.presenter import Presenter
 
 from demo.model import Demo
 
 
-class AppPresenter(ObservableEntity, Presenter):
+class AppPresenter(BindableEntity, Presenter):
     """Demo presenter"""
 
     def __init__(self):
-        ObservableEntity.__init__(self)
+        BindableEntity.__init__(self)
         Presenter.__init__(self)
         self._demos = [
             Demo("Widgets", "Button", "button/button"),
@@ -32,7 +32,7 @@ class AppPresenter(ObservableEntity, Presenter):
 
             Demo("Containers", "For", "for/for"),
             Demo("Containers", "If", "if/if"),
-        ]
+        ] # yapf: disable
         self.demo_view = None
         self.demo_name = None
         self._default_demo = self._demos[0]
@@ -44,10 +44,11 @@ class AppPresenter(ObservableEntity, Presenter):
     def on_rendered(self):
         """Add demo items to tree"""
         for i, (section, demos) in enumerate(groupby(self._demos, lambda d: d.section)):
-            section_item = self.demo_tree.insert("", i, section, text=section)
+            section_item = self.demo_tree.insert("", i, section, text = section)
             for demo_i, demo in enumerate(demos):
-                self.demo_tree.insert(section_item, demo_i, iid=demo.name, text=demo.name,
-                                      values=[demo.view, demo.name])
+                self.demo_tree.insert(
+                    section_item, demo_i, iid = demo.name, text = demo.name, values = [demo.view, demo.name]
+                )
                 if demo == self._default_demo:
                     self.demo_view = demo.view
                     self.demo_name = demo.name

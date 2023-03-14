@@ -1,9 +1,10 @@
 from typing import Tuple
 
-from pyviews.core import ObservableEntity
+from pyviews.core.bindable import BindableEntity
 
 
-class ListboxItemsViewModel(ObservableEntity):
+class ListboxItemsViewModel(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self.items = ['one', 'two', 'three']

@@ -3,7 +3,7 @@
 from pyviews.rendering.pipeline import use_pipeline
 
 from sandbox.widgets import get_scroll_pipeline
-from tkviews.app import register_dependencies, launch
+from tkviews.app import launch, register_dependencies
 
 
 def run_sandbox():

@@ -1,8 +1,9 @@
 """Checkbutton demo view models"""
-from pyviews.core import ObservableEntity
+
+from pyviews.core.bindable import BindableEntity
 
 
-class RadioViewModel(ObservableEntity):
+class RadioViewModel(BindableEntity):
     """Check button view model"""
 
     def __init__(self):

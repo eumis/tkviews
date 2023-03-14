@@ -3,7 +3,7 @@ from typing import cast
 from unittest.mock import Mock, call, patch
 
 from pytest import fixture, mark
-from pyviews.rendering import RenderingPipeline
+from pyviews.rendering.pipeline import RenderingPipeline
 
 from tkviews.core import TkRenderingContext
 from tkviews.widgets import node

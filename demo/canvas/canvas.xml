@@ -4,7 +4,7 @@
                xmlns:styles="tkviews.apply_styles">
     <tkv:StylesView name="styles"/>
 
-    <Canvas styles:="packed">
+    <Canvas styles:_="packed">
         <canvas:Rectangle place="{[10, 10, 100, 100]}"
                           fill="black"/>
         <canvas:Rectangle place="{[110, 10, 210, 100]}"

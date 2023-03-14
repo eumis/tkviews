@@ -1,7 +1,8 @@
-from pyviews.core import ObservableEntity
+from pyviews.core.bindable import BindableEntity
 
 
-class ScrollVm(ObservableEntity):
+class ScrollVm(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self.items = [ScrollItem(i) for i in range(100)]
@@ -16,7 +17,8 @@ class ScrollVm(ObservableEntity):
         # scroll_to(find_node('scroll_id'), node_id)
 
 
-class ScrollItem(ObservableEntity):
+class ScrollItem(BindableEntity):
+
     def __init__(self, index):
         super().__init__()
         self._index = index

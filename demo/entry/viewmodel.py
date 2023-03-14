@@ -1,8 +1,9 @@
 """Entry demo view models"""
-from pyviews.core import ObservableEntity
+
+from pyviews.core.bindable import BindableEntity
 
 
-class EntryViewModel(ObservableEntity):
+class EntryViewModel(BindableEntity):
     """Entry view model"""
 
     def __init__(self):

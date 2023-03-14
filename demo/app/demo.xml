@@ -26,7 +26,7 @@
                 frame.grid_columnconfigure(index=1, weight=1)
             </tkv:Code>
 
-            <ttk:Treeview ref:="demo_tree"
+            <ttk:Treeview ref:_="demo_tree"
                           call:grid='{args(row=0, column=0, sticky="nwes")}'/>
 
             <LabelFrame call:grid='{args(row=0, column=1, sticky="nwes")}'

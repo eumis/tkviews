@@ -3,8 +3,11 @@ from typing import Type
 from unittest.mock import Mock, call
 
 from pytest import mark, fixture
-from pyviews.binding import BindingContext, TwoWaysBinding
-from pyviews.core import XmlAttr, Node, ObservableEntity, InheritedDict
+from pyviews.binding.binder import BindingContext
+from pyviews.binding.twoways import TwoWaysBinding
+from pyviews.core.bindable import BindableEntity
+from pyviews.core.rendering import Node, NodeGlobals
+from pyviews.core.xml import XmlAttr
 from pyviews.pipes import call_set_attr
 
 from tkviews.widgets.binding import VariableBinding, check_widget_and_property, \
@@ -13,7 +16,6 @@ from tkviews.widgets.node import WidgetNode
 
 
 class TestVariable:
-    # noinspection PyMissingConstructor
     def __init__(self):
         self._val = None
         self._callback = None
@@ -80,7 +82,7 @@ class Radiobutton(Widget):
         pass
 
 
-class TestViewModel(ObservableEntity):
+class TestViewModel(BindableEntity):
     def __init__(self):
         super().__init__()
         self.value = None
@@ -89,7 +91,7 @@ class TestViewModel(ObservableEntity):
 @fixture
 def var_binding_fixture(request):
     widget, view_model = Entry(), TestViewModel()
-    node = WidgetNode(widget, Mock(), InheritedDict({'vm': view_model}))
+    node = WidgetNode(widget, Mock(), NodeGlobals({'vm': view_model}))
 
     context = BindingContext()
     context.node = node
@@ -200,7 +202,6 @@ class CheckWidgetAndPropertyTests:
 
 
 @fixture
-# pylint: disable=redefined-outer-name,unused-argument
 def custom_var_binding_fixture(var_binding_fixture, request):
     var = TestVariable()
     request.cls.variable = var

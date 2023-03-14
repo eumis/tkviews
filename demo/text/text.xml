@@ -12,8 +12,8 @@
     <tkv:StylesView name='styles'/>
 
     <tkv:PresenterNode instance="once:{TextPresenter()}">
-        <Text styles:="packed"
-              ref:="text"/>
+        <Text styles:_="packed"
+              ref:_="text"/>
     </tkv:PresenterNode>
 
 </tkv:Container>

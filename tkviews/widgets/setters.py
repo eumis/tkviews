@@ -2,8 +2,7 @@
 
 from tkinter import Event
 
-from pyviews.core import PyViewsError
-from pyviews.core import error_handling, ViewInfo
+from pyviews.core.error import PyViewsError, ViewInfo, error_handling
 
 from tkviews.widgets.node import WidgetNode
 

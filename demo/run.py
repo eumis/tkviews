@@ -1,7 +1,9 @@
 """Runs demo application"""
 from os.path import abspath
+
 from injectool import add_singleton
-from tkviews.app import register_dependencies, launch
+
+from tkviews.app import launch, register_dependencies
 
 
 def run_demo():

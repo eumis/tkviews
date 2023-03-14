@@ -1,7 +1,7 @@
-from tkinter import Frame, Canvas, Scrollbar
+from tkinter import Canvas, Frame, Scrollbar
+from typing import Optional
 
-from pyviews.core import Node
-from pyviews.core.observable import InheritedDict
+from pyviews.core.rendering import Node, NodeGlobals
 from pyviews.core.xml import XmlNode
 from pyviews.pipes import apply_attributes, render_children
 from pyviews.rendering.pipeline import RenderingPipeline
@@ -10,9 +10,9 @@ from tkviews.core.rendering import TkRenderingContext
 
 
 class Scroll(Node):
-    def __init__(self, master, xml_node: XmlNode,
-                 node_globals: InheritedDict = None):
-        super().__init__(xml_node, node_globals=node_globals)
+
+    def __init__(self, master, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
+        super().__init__(xml_node, node_globals = node_globals)
         self._frame = self._create_scroll_frame(master)
         self._canvas = self._create_canvas(self._frame)
         self._scroll = self._create_scroll(self._frame, self._canvas)
@@ -29,39 +29,36 @@ class Scroll(Node):
     @staticmethod
     def _create_scroll_frame(master):
         frame = Frame(master)
-        frame.columnconfigure(0, weight=1)
-        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight = 1)
+        frame.rowconfigure(0, weight = 1)
         return frame
 
     @staticmethod
     def _create_canvas(master):
         canvas = Canvas(master)
-        canvas.grid(row=0, column=0, sticky='wens')
+        canvas.grid(row = 0, column = 0, sticky = 'wens')
         return canvas
 
     @staticmethod
     def _create_scroll(master, canvas):
-        scroll = Scrollbar(master, orient='vertical', command=canvas.yview)
-        scroll.grid(row=0, column=1, sticky='ns')
-        canvas.config(yscrollcommand=scroll.set, highlightthickness=0, bg='green')
+        scroll = Scrollbar(master, orient = 'vertical', command = canvas.yview)
+        scroll.grid(row = 0, column = 1, sticky = 'ns')
+        canvas.config(yscrollcommand = scroll.set, highlightthickness = 0, bg = 'green')
         return scroll
 
     @staticmethod
     def _create_container(canvas):
         container = Frame(canvas)
-        container.pack(fill='both', expand=True)
-        container_window_sets = {
-            'window': container,
-            'anchor': 'nw'
-        }
+        container.pack(fill = 'both', expand = True)
+        container_window_sets = {'window': container, 'anchor': 'nw'}
         container.win_id = canvas.create_window((0, 0), container_window_sets)
         return container
 
     def _config_container(self):
-        self._canvas.config(scrollregion=self._canvas.bbox("all"))
+        self._canvas.config(scrollregion = self._canvas.bbox("all"))
 
     def _config_canvas(self, event):
-        self._canvas.itemconfig(self._container.win_id, width=event.width)
+        self._canvas.itemconfig(self._container.win_id, width = event.width)
 
     def _on_mouse_scroll(self, event):
         if Scroll.active_canvas and self._is_active():
@@ -97,11 +94,7 @@ class Scroll(Node):
 
 
 def get_scroll_pipeline():
-    return RenderingPipeline(pipes=[
-        setup_setter,
-        apply_attributes,
-        render_scroll_children
-    ])
+    return RenderingPipeline(pipes = [setup_setter, apply_attributes, render_scroll_children])
 
 
 def setup_setter(node: Scroll, _: TkRenderingContext):

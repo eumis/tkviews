@@ -1,9 +1,10 @@
 from typing import List
 
-from pyviews.core import ObservableEntity
+from pyviews.core.bindable import BindableEntity
 
 
-class Counter(ObservableEntity):
+class Counter(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self._count = None

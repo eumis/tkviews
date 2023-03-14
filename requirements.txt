@@ -2,3 +2,5 @@ pyviews
 -e .
 pylint
 pytest
+toml
+yapf

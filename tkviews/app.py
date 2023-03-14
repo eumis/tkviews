@@ -3,20 +3,19 @@
 from typing import Optional, cast
 
 from injectool import add_singleton
-from pyviews.binding import use_binding
+from pyviews.binding.setup import use_binding
 from pyviews.code import run_code
-from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, get_if_pipeline
+from pyviews.containers import get_container_pipeline, get_for_pipeline, get_if_pipeline, get_view_pipeline
 from pyviews.presenter import get_presenter_pipeline
-from pyviews.rendering import RenderingPipeline, use_rendering, get_child_context
-from pyviews.rendering.pipeline import use_pipeline
-from pyviews.rendering.views import render_view
+from pyviews.rendering.common import get_child_context
+from pyviews.rendering.pipeline import RenderingPipeline, render_view, use_pipeline
+from pyviews.rendering.setup import use_rendering
 
 from tkviews.canvas import get_canvas_pipeline
 from tkviews.core.rendering import TkRenderingContext, get_tk_child_context
 from tkviews.listbox import get_listboxitem_pipeline
 from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
-from tkviews.widgets import get_root_pipeline, get_widget_pipeline, Root
-from tkviews.widgets import use_variables_binding
+from tkviews.widgets import Root, get_root_pipeline, get_widget_pipeline, use_variables_binding
 from tkviews.widgets.ttk import get_ttk_style_pipeline
 
 
@@ -47,7 +46,7 @@ def use_tkviews_pipelines():
     use_pipeline(get_canvas_pipeline(), 'tkviews.canvas')
     use_pipeline(get_listboxitem_pipeline(), 'tkviews.ListboxItem')
 
-    use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')
+    use_pipeline(RenderingPipeline(pipes = [run_code]), 'tkviews.Code')
 
 
 def launch(root_view: Optional[str] = None):

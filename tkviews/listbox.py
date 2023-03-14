@@ -1,18 +1,19 @@
 from tkinter import Listbox
 from typing import Callable, Optional
 
-from pyviews.core import Node, XmlNode, InheritedDict
+from pyviews.core.rendering import Node, NodeGlobals, RenderingError
+from pyviews.core.xml import XmlNode
 from pyviews.pipes import apply_attributes
-from pyviews.rendering import RenderingPipeline, RenderingError
+from pyviews.rendering.pipeline import RenderingPipeline
 
 from tkviews.core import TkRenderingContext
 
 
 class ListboxItem(Node):
-    def __init__(self, xml_node: XmlNode,
-                 node_globals: Optional[InheritedDict] = None):
-        super().__init__(xml_node, node_globals=node_globals)
-        self.on_updated: Callable[[ListboxItem], None] = None
+
+    def __init__(self, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
+        super().__init__(xml_node, node_globals = node_globals)
+        self.on_updated: Optional[Callable[[ListboxItem], None]] = None
         self._index: Optional[int] = None
         self._value: str = ''
 
@@ -44,7 +45,7 @@ def get_listboxitem_pipeline() -> RenderingPipeline[ListboxItem, TkRenderingCont
         insert_item,
         setup_on_updated,
         setup_on_destroy
-    ])
+    ]) # yapf: disable
 
 
 def insert_item(node: ListboxItem, context: TkRenderingContext):

@@ -1,13 +1,15 @@
-from pyviews.core import ObservableEntity
+from pyviews.core.bindable import BindableEntity
 
 
-class AppViewModel(ObservableEntity):
-    def __init__(self, default_view=None):
+class AppViewModel(BindableEntity):
+
+    def __init__(self, default_view = None):
         super().__init__()
         self.view = default_view
 
 
-class BindingViewModel(ObservableEntity):
+class BindingViewModel(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self.entry = 'value'

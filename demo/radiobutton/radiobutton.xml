@@ -10,7 +10,7 @@
                global:vm="once:{RadioViewModel()}">
     <tkv:StylesView name="styles"/>
 
-    <LabelFrame styles:="packed,frame"
+    <LabelFrame styles:_="packed,frame"
                 text='Radiobutton int(default) binding'>
         <tkv:For items='{list(range(3))}'>
             <Radiobutton call:pack='{args(side="left")}'
@@ -25,7 +25,7 @@
         </Label>
     </LabelFrame>
 
-    <LabelFrame styles:="packed,frame"
+    <LabelFrame styles:_="packed,frame"
                 text='Radiobutton string binding'>
         <Radiobutton call:pack='{args(side="left")}'
                      value='one'
@@ -42,7 +42,7 @@
         </Label>
     </LabelFrame>
 
-    <LabelFrame styles:="packed,frame"
+    <LabelFrame styles:_="packed,frame"
                 text='Radiobutton bool binding'>
         <Radiobutton call:pack='{args(side="left")}'
                      value='once:{True}'

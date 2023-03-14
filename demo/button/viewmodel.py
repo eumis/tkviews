@@ -1,8 +1,9 @@
 """Button demo view models"""
-from pyviews.core import ObservableEntity
+
+from pyviews.core.bindable import BindableEntity
 
 
-class CounterViewModel(ObservableEntity):
+class CounterViewModel(BindableEntity):
     """Counter button view model"""
 
     def __init__(self):

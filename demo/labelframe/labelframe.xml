@@ -17,7 +17,7 @@
                     width="{500}"
                     borderwidth="{5}"
                     relief="groove"
-                    ref:="label_frame"
+                    ref:_="label_frame"
         />
     </tkv:PresenterNode>
 

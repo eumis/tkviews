@@ -2,14 +2,14 @@
 
 from pyviews.rendering.pipeline import use_pipeline
 
-from sandbox.widgets import get_scroll_pipeline
+from widgets import get_scroll_pipeline
 from tkviews.app import launch, register_dependencies
 
 
 def run_sandbox():
     """Entry point"""
     register_dependencies()
-    use_pipeline(get_scroll_pipeline(), 'sandbox.widgets')
+    use_pipeline(get_scroll_pipeline(), 'widgets')
     launch('app')
 
 

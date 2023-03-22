@@ -23,7 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10"
 ]
 dependencies = [
-    'pyviews>=3.*.*,<4.*.*'
+    'pyviews == 3.*'
 ]
 
 [tool.setuptools]

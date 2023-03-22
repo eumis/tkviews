@@ -5,7 +5,7 @@ from tkinter.ttk import Treeview
 from pyviews.core.bindable import BindableEntity
 from pyviews.presenter import Presenter
 
-from demo.model import Demo
+from model import Demo
 
 
 class AppPresenter(BindableEntity, Presenter):

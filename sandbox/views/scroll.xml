@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <sb:Scroll xmlns='tkinter'
            xmlns:tkv="tkviews"
-           xmlns:sb='sandbox.widgets'
+           xmlns:sb='widgets'
            xmlns:import="tkviews.import_global"
            xmlns:bind="tkviews.bind"
            xmlns:global='tkviews.set_global'

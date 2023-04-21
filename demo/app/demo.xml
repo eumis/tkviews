@@ -11,6 +11,7 @@
           import:AppPresenter="app.presenter.AppPresenter"
 
           background="black"
+          call:title="{args('Demo app')}"
           global:root="{node.instance}">
 
     <tkv:TtkStyle name="demo.Treeview"/>

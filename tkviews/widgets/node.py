@@ -14,8 +14,8 @@ from tkviews.core import TkRenderingContext
 class Root(InstanceNode):
     """Wrapper under tkinter Root"""
 
-    def __init__(self, xml_node: XmlNode):
-        super().__init__(Tk(), xml_node)
+    def __init__(self, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
+        super().__init__(Tk(), xml_node, node_globals)
         self._icon = None
 
     @property

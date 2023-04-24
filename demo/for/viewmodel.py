@@ -1,7 +1,7 @@
 from tkinter import StringVar
 from typing import List
 
-from pyviews.core.bindable import BindableEntity
+from pyviews.core.binding import BindableEntity
 
 
 class Counter(BindableEntity):

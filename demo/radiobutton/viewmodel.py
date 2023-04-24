@@ -1,6 +1,6 @@
 """Checkbutton demo view models"""
 
-from pyviews.core.bindable import BindableEntity
+from pyviews.core.binding import BindableEntity
 
 
 class RadioViewModel(BindableEntity):

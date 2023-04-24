@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from pyviews.core.bindable import BindableEntity
+from pyviews.core.binding import BindableEntity
 
 
 class ListboxItemsViewModel(BindableEntity):

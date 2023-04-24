@@ -8,7 +8,7 @@ from pyviews.code import run_code
 from pyviews.containers import get_container_pipeline, get_for_pipeline, get_if_pipeline, get_view_pipeline
 from pyviews.core.rendering import NodeGlobals
 from pyviews.presenter import get_presenter_pipeline
-from pyviews.rendering.common import get_child_context
+from pyviews.rendering.context import get_child_context
 from pyviews.rendering.pipeline import RenderingPipeline, render_view, use_pipeline
 from pyviews.rendering.config import use_rendering
 

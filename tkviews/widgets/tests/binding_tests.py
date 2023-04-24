@@ -5,7 +5,7 @@ from unittest.mock import Mock, call
 from pytest import mark, fixture
 from pyviews.binding.binder import BindingContext
 from pyviews.binding.twoways import TwoWaysBinding
-from pyviews.core.bindable import BindableEntity
+from pyviews.core.binding import BindableEntity
 from pyviews.core.rendering import Node, NodeGlobals
 from pyviews.core.xml import XmlAttr
 from pyviews.pipes import call_set_attr

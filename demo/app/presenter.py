@@ -2,7 +2,7 @@
 from itertools import groupby
 from tkinter.ttk import Treeview
 
-from pyviews.core.bindable import BindableEntity
+from pyviews.core.binding import BindableEntity
 from pyviews.presenter import Presenter
 
 from model import Demo

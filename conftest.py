@@ -2,7 +2,7 @@
 
 from injectool import use_container
 from pytest import fixture
-from pyviews.binding.setup import use_binding
+from pyviews.binding.config import use_binding
 
 from tkviews.widgets import use_variables_binding
 

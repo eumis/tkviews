@@ -1,3 +1,5 @@
+# Expressions
+
 Expressions can be used in attribute values to specify dynamic values.
 An expression can be any valid Python expression that can be evaluated at runtime.
 Expressions are enclosed in curly braces {} within an attribute value.
@@ -16,4 +18,7 @@ Attribute value cannot be partially expression. For example
 
 Here label text will be interpreted as plain text: `"{len(items)} items"`
 
-Expressions use [node globals](Rendering#Node-globals) as python expression globals.
+Expressions use [node globals](Rendering.md#Node-globals) as python expression globals.
+
+___
+[Previous](Setters.md "Setters") | [Next](Binding.md "Binding")

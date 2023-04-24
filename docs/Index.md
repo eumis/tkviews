@@ -3,8 +3,8 @@
 - [Quick Start](Quick-Start.md)
 - [Overview](Overview.md)
 - [Rendering](Rendering.md)
-- [Setters](Overview.md)
-- [Expressions](Overview.md)
-- [Binding](Overview.md)
+- [Setters](Setters.md)
+- [Expressions](Expressions.md)
+- [Binding](Binding.md)
 - [Containers](Containers.md)
 

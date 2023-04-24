@@ -1,3 +1,5 @@
+# Rendering
+
 ## Node
 
 tkviews rendering is a process of parsing xml and creating Node object.
@@ -68,7 +70,7 @@ use_pipeline(get_custom_widget_pipeline(), 'tkinter.ttk')
 
 ## Node globals
 
-Node globals is a dictionary with values, which are used as globals for [Expressions](Expressions).
+Node globals is a dictionary with values, which are used as globals for [Expressions](Expressions.md).
 
 Parent globals are available in child nodes. For example
 
@@ -80,3 +82,6 @@ Parent globals are available in child nodes. For example
 
 In this example, the `Frame` node defines a `view_model` value in the globals dictionary.
 This value is then accessed in the `Label` node using an expression ({view_model.value}).
+
+___
+[Previous](Overview.md "Overview") | [Next](Setters.md "Setters")

@@ -1,3 +1,5 @@
+# Setters
+
 Basically setters are functions that set node or widget attributes.  
 
 ## Built-in setters
@@ -71,3 +73,6 @@ and can be used in views like this:
 ```xml
 <Label xmlns:my_setter="mymodule.my_setter" my_setter:key="value" />
 ```
+
+___
+[Previous](Rendering.md "Rendering") | [Next](Expressions.md "Expressions")

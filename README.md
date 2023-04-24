@@ -35,6 +35,10 @@ cd [root_folder]\demo
 python run.py
 ```
 
+## Docs
+
+See some documentation in [docs](https://github.com/eumis/tkviews/tree/dev/docs) folder
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)

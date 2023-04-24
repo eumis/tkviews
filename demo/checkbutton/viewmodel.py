@@ -1,8 +1,9 @@
 """Checkbutton demo view models"""
-from pyviews.core import ObservableEntity
+
+from pyviews.core.binding import BindableEntity
 
 
-class CheckViewModel(ObservableEntity):
+class CheckViewModel(BindableEntity):
     """Check button view model"""
 
     def __init__(self):

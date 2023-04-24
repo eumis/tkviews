@@ -2,14 +2,14 @@ from unittest.mock import Mock, call
 
 from pytest import fixture, mark
 
-from tkviews.canvas import CanvasItemNode, setup_temp_setter, setup_temp_binding, create_item, \
-    setup_config_setter, \
-    setup_event_binding, apply_temp_events, clear_temp, Rectangle, Text, Image, Arc, Bitmap, Line, \
-    Oval, Polygon, Window
+from tkviews.canvas import (Arc, Bitmap, CanvasItemNode, Image, Line, Oval, Polygon, Rectangle, Text, Window,
+                            apply_temp_events, clear_temp, create_item, setup_config_setter, setup_event_binding,
+                            setup_temp_binding, setup_temp_setter)
 from tkviews.core.rendering import TkRenderingContext
 
 
 class TestCanvasItem(CanvasItemNode):
+
     def __init__(self, canvas, item_id):
         super().__init__(canvas, Mock())
         self._id = item_id
@@ -36,7 +36,7 @@ class CanvasNodeTests:
 
     @mark.parametrize('event, command', [
         ('Button-1', lambda: None)
-    ])
+    ]) # yapf: disable
     def test_bind(self, event, command):
         """bind() should call tag_bind of canvas"""
         self.item.create()
@@ -49,7 +49,7 @@ class CanvasNodeTests:
     @mark.parametrize('options', [
         {'option1': 1},
         {'option1': 1, 'option2': 'value'}
-    ])
+    ]) # yapf: disable
     def test_config(self, options: dict):
         """config() should call itemconfig of canvas"""
         self.item.create()
@@ -166,6 +166,7 @@ class CanvasItemsTests:
 
 
 class TestCanvasNode(CanvasItemNode):
+
     def _create(self, **options):
         return "id"
 
@@ -174,7 +175,7 @@ class TestCanvasNode(CanvasItemNode):
     {'key': 1},
     {'key': 1, 'one': 'one'},
     {'key': None, 'list': [1], 'obj': object()}
-])
+]) # yapf: disable
 def test_setup_temp_setter(attrs: dict):
     """setup_temp_setter() should set setter that stores attrs it attr_values property"""
     canvas = TestCanvasNode(Mock(), Mock())
@@ -189,7 +190,7 @@ def test_setup_temp_setter(attrs: dict):
 @mark.parametrize('events', [
     {'key': lambda: None},
     {'key': lambda: None, 'two': lambda: None}
-])
+]) # yapf: disable
 def test_setup_temp_binding_stores_commands(events):
     """setup_temp_binding() should set bind that stores callbacks it events property"""
     canvas = TestCanvasNode(Mock(), Mock())
@@ -215,7 +216,7 @@ def test_create_item_calls_create():
 @mark.parametrize('key, value', [
     ('key', 1),
     ('other_key', 'value')
-])
+]) # yapf: disable
 def test_setup_config_setter_calls_config(key, value):
     """setup_config_setter() should set setter that calls config method"""
     canvas = TestCanvasNode(Mock(), Mock())
@@ -242,7 +243,7 @@ def test_setup_event_binding_should_restore_bind():
 @mark.parametrize('events', [
     {'key': lambda: None},
     {'key': lambda: None, 'two': lambda: None}
-])
+]) # yapf: disable
 def test_apply_temp_events_should_bind(events: dict):
     """apply_temp_events() should bind events stored in temp dictionary"""
     canvas = Mock()

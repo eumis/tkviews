@@ -1,16 +1,16 @@
 """Widgets binding"""
 
-from tkinter import Widget, Variable, Entry, Checkbutton, Radiobutton, StringVar, BooleanVar, \
-    IntVar, DoubleVar, Scale, Spinbox
+from tkinter import (BooleanVar, Checkbutton, DoubleVar, Entry, IntVar, Radiobutton, Scale, Spinbox, StringVar,
+                     Variable, Widget)
 from typing import Type, Union
 
-from injectool import inject
-from pyviews.binding import BindingContext, TwoWaysBinding, ExpressionBinding, Binder, \
-    get_expression_callback
-from pyviews.core import BindingCallback, Binding, \
-    BindingError, PyViewsError
-from pyviews.core import error_handling
-from pyviews.expression import Expression, execute
+from injectool import In, inject
+from pyviews.binding.binder import Binder, BindingContext
+from pyviews.binding.expression import ExpressionBinding, get_expression_callback
+from pyviews.binding.twoways import TwoWaysBinding
+from pyviews.core.binding import Binding, BindingCallback, BindingError
+from pyviews.core.error import PyViewsError, error_handling
+from pyviews.core.expression import Expression, execute
 
 
 class VariableBinding(Binding):
@@ -44,24 +44,38 @@ class VariableBinding(Binding):
         self._trace_id = None
 
 
-@inject(binder=Binder)
-def use_variables_binding(binder: Binder = None):
+@inject(binder = Binder)
+def use_variables_binding(binder: Binder = In):
     """Adds tkinter variables bindings"""
-    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(StringVar, ctx),
-                    lambda ctx: check_widget_and_property(Entry, 'textvariable', ctx))
-    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(BooleanVar, ctx),
-                    lambda ctx: check_widget_and_property(Checkbutton, 'variable', ctx))
-    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(IntVar, ctx),
-                    lambda ctx: check_widget_and_property(Radiobutton, 'variable', ctx))
-    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(DoubleVar, ctx),
-                    lambda ctx: check_widget_and_property(Scale, 'variable', ctx))
-    binder.add_rule('twoways', lambda ctx: bind_variable_and_expression(StringVar, ctx),
-                    lambda ctx: check_widget_and_property(Spinbox, 'textvariable', ctx))
+    binder.add_rule(
+        'twoways',
+        lambda ctx: bind_variable_and_expression(StringVar, ctx),
+        lambda ctx: check_widget_and_property(Entry, 'textvariable', ctx)
+    )
+    binder.add_rule(
+        'twoways',
+        lambda ctx: bind_variable_and_expression(BooleanVar, ctx),
+        lambda ctx: check_widget_and_property(Checkbutton, 'variable', ctx)
+    )
+    binder.add_rule(
+        'twoways',
+        lambda ctx: bind_variable_and_expression(IntVar, ctx),
+        lambda ctx: check_widget_and_property(Radiobutton, 'variable', ctx)
+    )
+    binder.add_rule(
+        'twoways',
+        lambda ctx: bind_variable_and_expression(DoubleVar, ctx),
+        lambda ctx: check_widget_and_property(Scale, 'variable', ctx)
+    )
+    binder.add_rule(
+        'twoways',
+        lambda ctx: bind_variable_and_expression(StringVar, ctx),
+        lambda ctx: check_widget_and_property(Spinbox, 'textvariable', ctx)
+    )
     binder.add_rule('var', bind_custom_variable_and_expression)
 
 
-def bind_variable_and_expression(variable: Union[Variable, Type[Variable]],
-                                 context: BindingContext) -> TwoWaysBinding:
+def bind_variable_and_expression(variable: Union[Variable, Type[Variable]], context: BindingContext) -> TwoWaysBinding:
     """Create two ways binding between variable and expression"""
     if isinstance(variable, type):
         variable = variable()
@@ -76,8 +90,7 @@ def bind_variable_and_expression(variable: Union[Variable, Type[Variable]],
     return two_ways_binding
 
 
-def check_widget_and_property(widget_type: Type[Widget], var_property: str,
-                              context: BindingContext) -> bool:
+def check_widget_and_property(widget_type: Type[Widget], var_property: str, context: BindingContext) -> bool:
     """Return true if type and property are matched with values from context"""
     try:
         return isinstance(context.node.instance, widget_type) \
@@ -92,7 +105,7 @@ def bind_custom_variable_and_expression(context: BindingContext) -> TwoWaysBindi
     Expression should be "[binding type]:{[variable to bind]}:{[expression to bind]}"
     """
     (var_body, value_body) = context.expression_body.split('}:{')
-    variable: Variable = execute(Expression(var_body), context.node.node_globals.to_dictionary())
+    variable: Variable = execute(Expression(var_body), context.node.node_globals)
     custom_context = BindingContext(context)
     custom_context.expression_body = value_body
     return bind_variable_and_expression(variable, custom_context)

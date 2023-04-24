@@ -2,9 +2,11 @@
 from functools import partial
 from tkinter.ttk import Style
 from typing import Any
+from pyviews.core.error import Optional
 
-from pyviews.core import XmlNode, Node, InheritedDict
-from pyviews.rendering import RenderingPipeline
+from pyviews.core.rendering import Node, NodeGlobals, XmlNode
+from pyviews.rendering.pipeline import RenderingPipeline
+
 
 from tkviews.core.rendering import TkRenderingContext, render_attribute
 
@@ -12,7 +14,7 @@ from tkviews.core.rendering import TkRenderingContext, render_attribute
 class TtkStyle(Node):
     """Node for tkk style"""
 
-    def __init__(self, xml_node: XmlNode, parent_name=None, node_globals: InheritedDict = None):
+    def __init__(self, xml_node: XmlNode, parent_name=None, node_globals: Optional[NodeGlobals] = None):
         super().__init__(xml_node, node_globals=node_globals)
         self.values = {}
         self._parent_name = parent_name

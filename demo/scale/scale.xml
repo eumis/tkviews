@@ -9,14 +9,14 @@
                global:vm="once:{ScaleViewModel()}">
     <tkv:StylesView name="styles"/>
 
-    <Scale styles:="packed"
+    <Scale styles:_="packed"
            resolution="once:{0.5}"
            orient="once:{tk.HORIZONTAL}"
            from="once:{-10.0}"
            to="once:{10.0}"
            variable="{{vm.value}}"/>
 
-    <Label styles:="packed">
+    <Label styles:_="packed">
         {str(vm.value)}
     </Label>
 </tkv:Container>

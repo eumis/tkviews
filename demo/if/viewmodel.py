@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from pyviews.core import ObservableEntity
+from pyviews.core.binding import BindableEntity
 
 
 class RadioValue(NamedTuple):
@@ -8,7 +8,8 @@ class RadioValue(NamedTuple):
     label: str
 
 
-class ValuesViewModel(ObservableEntity):
+class ValuesViewModel(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self.values = ['None', 'One', 'Two']

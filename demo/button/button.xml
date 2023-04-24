@@ -10,20 +10,20 @@
                global:vm="once:{CounterViewModel()}">
     <tkv:StylesView name="styles"/>
 
-    <Button styles:="packed"
+    <Button styles:_="packed"
             text=" Dialog button"
             command="once:{lambda: messagebox.showinfo('title', 'dialog button message')}"/>
-    <Button styles:="packed"
+    <Button styles:_="packed"
             text="Disabled button"
             state="disabled"/>
-    <Button styles:="packed"
+    <Button styles:_="packed"
             text="{f'Flat counter - {vm.count}'}"
             relief="flat"
             bind:Button-1="once:{lambda e: vm.add_count()}"/>
     <tkv:TtkStyle name='TButton'
                font="once:{('calibri', 10, 'bold', 'underline')}"
                foreground="red"/>
-    <ttk:Button styles:="packed"
+    <ttk:Button styles:_="packed"
                 text="oneway:{f'ttk button counter - {vm.count}'}"
                 style="TButton"
                 bind:Button-1="once:{lambda e: vm.add_count()}"/>

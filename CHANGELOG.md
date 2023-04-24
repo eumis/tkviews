@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.0
+
+- upgraded pyviews to 4.0.0
+- added docs
+
 ## 3.2.0
 
 - added Radiobutton two ways binding

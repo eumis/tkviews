@@ -8,18 +8,18 @@
                height="{5}"/>
 
 
-    <Label styles:="packed,label_size"
+    <Label styles:_="packed,label_size"
            text="left text"
            foreground="blue"
            background="gray"
            anchor="nw"/>
 
-    <Label styles:="packed,label_size"
+    <Label styles:_="packed,label_size"
            text="hover me"
            background="gray"
            activeforeground="blue"/>
 
-    <Label styles:="packed,label_size"
+    <Label styles:_="packed,label_size"
            background="gray"
            text="Helvetica 24 bold"
            font="Helvetica 24 bold"

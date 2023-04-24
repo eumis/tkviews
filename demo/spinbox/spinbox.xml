@@ -10,9 +10,9 @@
                global:vm="once:{SpinboxViewModel()}">
     <tkv:StylesView name="styles"/>
 
-    <LabelFrame styles:="packed,frame"
+    <LabelFrame styles:_="packed,frame"
                 text='Spinbox from -10 to 10'>
-        <Spinbox styles:="packed"
+        <Spinbox styles:_="packed"
                  textvariable="{{vm.int_value}}"
                  from_="once:{-10}"
                  to="once:{10}"/>
@@ -22,9 +22,9 @@
         </Label>
     </LabelFrame>
 
-    <LabelFrame styles:="packed,frame"
+    <LabelFrame styles:_="packed,frame"
                 text='Spinbox with defined values'>
-        <Spinbox styles:="packed"
+        <Spinbox styles:_="packed"
                  textvariable="{{vm.str_value}}"
                  values="once:{('one', 'two', 'three')}"/>
 

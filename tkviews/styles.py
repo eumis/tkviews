@@ -2,12 +2,13 @@
 from tkinter import Widget
 from typing import Any, List, Optional
 
-from pyviews.core import PyViewsError, Setter, Node, XmlNode, InheritedDict, XmlAttr
-from pyviews.expression import parse_expression, is_expression, execute
-from pyviews.pipes import render_children, get_setter, apply_attributes
-from pyviews.rendering import RenderingPipeline
-
 from pyviews.containers import render_view_content
+from pyviews.core.error import PyViewsError
+from pyviews.core.expression import execute, is_expression, parse_expression
+from pyviews.core.rendering import Node, NodeGlobals, Setter
+from pyviews.core.xml import XmlAttr, XmlNode
+from pyviews.pipes import apply_attributes, get_setter, render_children
+from pyviews.rendering.pipeline import RenderingPipeline
 
 from tkviews.core import TkRenderingContext
 
@@ -55,7 +56,7 @@ class StyleItem:
 class Style(Node):
     """Node for storing config options"""
 
-    def __init__(self, xml_node: XmlNode, node_globals: Optional[InheritedDict] = None):
+    def __init__(self, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
         super().__init__(xml_node, node_globals)
         self.name: Optional[str] = None
         self.items = {}
@@ -69,13 +70,13 @@ def get_style_pipeline() -> RenderingPipeline:
         apply_parent_items,
         store_to_node_styles,
         render_child_styles
-    ], name='styles pipeline')
+    ], name='styles pipeline') # yapf: disable
 
 
 def setup_node_styles(_: Style, context: TkRenderingContext):
     """Initializes node styles"""
     if STYLES_KEY not in context.parent_node.node_globals:
-        context.parent_node.node_globals[STYLES_KEY] = InheritedDict()
+        context.parent_node.node_globals[STYLES_KEY] = NodeGlobals()
 
 
 def apply_style_items(node: Style, _: TkRenderingContext):
@@ -85,10 +86,7 @@ def apply_style_items(node: Style, _: TkRenderingContext):
         node.name = next(attr.value for attr in attrs if attr.name == 'name')
     except StopIteration as error:
         raise StyleError('Style name is missing', node.xml_node.view_info) from error
-    node.items = {
-        f'{attr.namespace}{attr.name}':
-            _get_style_item(node, attr) for attr in attrs if attr.name != 'name'
-    }
+    node.items = {f'{attr.namespace}{attr.name}': _get_style_item(node, attr) for attr in attrs if attr.name != 'name'}
 
 
 def _get_style_item(node: Style, attr: XmlAttr):
@@ -96,7 +94,7 @@ def _get_style_item(node: Style, attr: XmlAttr):
     value = attr.value if attr.value else ''
     if is_expression(value):
         expression_body = parse_expression(value).body
-        value = execute(expression_body, node.node_globals.to_dictionary())
+        value = execute(expression_body, node.node_globals)
     return StyleItem(setter, attr.name, value)
 
 
@@ -111,25 +109,31 @@ def store_to_node_styles(node: Style, context: TkRenderingContext):
     _get_styles(context)[node.name] = node.items.values()
 
 
-def _get_styles(context: TkRenderingContext) -> InheritedDict:
+def _get_styles(context: TkRenderingContext) -> NodeGlobals:
     return context.parent_node.node_globals[STYLES_KEY]
 
 
 def render_child_styles(node: Style, context: TkRenderingContext):
     """Renders child styles"""
-    render_children(node, context, lambda x, n, _: TkRenderingContext({
-        'parent_node': n,
-        'node_globals': InheritedDict(node.node_globals),
-        'node_styles': _get_styles(context),
-        'xml_node': x
-    }))
+    render_children(
+        node,
+        context,
+        lambda x,
+        n,
+        _: TkRenderingContext({
+            'parent_node': n,
+            'node_globals': NodeGlobals(node.node_globals),
+            'node_styles': _get_styles(context),
+            'xml_node': x
+        })
+    )
 
 
 class StylesView(Node):
     """Loads styles from separate file"""
 
-    def __init__(self, master: Widget, xml_node: XmlNode, node_globals: Optional[InheritedDict] = None):
-        super().__init__(xml_node, node_globals=node_globals)
+    def __init__(self, master: Widget, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
+        super().__init__(xml_node, node_globals = node_globals)
         self.name = None
         self.master = master
 
@@ -140,21 +144,19 @@ class StylesView(Node):
 
 def get_styles_view_pipeline() -> RenderingPipeline:
     """Returns setup for container"""
-    return RenderingPipeline(pipes=[
-        apply_attributes,
-        render_view_content,
-        store_to_globals
-    ], name='styles view pipeline')
+    return RenderingPipeline(
+        pipes = [apply_attributes, render_view_content, store_to_globals], name = 'styles view pipeline'
+    )
 
 
 def store_to_globals(view: StylesView, context: TkRenderingContext):
     """Stores styles to parent node globals"""
     child: Node = view.children[0]
-    styles: InheritedDict = child.node_globals[STYLES_KEY]
+    styles: NodeGlobals = child.node_globals[STYLES_KEY]
     if STYLES_KEY in context.parent_node.node_globals:
         parent_styles = context.parent_node.node_globals[STYLES_KEY]
-        merged_styles = {**parent_styles.to_dictionary(), **styles.to_dictionary()}
-        styles = InheritedDict(merged_styles)
+        merged_styles = {**parent_styles, **styles}
+        styles = NodeGlobals(merged_styles)
     context.parent_node.node_globals[STYLES_KEY] = styles
 
 

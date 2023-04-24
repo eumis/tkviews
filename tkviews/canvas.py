@@ -5,9 +5,10 @@ from functools import partial
 from tkinter import Canvas
 from typing import Optional, cast
 
-from pyviews.core import XmlNode, InheritedDict, Node
+from pyviews.core.rendering import Node, NodeGlobals, RenderingError
+from pyviews.core.xml import XmlNode
 from pyviews.pipes import apply_attributes
-from pyviews.rendering import RenderingPipeline, RenderingError, get_type
+from pyviews.rendering.pipeline import RenderingPipeline, get_type
 
 from tkviews.core.rendering import TkRenderingContext
 
@@ -15,9 +16,8 @@ from tkviews.core.rendering import TkRenderingContext
 class CanvasItemNode(Node, ABC):
     """Base class for wrappers"""
 
-    def __init__(self, master: Canvas, xml_node: XmlNode,
-                 node_globals: Optional[InheritedDict] = None):
-        super().__init__(xml_node, node_globals=node_globals)
+    def __init__(self, master: Canvas, xml_node: XmlNode, node_globals: Optional[NodeGlobals] = None):
+        super().__init__(xml_node, node_globals = node_globals)
         self._canvas: Canvas = master
         self._item_id: Optional[int] = None
         self.place: list = []
@@ -126,7 +126,7 @@ def get_canvas_pipeline() -> RenderingPipeline[Node, TkRenderingContext]:
         setup_event_binding,
         apply_temp_events,
         clear_temp
-    ], create_node=create_canvas_node)
+    ], create_node=create_canvas_node) # yapf: disable
 
 
 def create_canvas_node(context: TkRenderingContext) -> Node:
@@ -154,7 +154,7 @@ def setup_temp_binding(node: CanvasItemNode, _: TkRenderingContext):
     """Stores event callbacks to temp dictionary"""
     node.events = {}
     node.bind_source = node.bind
-    node.bind = lambda event, command, n=node: _bind(n, event, command)
+    node.bind = lambda event, command, n = node: _bind(n, event, command)
 
 
 def _bind(node: CanvasItemNode, event, command):

@@ -8,30 +8,30 @@
                global:vm="once:{EntryViewModel()}">
     <tkv:StylesView name="styles"/>
 
-    <LabelFrame styles:='packed'
+    <LabelFrame styles:_='packed'
                 text='Entry string binding'>
-        <Entry styles:='packed'
+        <Entry styles:_='packed'
                textvariable='{{vm.value}}'>
         </Entry>
 
-        <Label styles:='packed'>
+        <Label styles:_='packed'>
             {vm.value}
         </Label>
 
-        <Entry styles:='packed'
+        <Entry styles:_='packed'
                textvariable='{{vm.value}}'>
         </Entry>
     </LabelFrame>
 
-    <LabelFrame styles:='packed'
+    <LabelFrame styles:_='packed'
                 text='password field'>
-        <Entry styles:='packed'
+        <Entry styles:_='packed'
                show="*"/>
     </LabelFrame>
 
-    <LabelFrame styles:='packed'
+    <LabelFrame styles:_='packed'
                 text='readonly'>
-        <Entry styles:='packed'
+        <Entry styles:_='packed'
                state="readonly"
                import:StringVar="tkinter.StringVar"
                textvariable="{StringVar(value='readonly field')}"/>

@@ -19,22 +19,22 @@
     </tkv:Style>
 
     <LabelFrame text="Horizontal"
-                styles:="packed">
-        <PanedWindow styles:="packed"
+                styles:_="packed">
+        <PanedWindow styles:_="packed"
                      orient="once:{tk.HORIZONTAL}">
-            <Frame styles:="yellow_frame"/>
-            <Frame styles:="red_frame"/>
-            <Frame styles:="blue_frame"/>
+            <Frame styles:_="yellow_frame"/>
+            <Frame styles:_="red_frame"/>
+            <Frame styles:_="blue_frame"/>
         </PanedWindow>
     </LabelFrame>
 
     <LabelFrame text="Vertical"
-                styles:="packed">
-        <PanedWindow styles:="packed"
+                styles:_="packed">
+        <PanedWindow styles:_="packed"
                      orient="once:{tk.VERTICAL}">
-            <Frame styles:="yellow_frame"/>
-            <Frame styles:="red_frame"/>
-            <Frame styles:="blue_frame"/>
+            <Frame styles:_="yellow_frame"/>
+            <Frame styles:_="red_frame"/>
+            <Frame styles:_="blue_frame"/>
         </PanedWindow>
     </LabelFrame>
 

@@ -1,11 +1,11 @@
+from tkinter import StringVar
 from typing import List
 
-from tkinter import StringVar
-
-from pyviews.core import ObservableEntity
+from pyviews.core.binding import BindableEntity
 
 
-class Counter(ObservableEntity):
+class Counter(BindableEntity):
+
     def __init__(self):
         super().__init__()
         self._count = None
@@ -47,6 +47,7 @@ class Counter(ObservableEntity):
 
 
 class CounterVar(StringVar):
+
     def get(self):
         return self._to_int(super().get())
 

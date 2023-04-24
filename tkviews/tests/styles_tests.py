@@ -2,13 +2,13 @@ from itertools import chain
 from unittest.mock import Mock
 
 from pytest import mark, raises
-from pyviews.core import XmlAttr, InheritedDict, Node
+from pyviews.core.rendering import Node, NodeGlobals
+from pyviews.core.xml import XmlAttr
 from pyviews.pipes import call_set_attr
 
 from tkviews.core import TkRenderingContext
-from tkviews.styles import Style, StyleError, StylesView, apply_styles, STYLES_KEY
-from tkviews.styles import setup_node_styles, apply_style_items, apply_parent_items, store_to_globals
-from tkviews.styles import store_to_node_styles
+from tkviews.styles import (STYLES_KEY, Style, StyleError, StylesView, apply_parent_items, apply_style_items,
+                            apply_styles, setup_node_styles, store_to_globals, store_to_node_styles)
 
 
 def some_setter():
@@ -25,18 +25,18 @@ class SetupNodeStylesTest:
     @staticmethod
     def test_creates_node_styles():
         """should add node_styles to parent globals"""
-        parent_node: Node = Mock(node_globals=InheritedDict())
+        parent_node: Node = Mock(node_globals = NodeGlobals())
 
         setup_node_styles(Mock(), TkRenderingContext({'parent_node': parent_node}))
         actual = parent_node.node_globals.get(STYLES_KEY)
 
-        assert isinstance(actual, InheritedDict)
+        assert isinstance(actual, NodeGlobals)
 
     @staticmethod
     def test_does_not_create_if_exist():
         """should not change parent node_globals if node_styles exist"""
-        node_styles = InheritedDict()
-        parent_node: Node = Mock(node_globals=InheritedDict({STYLES_KEY: node_styles}))
+        node_styles = NodeGlobals()
+        parent_node: Node = Mock(node_globals = NodeGlobals({STYLES_KEY: node_styles}))
 
         setup_node_styles(Mock(), TkRenderingContext({'parent_node': parent_node}))
         actual = parent_node.node_globals[STYLES_KEY]
@@ -62,11 +62,11 @@ class ApplyStyleItemsTests:
           ('one', '', __name__ + '.another_setter')],
          [('one', 'value', some_setter),
           ('one', '', another_setter)])
-    ])
+     ]) # yapf: disable
     def test_creates_style_items_from_attrs(attrs, expected):
         """apply_style_items should create style item for every attribute"""
         attrs = [XmlAttr('name', 'hoho')] + [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
-        xml_node = Mock(attrs=attrs)
+        xml_node = Mock(attrs = attrs)
         node = Style(xml_node)
 
         apply_style_items(node, TkRenderingContext())
@@ -77,7 +77,7 @@ class ApplyStyleItemsTests:
     @staticmethod
     def test_requires_name_attribute():
         """apply_style_items should raise StyleError if name attribute is missing"""
-        xml_node = Mock(attrs=[])
+        xml_node = Mock(attrs = [])
         node = Style(xml_node)
 
         with raises(StyleError):
@@ -89,10 +89,10 @@ class ApplyStyleItemsTests:
         'name',
         'some name',
         ' some name    ',
-    ])
+    ]) # yapf: disable
     def test_sets_style_name(name):
         """apply_style_items should set style name from attributes"""
-        xml_node = Mock(attrs=[XmlAttr('name', name)])
+        xml_node = Mock(attrs = [XmlAttr('name', name)])
         node = Style(xml_node)
 
         apply_style_items(node, TkRenderingContext())
@@ -119,7 +119,7 @@ class ApplyParentItemsTests:
          [],
          [('one', 'value', some_setter),
           ('one', '', another_setter)])
-    ])
+    ]) # yapf: disable
     def test_uses_parent_style_items(self, items, parent_items, expected):
         """apply_parent_items should add parent style items"""
         node = self._get_style_node(items)
@@ -133,7 +133,7 @@ class ApplyParentItemsTests:
     @staticmethod
     def _get_style_node(attrs):
         attrs = [XmlAttr('name', 'hoho')] + [XmlAttr(attr[0], attr[1], attr[2]) for attr in attrs]
-        xml_node = Mock(attrs=attrs)
+        xml_node = Mock(attrs = attrs)
         node = Style(xml_node)
         apply_style_items(node, TkRenderingContext())
         return node
@@ -153,10 +153,10 @@ class ApplyParentItemsTests:
 
 def test_store_to_node_styles():
     """store_to_node_styles should store style items to node_styles"""
-    node_styles = InheritedDict()
+    node_styles = NodeGlobals()
     node = Style(Mock())
     node.items = Mock()
-    parent_node = Mock(node_globals=InheritedDict({STYLES_KEY: node_styles}))
+    parent_node = Mock(node_globals = NodeGlobals({STYLES_KEY: node_styles}))
 
     store_to_node_styles(node, TkRenderingContext({'parent_node': parent_node}))
 
@@ -170,19 +170,19 @@ def test_store_to_node_styles():
     ({}, {'key': 'style'}, {'key': 'style'}),
     ({'key': 'style'}, {'style': 'style'}, {'key': 'style', 'style': 'style'}),
     ({'key': 'parent style'}, {'key': 'view style'}, {'key': 'view style'})
-])
+]) # yapf: disable
 def test_store_to_globals(parent_styles, view_styles, expected):
     """should copy node styles from view root to parent globals"""
-    parent_node = Mock(node_globals=InheritedDict())
+    parent_node = Mock(node_globals = NodeGlobals())
     if parent_styles:
-        parent_node.node_globals[STYLES_KEY] = InheritedDict(parent_styles)
+        parent_node.node_globals[STYLES_KEY] = NodeGlobals(parent_styles)
     node = StylesView(Mock(), Mock())
-    child = Mock(node_globals=InheritedDict())
-    child.node_globals[STYLES_KEY] = InheritedDict(view_styles)
+    child = Mock(node_globals = NodeGlobals())
+    child.node_globals[STYLES_KEY] = NodeGlobals(view_styles)
     node.add_child(child)
 
     store_to_globals(node, TkRenderingContext({'parent_node': parent_node}))
-    actual = parent_node.node_globals[STYLES_KEY].to_dictionary()
+    actual = parent_node.node_globals[STYLES_KEY]
 
     assert expected == actual
 
@@ -201,12 +201,12 @@ class StyleTests:
         (['one'], ['one']),
         ([''], ['']),
         ([], []),
-    ])
+    ]) # yapf: disable
     def test_applies_style_items(style_keys, expected_keys):
         """should apply style items"""
-        node = Mock(node_globals=InheritedDict())
-        node_styles = {key: [Mock(apply=Mock())] for key in expected_keys}
-        node.node_globals[STYLES_KEY] = InheritedDict(source=node_styles)
+        node = Mock(node_globals = NodeGlobals())
+        node_styles = {key: [Mock(apply = Mock())] for key in expected_keys}
+        node.node_globals[STYLES_KEY] = NodeGlobals(node_styles)
 
         apply_styles(node, '', style_keys)
         called = True
@@ -218,8 +218,8 @@ class StyleTests:
     @staticmethod
     def test_raises_style_error():
         """should raise StyleError if style is not found"""
-        node = Mock(node_globals=InheritedDict())
-        node.node_globals[STYLES_KEY] = InheritedDict()
+        node = Mock(node_globals = NodeGlobals())
+        node.node_globals[STYLES_KEY] = NodeGlobals()
 
         with raises(StyleError):
             apply_styles(node, '', ['key'])

@@ -1,12 +1,12 @@
 """Common rendering functionality"""
 
 from tkinter import Widget
-from typing import Tuple, Any
+from typing import Any, Tuple
 
-from pyviews.core import Node, XmlAttr, Setter, XmlNode, InheritedDict
-from pyviews.expression import is_expression, parse_expression, Expression, execute
+from pyviews.core.expression import Expression, execute, is_expression, parse_expression
+from pyviews.core.rendering import Node, NodeGlobals, RenderingContext, Setter, XmlNode
+from pyviews.core.xml import XmlAttr
 from pyviews.pipes import get_setter
-from pyviews.rendering import RenderingContext
 
 
 class TkRenderingContext(RenderingContext):
@@ -28,7 +28,7 @@ def render_attribute(node: Node, xml_attr: XmlAttr) -> Tuple[Setter, Any]:
     value = xml_attr.value if xml_attr.value else ''
     if is_expression(value):
         expression_ = Expression(parse_expression(value)[1])
-        value = execute(expression_, node.node_globals.to_dictionary())
+        value = execute(expression_, node.node_globals)
     return setter, value
 
 
@@ -37,6 +37,6 @@ def get_tk_child_context(child_xml_node: XmlNode, node: Node, context: TkRenderi
     return TkRenderingContext({
         'parent_node': node,
         'master': context.master,
-        'node_globals': InheritedDict(node.node_globals),
+        'node_globals': NodeGlobals(node.node_globals),
         'xml_node': child_xml_node
     })

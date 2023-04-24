@@ -3,20 +3,20 @@
 from typing import Optional, cast
 
 from injectool import add_singleton
-from pyviews.binding import use_binding
+from pyviews.binding.config import use_binding
 from pyviews.code import run_code
-from pyviews.containers import get_container_pipeline, get_view_pipeline, get_for_pipeline, get_if_pipeline
+from pyviews.containers import get_container_pipeline, get_for_pipeline, get_if_pipeline, get_view_pipeline
+from pyviews.core.rendering import NodeGlobals
 from pyviews.presenter import get_presenter_pipeline
-from pyviews.rendering import RenderingPipeline, use_rendering, get_child_context
-from pyviews.rendering.pipeline import use_pipeline
-from pyviews.rendering.views import render_view
+from pyviews.rendering.context import get_child_context
+from pyviews.rendering.pipeline import RenderingPipeline, render_view, use_pipeline
+from pyviews.rendering.config import use_rendering
 
 from tkviews.canvas import get_canvas_pipeline
 from tkviews.core.rendering import TkRenderingContext, get_tk_child_context
 from tkviews.listbox import get_listboxitem_pipeline
 from tkviews.styles import get_style_pipeline, get_styles_view_pipeline
-from tkviews.widgets import get_root_pipeline, get_widget_pipeline, Root
-from tkviews.widgets import use_variables_binding
+from tkviews.widgets import Root, get_root_pipeline, get_widget_pipeline, use_variables_binding
 from tkviews.widgets.ttk import get_ttk_style_pipeline
 
 
@@ -47,11 +47,12 @@ def use_tkviews_pipelines():
     use_pipeline(get_canvas_pipeline(), 'tkviews.canvas')
     use_pipeline(get_listboxitem_pipeline(), 'tkviews.ListboxItem')
 
-    use_pipeline(RenderingPipeline(pipes=[run_code]), 'tkviews.Code')
+    use_pipeline(RenderingPipeline(pipes = [run_code]), 'tkviews.Code')
 
 
-def launch(root_view: Optional[str] = None):
+def launch(root_view: str, view_globals: Optional[dict] = None):
     """Runs application. Widgets are created from passed xml_files"""
     root_view = 'root' if root_view is None else root_view
-    root: Root = cast(Root, render_view(root_view, TkRenderingContext()))
+    rendering_context = TkRenderingContext({'node_globals': NodeGlobals(view_globals)} if view_globals else {})
+    root: Root = cast(Root, render_view(root_view, rendering_context))
     root.instance.mainloop()

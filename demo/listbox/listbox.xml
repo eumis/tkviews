@@ -13,7 +13,7 @@
 
     <tkv:StylesView name='styles'/>
 
-    <Listbox styles:="packed"
+    <Listbox styles:_="packed"
              bind:Delete="{lambda e: view_model.delete(e.widget.curselection())}">
         <tkv:For items="{view_model.items}">
             <tkv:ListboxItem index="{index}" value="{item}"/>

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "tkviews"
 description = "Package for creating tkinter applications in declarative way."
 keywords = ['binding', 'tkinter', 'tk', 'tkviews', 'pyviews', 'python', 'mvvm', 'views']
-version = "3.2.0"
+version = "4.0.0"
 readme = "README.md"
 requires-python = ">=3.6"
 classifiers = [
@@ -23,7 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10"
 ]
 dependencies = [
-    'pyviews>=3.*.*,<4.*.*'
+    'pyviews == 4.*'
 ]
 
 [tool.setuptools]
@@ -43,3 +43,24 @@ max-line-length = 120
 [tool.pytest.ini_options]
 python_files = '*_tests.py'
 python_classes = '*Tests'
+
+[tool.yapf]
+ALLOW_SPLIT_BEFORE_DICT_VALUE = true
+BLANK_LINE_BEFORE_NESTED_CLASS_OR_DEF = true
+BLANK_LINES_AROUND_TOP_LEVEL_DEFINITION = 2
+COALESCE_BRACKETS = true
+COLUMN_LIMIT = 120
+DEDENT_CLOSING_BRACKETS = true
+DISABLE_ENDING_COMMA_HEURISTIC = true
+EACH_DICT_ENTRY_ON_SEPARATE_LINE = true
+INDENT_DICTIONARY_VALUE = true
+JOIN_MULTIPLE_LINES = false
+SPACES_AROUND_DEFAULT_OR_NAMED_ASSIGN = true
+SPACES_BEFORE_COMMENT = 1
+SPLIT_ALL_TOP_LEVEL_COMMA_SEPARATED_VALUES = true
+SPLIT_ARGUMENTS_WHEN_COMMA_TERMINATED = false
+SPLIT_BEFORE_DOT = true
+SPLIT_BEFORE_EXPRESSION_AFTER_OPENING_PAREN = true
+
+[tool.isort]
+line_length = 120

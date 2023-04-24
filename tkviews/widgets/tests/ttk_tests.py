@@ -1,7 +1,7 @@
 from unittest.mock import call, Mock, patch
 
 from pytest import mark, fixture, raises
-from pyviews.core import XmlAttr
+from pyviews.core.xml import XmlAttr
 from pyviews.pipes import call_set_attr
 
 from tkviews.widgets import ttk

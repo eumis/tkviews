@@ -2,7 +2,7 @@
 
 ## Bindable
 
-`Bindable` is a base class that can notify about it's changes.  
+`Bindable` is a base class that can notify about its changes.  
 `BindableEntity` notifies about all properties changes.
 `BindableDict` notifies about values changes.
 

@@ -10,14 +10,6 @@ Here's an example of using an expression in the `text` attribute of a `Label` no
 <Label text="{f'{len(items)} items'}" />
 ```
 
-Attribute value cannot be partially expression. For example
-
-```xml
-<Label text="{len(items)} items" />
-```
-
-Here label text will be interpreted as plain text: `"{len(items)} items"`
-
 Expressions use [node globals](Rendering.md#Node-globals) as python expression globals.
 
 ___

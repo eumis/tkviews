@@ -3,7 +3,7 @@
 Every xml node represents widget or [Node](Rendering.md#Node).
 Tag namespace is interpreted as a module and tag name is used as a class name.
 
-For example, the following XML code is [rendered](Rendering.md) a tkinter.Button widget:
+For example, the following XML code is [rendered](Rendering.md) as `tkinter.Button` widget:
 ```xml
 <Button xmlns='tkinter' />
 ```
